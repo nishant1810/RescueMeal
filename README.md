@@ -2,8 +2,6 @@
 
 **RescueMeals** is a revolutionary food waste management platform designed to reduce food wastage by connecting **restaurants (donators)**, **volunteers**, and **NGOs/receivers**.  Built using the **MERN stack** (MongoDB, Express.js, React.js, Node.js), RescueMeals transforms surplus food into a valuable resource for those in need.
 
----
-
 ## Features
 
 - 🍱 Donators can post details of surplus raw or cooked food.

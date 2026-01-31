@@ -24,14 +24,14 @@ By transforming excess food into a valuable resource, RescueMeals fosters **sust
 
 ## Technologies Used
 
-  Frontend: React.js
-  Backend: Node.js, Express.js
-  Database: MongoDB
-  Authentication: JSON Web Tokens (JWT)
-  Payment Gateway: Razorpay
-  Email Service: Nodemailer
-  Styling: CSS with Bootstrap
-  Deployment: Heroku for backend, Vercel for frontend
+  - Frontend: React.js
+  - Backend: Node.js, Express.js
+  - Database: MongoDB
+  - Authentication: JSON Web Tokens (JWT)
+  - Payment Gateway: Razorpay
+  - Email Service: Nodemailer
+  - Styling: CSS with Bootstrap
+  - Deployment: Heroku for backend, Vercel for frontend
 
 
 ## ⚙️ Getting Started

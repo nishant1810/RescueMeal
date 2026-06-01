@@ -11,7 +11,7 @@ import {
 import toast from "react-hot-toast";
 
 import {
-  loginUser,
+  registerUser,
 } from "../services/authService";
 
 import { useAuth } from "../context/AuthContext";
@@ -21,7 +21,7 @@ import slide2 from "../assets/info-img.jpg";
 import slide3 from "../assets/pic-1.avif";
 import slide4 from "../assets/pexels-mehmet-turgut-kirkgoz-11576242.jpg";
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
 
   const { login } = useAuth();
@@ -38,8 +38,10 @@ const Login = () => {
 
   const [formData, setFormData] =
     useState({
+      name: "",
       email: "",
       password: "",
+      role: "donor",
     });
 
   useEffect(() => {
@@ -71,12 +73,12 @@ const Login = () => {
 
     try {
       const data =
-        await loginUser(formData);
+        await registerUser(formData);
 
       login(data.user, data.token);
 
       toast.success(
-        "Login Successful"
+        "Registration Successful"
       );
 
       navigate("/dashboard");
@@ -84,7 +86,7 @@ const Login = () => {
       toast.error(
         error.response?.data
           ?.message ||
-          "Login Failed"
+          "Registration Failed"
       );
     }
   };
@@ -111,7 +113,7 @@ const Login = () => {
             <img
               key={index}
               src={slide}
-              alt="slide"
+              alt={`slide-${index}`}
               className={`
                 absolute
                 inset-0
@@ -197,17 +199,17 @@ const Login = () => {
             </Link>
 
             <Link
-              to="/register"
+              to="/login"
               className="
               hover:text-green-400
             "
             >
-              Register
+              Login
             </Link>
           </div>
         </nav>
 
-        {/* LOGIN FORM */}
+        {/* REGISTER FORM */}
 
         <div
           className="
@@ -216,47 +218,87 @@ const Login = () => {
           items-center
           justify-center
           px-4
+          py-10
         "
         >
           <div
             className="
             w-full
-            max-w-2xl
+            max-w-xl
             bg-black/40
             backdrop-blur-md
             border
             border-white/20
             rounded-2xl
             p-6
-            md:p-10
+            md:p-8
           "
           >
+            {/* TITLE */}
+
             <h1
               className="
               text-5xl
-              md:text-7xl
+              md:text-6xl
               font-bold
               text-center
               mb-10
             "
             >
-              Login
+              Register
             </h1>
+
+            {/* FORM */}
 
             <form
               onSubmit={handleSubmit}
               className="
-              space-y-8
+              space-y-6
             "
             >
+              {/* NAME */}
+
               <div>
                 <label
                   className="
                   block
                   text-xl
-                  md:text-2xl
                   font-semibold
-                  mb-3
+                  mb-2
+                "
+                >
+                  Full Name
+                </label>
+
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Enter your name"
+                  onChange={handleChange}
+                  className="
+                  w-full
+                  bg-white/10
+                  border
+                  border-white/20
+                  p-4
+                  rounded-lg
+                  text-white
+                  placeholder:text-gray-300
+                  focus:outline-none
+                  focus:border-green-400
+                "
+                />
+              </div>
+
+              {/* EMAIL */}
+
+              <div>
+                <label
+                  className="
+                  block
+                  text-xl
+                  font-semibold
+                  mb-2
                 "
                 >
                   Email
@@ -282,14 +324,15 @@ const Login = () => {
                 />
               </div>
 
+              {/* PASSWORD */}
+
               <div>
                 <label
                   className="
                   block
                   text-xl
-                  md:text-2xl
                   font-semibold
-                  mb-3
+                  mb-2
                 "
                 >
                   Password
@@ -315,12 +358,67 @@ const Login = () => {
                 />
               </div>
 
+              {/* ROLE */}
+
+              <div>
+                <label
+                  className="
+                  block
+                  text-xl
+                  font-semibold
+                  mb-2
+                "
+                >
+                  Select Role
+                </label>
+
+                <select
+                  name="role"
+                  onChange={handleChange}
+                  className="
+                  w-full
+                  bg-white/10
+                  border
+                  border-white/20
+                  p-4
+                  rounded-lg
+                  text-white
+                  focus:outline-none
+                  focus:border-green-400
+                "
+                >
+                  <option
+                    value="donor"
+                    className="text-black"
+                  >
+                    Donor
+                  </option>
+
+                  <option
+                    value="ngo"
+                    className="text-black"
+                  >
+                    NGO
+                  </option>
+
+                  <option
+                    value="volunteer"
+                    className="text-black"
+                  >
+                    Volunteer
+                  </option>
+                </select>
+              </div>
+
+              {/* BUTTONS */}
+
               <div
                 className="
                 grid
                 grid-cols-1
                 md:grid-cols-2
                 gap-4
+                pt-2
               "
               >
                 <button
@@ -332,13 +430,14 @@ const Login = () => {
                   rounded-lg
                   text-lg
                   font-bold
+                  transition
                 "
                 >
-                  LOGIN
+                  REGISTER
                 </button>
 
                 <Link
-                  to="/register"
+                  to="/login"
                   className="
                   bg-blue-500
                   hover:bg-blue-600
@@ -349,17 +448,76 @@ const Login = () => {
                   flex
                   items-center
                   justify-center
+                  transition
                 "
                 >
-                  REGISTER
+                  LOGIN
                 </Link>
               </div>
+
+              {/* FOOTER */}
+
+              <p
+                className="
+                text-center
+                text-gray-300
+                pt-2
+              "
+              >
+                Already have an account?
+                {" "}
+                <Link
+                  to="/login"
+                  className="
+                  text-green-400
+                  hover:text-green-300
+                "
+                >
+                  Login Here
+                </Link>
+              </p>
             </form>
           </div>
+        </div>
+
+        {/* SLIDE INDICATORS */}
+
+        <div
+          className="
+          absolute
+          bottom-8
+          left-1/2
+          -translate-x-1/2
+          flex
+          gap-3
+          z-20
+        "
+        >
+          {slides.map(
+            (_, index) => (
+              <button
+                key={index}
+                onClick={() =>
+                  setCurrentSlide(index)
+                }
+                className={`
+                  w-4
+                  h-4
+                  rounded-full
+                  transition
+                  ${
+                    index === currentSlide
+                      ? "bg-white"
+                      : "bg-gray-500"
+                  }
+                `}
+              />
+            )
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

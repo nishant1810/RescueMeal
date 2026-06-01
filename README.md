@@ -24,6 +24,7 @@ By transforming excess food into a valuable resource, RescueMeals fosters **sust
 
 ## Technologies Used
 
+<<<<<<< HEAD
   - Frontend: React.js
   - Backend: Node.js, Express.js
   - Database: MongoDB
@@ -33,6 +34,11 @@ By transforming excess food into a valuable resource, RescueMeals fosters **sust
   - Styling: CSS with Bootstrap
   - Deployment: Heroku for backend, Vercel for frontend
 
+=======
+Frontend:   React.js, TailwindCSS, Axios, Sass, React Router
+Backend:    Node.js, Express.js, MongoDB, Mongoose, JWT
+Other:      dotenv, cors, bcryptjs, nodemon, body-parser
+>>>>>>> 56a5e63 (project updated)
 
 ## ⚙️ Getting Started
 

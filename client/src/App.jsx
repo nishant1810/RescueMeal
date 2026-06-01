@@ -1,53 +1,109 @@
-import React, { useEffect } from "react";
+import React from "react";
+
 import {
-  BrowserRouter,
-  Router,
   Routes,
   Route,
-  Link,
-  useLocation,
+  Navigate,
 } from "react-router-dom";
-import Home from "./pages/Home";
-import FoodDonation from "./pages/FoodDonation";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Layout from "./dashboard/Layout";
-import Navbar from "./components/Navbar/Navbar";
 
-import Profile from "./dashboard/Profile";
-import Food from "./dashboard/Food";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import DonateFood from "./pages/DonateFood";
+import AvailableFood from "./pages/AvailableFood";
+import MyDonations from "./pages/MyDonations";
+import ClaimedFood from "./pages/ClaimedFood";
+import Deliveries from "./pages/Deliveries";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
-  const token = localStorage.getItem("token");
-
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
   return (
-    <>
-      {!pathname.includes("/login") &&
-        !pathname.includes("/signup") &&
-        !pathname.includes("/dashboard") && <Navbar token={token} />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/donation" element={<FoodDonation />} />
+    <Routes>
+      {/* DEFAULT ROUTE */}
+      
+      <Route
+  path="/"
+  element={<Home />}
+/>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+      <Route
+        path="/register"
+        element={<Register />}
+       />
 
-        {token ? (
-          <Route element={<Layout />}>
-            <Route path="/dashboard" element={<FoodDonation />} />
-            <Route path="/dashboard/profile" element={<Profile />} />
-            <Route path="/dashboard/food" element={<Food />} />
-          </Route>
-        ) : (
-          <Route path="*" element={<Login />} />
-        )}
-      </Routes>
-    </>
+      {/* LOGIN */}
+      
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      {/* DASHBOARD */}
+      
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* DONATE FOOD */}
+      
+      <Route
+        path="/donate-food"
+        element={
+          <ProtectedRoute>
+            <DonateFood />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* AVAILABLE FOOD */}
+
+<Route
+  path="/available-food"
+  element={
+    <ProtectedRoute>
+      <AvailableFood />
+    </ProtectedRoute>
+  }
+/>
+
+{/* MY DONATIONS */}
+
+<Route
+  path="/my-donations"
+  element={
+    <ProtectedRoute>
+      <MyDonations />
+    </ProtectedRoute>
+  }
+/>
+
+{/* CLAIMED FOOD */}
+
+<Route
+  path="/claimed-food"
+  element={
+    <ProtectedRoute>
+      <ClaimedFood />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/deliveries"
+  element={
+    <ProtectedRoute>
+      <Deliveries />
+    </ProtectedRoute>
+  }
+/>
+
+    </Routes>
   );
 }
 

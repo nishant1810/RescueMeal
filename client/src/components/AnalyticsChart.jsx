@@ -1,12 +1,12 @@
 import React from "react";
 
 import {
+  ResponsiveContainer,
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
 
@@ -16,30 +16,22 @@ const AnalyticsChart = ({
   const data = [
     {
       name: "Available",
-
       value:
-        stats.availableFood,
+        stats?.availableFood ||
+        0,
     },
 
     {
       name: "Claimed",
-
       value:
-        stats.claimedFood,
-    },
-
-    {
-      name: "Picked",
-
-      value:
-        stats.pickedFood,
+        stats?.claimedFood || 0,
     },
 
     {
       name: "Delivered",
-
       value:
-        stats.deliveredFood,
+        stats?.deliveredFood ||
+        0,
     },
   ];
 
@@ -47,15 +39,16 @@ const AnalyticsChart = ({
     <div
       className="
       bg-white
-      rounded-2xl
-      shadow-lg
       p-6
-      mt-10
+      rounded-2xl
+      shadow-md
+      w-full
+      min-w-0
     "
     >
       <h2
         className="
-        text-2xl
+        text-3xl
         font-bold
         mb-6
       "
@@ -63,18 +56,12 @@ const AnalyticsChart = ({
         Food Analytics
       </h2>
 
-      <div
-        className="
-        h-96
-      "
-      >
+      <div className="w-full h-[350px]">
         <ResponsiveContainer
           width="100%"
           height="100%"
         >
-          <BarChart
-            data={data}
-          >
+          <BarChart data={data}>
             <CartesianGrid
               strokeDasharray="3 3"
             />
@@ -88,7 +75,7 @@ const AnalyticsChart = ({
             <Bar
               dataKey="value"
               fill="#22c55e"
-              radius={[8, 8, 0, 0]}
+              radius={[10, 10, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>

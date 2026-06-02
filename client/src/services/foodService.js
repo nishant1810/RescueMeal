@@ -8,19 +8,25 @@ DONATE FOOD
 
 export const donateFood =
   async (formData) => {
-    const { data } =
-      await api.post(
-        "/food/donate",
-        formData,
-        {
-          headers: {
-            "Content-Type":
-              "multipart/form-data",
-          },
-        }
-      );
+    try {
+      const { data } =
+        await api.post(
+          "/food/donate",
+          formData,
+          {
+            headers: {
+              "Content-Type":
+                "multipart/form-data",
+            },
+          }
+        );
 
-    return data;
+      return data;
+    } catch (error) {
+      console.log(error);
+
+      throw error;
+    }
   };
 
 /*
@@ -31,12 +37,26 @@ GET ALL FOOD
 
 export const getAllFood =
   async () => {
-    const { data } =
-      await api.get(
-        "/food/all"
-      );
+    try {
+      const { data } =
+        await api.get(
+          "/food/all"
+        );
 
-    return data.food;
+      /*
+      Backend returns:
+      {
+        success: true,
+        foods: []
+      }
+      */
+
+      return data.foods || [];
+    } catch (error) {
+      console.log(error);
+
+      return [];
+    }
   };
 
 /*
@@ -47,12 +67,18 @@ CLAIM FOOD
 
 export const claimFood =
   async (id) => {
-    const { data } =
-      await api.put(
-        `/food/claim/${id}`
-      );
+    try {
+      const { data } =
+        await api.put(
+          `/food/claim/${id}`
+        );
 
-    return data;
+      return data;
+    } catch (error) {
+      console.log(error);
+
+      throw error;
+    }
   };
 
 /*
@@ -63,12 +89,27 @@ MY DONATIONS
 
 export const getMyDonations =
   async () => {
-    const { data } =
-      await api.get(
-        "/food/my-donations"
+    try {
+      const { data } =
+        await api.get(
+          "/food/my-donations"
+        );
+
+      console.log(
+        "MY DONATIONS:",
+        data
       );
 
-    return data.food;
+      /*
+      IMPORTANT FIX
+      */
+
+      return data.foods || [];
+    } catch (error) {
+      console.log(error);
+
+      return [];
+    }
   };
 
 /*
@@ -79,12 +120,18 @@ CLAIMED FOOD
 
 export const getClaimedFood =
   async () => {
-    const { data } =
-      await api.get(
-        "/food/claimed-food"
-      );
+    try {
+      const { data } =
+        await api.get(
+          "/food/claimed-food"
+        );
 
-    return data.food;
+      return data.foods || [];
+    } catch (error) {
+      console.log(error);
+
+      return [];
+    }
   };
 
 /*
@@ -95,15 +142,37 @@ DASHBOARD STATS
 
 export const getDashboardStats =
   async () => {
-    const { data } =
-      await api.get(
-        "/food/stats"
-      );
+    try {
+      const { data } =
+        await api.get(
+          "/food/stats"
+        );
 
-    return data.stats;
+      /*
+      SAFE STATS
+      */
+
+      return (
+        data.stats || {
+          totalFood: 0,
+          availableFood: 0,
+          claimedFood: 0,
+          deliveredFood: 0,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+
+      return {
+        totalFood: 0,
+        availableFood: 0,
+        claimedFood: 0,
+        deliveredFood: 0,
+      };
+    }
   };
 
-  /*
+/*
 ========================================
 VOLUNTEER DELIVERIES
 ========================================
@@ -111,28 +180,46 @@ VOLUNTEER DELIVERIES
 
 export const getVolunteerDeliveries =
   async () => {
-    const { data } =
-      await api.get(
-        "/food/volunteer-deliveries"
-      );
+    try {
+      const { data } =
+        await api.get(
+          "/food/volunteer-deliveries"
+        );
 
-    return data.food;
+      return data.foods || [];
+    } catch (error) {
+      console.log(error);
+
+      return [];
+    }
   };
 
-  /*
+/*
 ========================================
 ASSIGN DELIVERY
 ========================================
 */
 
 export const assignDelivery =
-  async (id) => {
-    const { data } =
-      await api.put(
-        `/food/assign/${id}`
-      );
+  async (
+    foodId,
+    volunteerId
+  ) => {
+    try {
+      const { data } =
+        await api.put(
+          `/food/assign/${foodId}`,
+          {
+            volunteerId,
+          }
+        );
 
-    return data;
+      return data;
+    } catch (error) {
+      console.log(error);
+
+      throw error;
+    }
   };
 
 /*
@@ -143,10 +230,16 @@ MARK DELIVERED
 
 export const markDelivered =
   async (id) => {
-    const { data } =
-      await api.put(
-        `/food/mark-delivered/${id}`
-      );
+    try {
+      const { data } =
+        await api.put(
+          `/food/mark-delivered/${id}`
+        );
 
-    return data;
+      return data;
+    } catch (error) {
+      console.log(error);
+
+      throw error;
+    }
   };

@@ -11,8 +11,7 @@ import {
 const COLORS = [
   "#22c55e",
   "#3b82f6",
-  "#f97316",
-  "#ef4444",
+  "#f59e0b",
 ];
 
 const CategoryPieChart = ({
@@ -22,25 +21,21 @@ const CategoryPieChart = ({
     {
       name: "Available",
       value:
-        stats.availableFood,
+        stats?.availableFood ||
+        0,
     },
 
     {
       name: "Claimed",
       value:
-        stats.claimedFood,
-    },
-
-    {
-      name: "Picked",
-      value:
-        stats.pickedFood,
+        stats?.claimedFood || 0,
     },
 
     {
       name: "Delivered",
       value:
-        stats.deliveredFood,
+        stats?.deliveredFood ||
+        0,
     },
   ];
 
@@ -48,15 +43,16 @@ const CategoryPieChart = ({
     <div
       className="
       bg-white
-      rounded-2xl
-      shadow-lg
       p-6
-      mt-10
+      rounded-2xl
+      shadow-md
+      w-full
+      min-w-0
     "
     >
       <h2
         className="
-        text-2xl
+        text-3xl
         font-bold
         mb-6
       "
@@ -64,11 +60,7 @@ const CategoryPieChart = ({
         Distribution
       </h2>
 
-      <div
-        className="
-        h-96
-      "
-      >
+      <div className="w-full h-[350px]">
         <ResponsiveContainer
           width="100%"
           height="100%"
@@ -76,8 +68,10 @@ const CategoryPieChart = ({
           <PieChart>
             <Pie
               data={data}
+              cx="50%"
+              cy="50%"
+              outerRadius={120}
               dataKey="value"
-              outerRadius={140}
               label
             >
               {data.map(

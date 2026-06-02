@@ -52,7 +52,7 @@ const io =
 
 /*
 ========================================
-EXPORT IO
+EXPORT SOCKET IO
 ========================================
 */
 
@@ -68,21 +68,56 @@ io.on(
   "connection",
   (socket) => {
     console.log(
-      "Socket Connected:",
-      socket.id
+      `Socket Connected: ${socket.id}`
     );
+
+    /*
+    ========================================
+    JOIN ROOM
+    ========================================
+    */
+
+    socket.on(
+      "joinRoom",
+      (roomId) => {
+        socket.join(roomId);
+
+        console.log(
+          `Socket ${socket.id} joined room ${roomId}`
+        );
+      }
+    );
+
+    /*
+    ========================================
+    DISCONNECT
+    ========================================
+    */
 
     socket.on(
       "disconnect",
       () => {
         console.log(
-          "Socket Disconnected:",
-          socket.id
+          `Socket Disconnected: ${socket.id}`
         );
       }
     );
   }
 );
+
+/*
+========================================
+HEALTH CHECK
+========================================
+*/
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message:
+      "RescueMeal API Running",
+  });
+});
 
 /*
 ========================================

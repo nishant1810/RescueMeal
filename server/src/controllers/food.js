@@ -155,6 +155,8 @@ export const getAllFood =
         foods,
       });
     } catch (error) {
+      console.log(error);
+
       res.status(500).json({
         success: false,
 
@@ -180,17 +182,24 @@ export const getMyDonations =
           createdAt: -1,
         });
 
+      console.log(
+        "MY DONATIONS:",
+        foods
+      );
+
       res.status(200).json({
         success: true,
 
         foods,
       });
     } catch (error) {
+      console.log(error);
+
       res.status(500).json({
         success: false,
 
         message:
-          error.message,
+          "Failed to fetch donations",
       });
     }
   };
@@ -225,6 +234,12 @@ export const claimFood =
 
       await food.save();
 
+      /*
+      ========================================
+      SOCKET EVENT
+      ========================================
+      */
+
       io.emit("foodClaimed", {
         food,
       });
@@ -238,6 +253,180 @@ export const claimFood =
         food,
       });
     } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+
+        message:
+          error.message,
+      });
+    }
+  };
+
+/*
+========================================
+GET CLAIMED FOOD
+========================================
+*/
+
+export const getClaimedFood =
+  async (req, res) => {
+    try {
+      const foods =
+        await Food.find({
+          status: "claimed",
+        })
+          .populate(
+            "claimedBy",
+            "name email"
+          )
+          .sort({
+            createdAt: -1,
+          });
+
+      res.status(200).json({
+        success: true,
+
+        foods,
+      });
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+
+        message:
+          error.message,
+      });
+    }
+  };
+
+/*
+========================================
+ASSIGN DELIVERY
+========================================
+*/
+
+export const assignDelivery =
+  async (req, res) => {
+    try {
+      const {
+        volunteerId,
+      } = req.body;
+
+      const food =
+        await Food.findById(
+          req.params.id
+        );
+
+      if (!food) {
+        return res.status(404).json({
+          success: false,
+
+          message:
+            "Food not found",
+        });
+      }
+
+      food.volunteer =
+        volunteerId;
+
+      await food.save();
+
+      res.status(200).json({
+        success: true,
+
+        message:
+          "Volunteer assigned successfully",
+
+        food,
+      });
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+
+        message:
+          error.message,
+      });
+    }
+  };
+
+/*
+========================================
+MARK DELIVERED
+========================================
+*/
+
+export const markDelivered =
+  async (req, res) => {
+    try {
+      const food =
+        await Food.findById(
+          req.params.id
+        );
+
+      if (!food) {
+        return res.status(404).json({
+          success: false,
+
+          message:
+            "Food not found",
+        });
+      }
+
+      food.status =
+        "delivered";
+
+      await food.save();
+
+      res.status(200).json({
+        success: true,
+
+        message:
+          "Food delivered successfully",
+
+        food,
+      });
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+
+        message:
+          error.message,
+      });
+    }
+  };
+
+/*
+========================================
+VOLUNTEER DELIVERIES
+========================================
+*/
+
+export const getVolunteerDeliveries =
+  async (req, res) => {
+    try {
+      const foods =
+        await Food.find({
+          volunteer:
+            req.user.id,
+        }).sort({
+          createdAt: -1,
+        });
+
+      res.status(200).json({
+        success: true,
+
+        foods,
+      });
+    } catch (error) {
+      console.log(error);
+
       res.status(500).json({
         success: false,
 
@@ -284,6 +473,8 @@ export const getDashboardStats =
         );
 
       res.status(200).json({
+        success: true,
+
         totalFood,
 
         availableFood,
@@ -296,6 +487,8 @@ export const getDashboardStats =
           claimedFood,
       });
     } catch (error) {
+      console.log(error);
+
       res.status(500).json({
         success: false,
 

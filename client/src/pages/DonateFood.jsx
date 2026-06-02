@@ -3,13 +3,28 @@ import React, {
   useEffect,
 } from "react";
 
+import {
+  useNavigate,
+} from "react-router-dom";
+
 import toast from "react-hot-toast";
 
 import DashboardLayout from "../layouts/DashboardLayout";
 
-import { donateFood } from "../services/foodService";
+import {
+  donateFood,
+} from "../services/foodService";
 
 const DonateFood = () => {
+  /*
+  ========================================
+  NAVIGATION
+  ========================================
+  */
+
+  const navigate =
+    useNavigate();
+
   /*
   ========================================
   STATE
@@ -210,6 +225,12 @@ const DonateFood = () => {
         formData.description
       );
 
+      /*
+      ========================================
+      IMAGE
+      ========================================
+      */
+
       if (
         formData.foodImage
       ) {
@@ -228,6 +249,12 @@ const DonateFood = () => {
       await donateFood(
         submitData
       );
+
+      /*
+      ========================================
+      SUCCESS
+      ========================================
+      */
 
       toast.success(
         "Food donated successfully"
@@ -249,6 +276,18 @@ const DonateFood = () => {
         foodImage: null,
       });
 
+      /*
+      ========================================
+      RESET PREVIEW
+      ========================================
+      */
+
+      if (preview) {
+        URL.revokeObjectURL(
+          preview
+        );
+      }
+
       setPreview("");
 
       /*
@@ -265,6 +304,16 @@ const DonateFood = () => {
       if (fileInput) {
         fileInput.value = "";
       }
+
+      /*
+      ========================================
+      REDIRECT
+      ========================================
+      */
+
+      navigate(
+        "/my-donations"
+      );
     } catch (error) {
       console.log(error);
 

@@ -1,80 +1,91 @@
 import express from "express";
+
 import upload from "../middleware/upload.js";
-import authMiddleware from "../middleware/authMiddleware.js";
+
 import protect from "../middleware/authMiddleware.js";
 
 import {
   donateFood,
   getAllFood,
-  claimFood,
   getMyDonations,
-  getClaimedFood,
-  assignDelivery,
-  markDelivered,
-  getVolunteerDeliveries,
+  claimFood,
   getDashboardStats,
 } from "../controllers/food.js";
-
 
 const router =
   express.Router();
 
+/*
+========================================
+DONATE FOOD
+========================================
+*/
+
 router.post(
   "/donate",
+
   protect,
 
-  // upload.single(
-  //   "foodImage"
-  // ),
+  upload.single(
+    "foodImage"
+  ),
 
   donateFood
 );
 
+/*
+========================================
+GET ALL FOOD
+========================================
+*/
+
 router.get(
   "/all",
+
   protect,
+
   getAllFood
 );
 
-router.put(
-  "/claim/:id",
-  protect,
-  claimFood
-);
+/*
+========================================
+MY DONATIONS
+========================================
+*/
 
 router.get(
   "/my-donations",
+
   protect,
+
   getMyDonations
 );
 
-router.get(
-  "/claimed-food",
-  protect,
-  getClaimedFood
-);
+/*
+========================================
+CLAIM FOOD
+========================================
+*/
 
 router.put(
-  "/assign/:id",
+  "/claim/:id",
+
   protect,
-  assignDelivery
+
+  claimFood
 );
 
-router.put(
-  "/mark-delivered/:id",
-  protect,
-  markDelivered
-);
-
-router.get(
-  "/volunteer-deliveries",
-  protect,
-  getVolunteerDeliveries
-);
+/*
+========================================
+DASHBOARD STATS
+========================================
+*/
 
 router.get(
   "/stats",
+
   protect,
+
   getDashboardStats
 );
 

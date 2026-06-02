@@ -20,17 +20,11 @@ import {
 import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
-  /*
-  ========================================
-  AUTH
-  ========================================
-  */
-
   const { user } = useAuth();
 
   /*
   ========================================
-  STATE
+  SAFE INITIAL STATE
   ========================================
   */
 
@@ -48,7 +42,7 @@ const Dashboard = () => {
 
   /*
   ========================================
-  FETCH DASHBOARD STATS
+  FETCH STATS
   ========================================
   */
 
@@ -58,9 +52,46 @@ const Dashboard = () => {
         const data =
           await getDashboardStats();
 
-        setStats(data);
+        /*
+        ========================================
+        SAFE FALLBACK
+        ========================================
+        */
+
+        setStats({
+          totalFood:
+            data?.totalFood || 0,
+
+          availableFood:
+            data?.availableFood ||
+            0,
+
+          claimedFood:
+            data?.claimedFood || 0,
+
+          deliveredFood:
+            data?.deliveredFood ||
+            0,
+
+          pickedFood:
+            data?.pickedFood || 0,
+        });
       } catch (error) {
         console.log(error);
+
+        /*
+        ========================================
+        PREVENT CRASH
+        ========================================
+        */
+
+        setStats({
+          totalFood: 0,
+          availableFood: 0,
+          claimedFood: 0,
+          deliveredFood: 0,
+          pickedFood: 0,
+        });
       } finally {
         setLoading(false);
       }
@@ -68,7 +99,7 @@ const Dashboard = () => {
 
   /*
   ========================================
-  INITIAL FETCH
+  INITIAL LOAD
   ========================================
   */
 
@@ -78,57 +109,37 @@ const Dashboard = () => {
 
   /*
   ========================================
-  REAL-TIME SOCKET EVENTS
+  SOCKET EVENTS
   ========================================
   */
 
   useEffect(() => {
-    /*
-    ========================================
-    NEW DONATION
-    ========================================
-    */
-
     socket.on(
       "newFoodDonation",
-      () => {
-        fetchStats();
-      }
+      fetchStats
     );
-
-    /*
-    ========================================
-    FOOD CLAIMED
-    ========================================
-    */
 
     socket.on(
       "foodClaimed",
-      () => {
-        fetchStats();
-      }
+      fetchStats
     );
-
-    /*
-    ========================================
-    CLEANUP
-    ========================================
-    */
 
     return () => {
       socket.off(
-        "newFoodDonation"
+        "newFoodDonation",
+        fetchStats
       );
 
       socket.off(
-        "foodClaimed"
+        "foodClaimed",
+        fetchStats
       );
     };
   }, []);
 
   /*
   ========================================
-  LOADING STATE
+  LOADING
   ========================================
   */
 
@@ -141,47 +152,20 @@ const Dashboard = () => {
           flex
           items-center
           justify-center
-          bg-gray-100
         "
         >
-          <div
+          <h1
             className="
-            text-center
+            text-3xl
+            font-bold
           "
           >
-            <div
-              className="
-              w-14
-              h-14
-              border-4
-              border-green-500
-              border-t-transparent
-              rounded-full
-              animate-spin
-              mx-auto
-              mb-4
-            "
-            />
-
-            <h1
-              className="
-              text-2xl
-              font-bold
-            "
-            >
-              Loading Dashboard...
-            </h1>
-          </div>
+            Loading...
+          </h1>
         </div>
       </DashboardLayout>
     );
   }
-
-  /*
-  ========================================
-  MAIN UI
-  ========================================
-  */
 
   return (
     <DashboardLayout>
@@ -191,119 +175,97 @@ const Dashboard = () => {
         bg-gray-100
         p-4
         md:p-6
-        overflow-x-hidden
       "
       >
-        {/* CONTAINER */}
+        {/* HEADER */}
+
+        <div className="mb-10">
+          <h1
+            className="
+            text-4xl
+            md:text-5xl
+            font-bold
+            mb-2
+          "
+          >
+            Welcome,
+            {" "}
+            {user?.name}
+          </h1>
+
+          <p
+            className="
+            text-gray-500
+            text-lg
+          "
+          >
+            Role:
+            {" "}
+            {user?.role}
+          </p>
+        </div>
+
+        {/* STATS */}
 
         <div
           className="
-          max-w-7xl
-          mx-auto
+          grid
+          grid-cols-1
+          sm:grid-cols-2
+          lg:grid-cols-3
+          gap-6
         "
         >
-          {/* HEADER */}
+          <StatsCard
+            title="Total Donations"
+            value={stats.totalFood}
+          />
 
-          <div className="mb-8">
-            <h1
-              className="
-              text-3xl
-              md:text-5xl
-              font-bold
-              mb-2
-            "
-            >
-              Welcome,
-              {" "}
-              {user?.name}
-            </h1>
+          <StatsCard
+            title="Available Food"
+            value={
+              stats.availableFood
+            }
+          />
 
-            <p
-              className="
-              text-gray-500
-              text-lg
-            "
-            >
-              Role:
-              {" "}
-              {user?.role ===
-              "ngo"
-                ? "NGO"
-                : user?.role
-                    ?.charAt(0)
-                    .toUpperCase() +
-                  user?.role?.slice(
-                    1
-                  )}
-            </p>
-          </div>
+          <StatsCard
+            title="Claimed Food"
+            value={
+              stats.claimedFood
+            }
+          />
 
-          {/* STATS */}
+          <StatsCard
+            title="Delivered Food"
+            value={
+              stats.deliveredFood
+            }
+          />
 
-          <div
-            className="
-            grid
-            grid-cols-1
-            sm:grid-cols-2
-            xl:grid-cols-3
-            gap-5
-          "
-          >
-            <StatsCard
-              title="Total Donations"
-              value={
-                stats.totalFood
-              }
-            />
+          <StatsCard
+            title="Picked Deliveries"
+            value={stats.pickedFood}
+          />
+        </div>
 
-            <StatsCard
-              title="Available Food"
-              value={
-                stats.availableFood
-              }
-            />
+        {/* CHARTS */}
 
-            <StatsCard
-              title="Claimed Food"
-              value={
-                stats.claimedFood
-              }
-            />
+        <div
+          className="
+          grid
+          grid-cols-1
+          xl:grid-cols-2
+          gap-6
+          mt-10
+        "
+        >
+          <AnalyticsChart
+            stats={stats}
+          />
 
-            <StatsCard
-              title="Delivered Food"
-              value={
-                stats.deliveredFood
-              }
-            />
-
-            <StatsCard
-              title="Picked Deliveries"
-              value={
-                stats.pickedFood
-              }
-            />
-          </div>
-
-          {/* CHARTS */}
-
-          <div
-            className="
-            grid
-            grid-cols-1
-            2xl:grid-cols-2
-            gap-6
-            mt-6
-          "
-          >
-            <AnalyticsChart
-              stats={stats}
-            />
-
-            <CategoryPieChart
-              stats={stats}
-            />
-          </div>
+          <CategoryPieChart
+            stats={stats}
+          />
         </div>
       </div>
     </DashboardLayout>

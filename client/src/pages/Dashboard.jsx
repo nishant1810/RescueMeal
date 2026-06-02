@@ -20,7 +20,8 @@ import {
 import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user } =
+    useAuth();
 
   /*
   ========================================
@@ -30,11 +31,15 @@ const Dashboard = () => {
 
   const [stats, setStats] =
     useState({
-      totalFood: 0,
+      totalDonations: 0,
+
       availableFood: 0,
+
       claimedFood: 0,
+
       deliveredFood: 0,
-      pickedFood: 0,
+
+      pickedDeliveries: 0,
     });
 
   const [loading, setLoading] =
@@ -52,45 +57,57 @@ const Dashboard = () => {
         const data =
           await getDashboardStats();
 
+        console.log(
+          "Dashboard Stats:",
+          data
+        );
+
         /*
         ========================================
-        SAFE FALLBACK
+        SAFE STATE UPDATE
         ========================================
         */
 
         setStats({
-          totalFood:
-            data?.totalFood || 0,
+          totalDonations:
+            data?.totalDonations ||
+            0,
 
           availableFood:
             data?.availableFood ||
             0,
 
           claimedFood:
-            data?.claimedFood || 0,
+            data?.claimedFood ||
+            0,
 
           deliveredFood:
             data?.deliveredFood ||
             0,
 
-          pickedFood:
-            data?.pickedFood || 0,
+          pickedDeliveries:
+            data?.pickedDeliveries ||
+            0,
         });
       } catch (error) {
         console.log(error);
 
         /*
         ========================================
-        PREVENT CRASH
+        PREVENT UI CRASH
         ========================================
         */
 
         setStats({
-          totalFood: 0,
+          totalDonations: 0,
+
           availableFood: 0,
+
           claimedFood: 0,
+
           deliveredFood: 0,
-          pickedFood: 0,
+
+          pickedDeliveries: 0,
         });
       } finally {
         setLoading(false);
@@ -124,6 +141,11 @@ const Dashboard = () => {
       fetchStats
     );
 
+    socket.on(
+      "foodDelivered",
+      fetchStats
+    );
+
     return () => {
       socket.off(
         "newFoodDonation",
@@ -134,12 +156,17 @@ const Dashboard = () => {
         "foodClaimed",
         fetchStats
       );
+
+      socket.off(
+        "foodDelivered",
+        fetchStats
+      );
     };
   }, []);
 
   /*
   ========================================
-  LOADING
+  LOADING UI
   ========================================
   */
 
@@ -218,7 +245,9 @@ const Dashboard = () => {
         >
           <StatsCard
             title="Total Donations"
-            value={stats.totalFood}
+            value={
+              stats.totalDonations
+            }
           />
 
           <StatsCard
@@ -244,7 +273,9 @@ const Dashboard = () => {
 
           <StatsCard
             title="Picked Deliveries"
-            value={stats.pickedFood}
+            value={
+              stats.pickedDeliveries
+            }
           />
         </div>
 

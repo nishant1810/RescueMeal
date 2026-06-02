@@ -442,49 +442,108 @@ GET DASHBOARD STATS
 ========================================
 */
 
+/*
+========================================
+GET DASHBOARD STATS
+========================================
+*/
+
 export const getDashboardStats =
   async (req, res) => {
     try {
-      const totalFood =
-        await Food.countDocuments();
+      /*
+      ========================================
+      CURRENT USER
+      ========================================
+      */
+
+      const userId =
+        req.user._id;
+
+      /*
+      ========================================
+      TOTAL DONATIONS
+      ========================================
+      */
+
+      const totalDonations =
+        await Food.countDocuments({
+          donor: userId,
+        });
+
+      /*
+      ========================================
+      AVAILABLE FOOD
+      ========================================
+      */
 
       const availableFood =
-        await Food.countDocuments(
-          {
-            status:
-              "available",
-          }
-        );
+        await Food.countDocuments({
+          donor: userId,
+
+          status:
+            "available",
+        });
+
+      /*
+      ========================================
+      CLAIMED FOOD
+      ========================================
+      */
 
       const claimedFood =
-        await Food.countDocuments(
-          {
-            status:
-              "claimed",
-          }
-        );
+        await Food.countDocuments({
+          donor: userId,
+
+          status:
+            "claimed",
+        });
+
+      /*
+      ========================================
+      DELIVERED FOOD
+      ========================================
+      */
 
       const deliveredFood =
-        await Food.countDocuments(
-          {
-            status:
-              "delivered",
-          }
-        );
+        await Food.countDocuments({
+          donor: userId,
+
+          status:
+            "delivered",
+        });
+
+      /*
+      ========================================
+      PICKED DELIVERIES
+      ========================================
+      */
+
+      const pickedDeliveries =
+        await Food.countDocuments({
+          volunteer: userId,
+        });
+
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
 
       res.status(200).json({
         success: true,
 
-        totalFood,
+        stats: {
+          totalDonations,
 
-        availableFood,
+          availableFood,
 
-        claimedFood,
-
-        deliveredFood,
-
-        pickedFood:
           claimedFood,
+
+          deliveredFood,
+
+          pickedDeliveries,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -493,7 +552,7 @@ export const getDashboardStats =
         success: false,
 
         message:
-          error.message,
+          "Failed to fetch dashboard stats",
       });
     }
   };

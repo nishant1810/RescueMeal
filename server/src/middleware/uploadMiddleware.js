@@ -22,25 +22,20 @@ const storage =
       file
     ) => ({
       folder:
-        "RescueMeal",
+        "rescuemeal",
 
-      allowed_formats: [
-        "jpg",
-        "jpeg",
+      format:
         "png",
-        "webp",
-      ],
 
       public_id:
         Date.now() +
-        "-" +
-        file.originalname,
+        "-food",
     }),
   });
 
 /*
 ========================================
-UPLOAD MIDDLEWARE
+UPLOAD
 ========================================
 */
 

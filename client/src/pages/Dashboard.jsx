@@ -3,47 +3,26 @@ import React, {
   useState,
 } from "react";
 
-import DashboardLayout from "../layouts/DashboardLayout";
-
 import {
-  useNotification,
-} from "../context/NotificationContext";
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
-import AnalyticsChart from "../components/AnalyticsChart";
+import Navbar
+from "../components/Navbar";
 
-import CategoryPieChart from "../components/CategoryPieChart";
-
-import StatsCard from "../components/StatsCard";
-
-import StatsCardSkeleton from "../components/StatsCardSkeleton";
-
-import socket from "../socket";
+import StatsCard
+from "../components/StatsCard";
 
 import {
   getDashboardStats,
 } from "../services/foodService";
 
-import { useAuth } from "../context/AuthContext";
-
 const Dashboard = () => {
-  /*
-  ========================================
-  AUTH
-  ========================================
-  */
-
-  const { user } =
-    useAuth();
-
-  /*
-  ========================================
-  NOTIFICATIONS
-  ========================================
-  */
-
-  const {
-    addNotification,
-  } = useNotification();
 
   /*
   ========================================
@@ -54,266 +33,120 @@ const Dashboard = () => {
   const [stats, setStats] =
     useState({
       totalDonations: 0,
-
       availableFood: 0,
-
       claimedFood: 0,
-
       deliveredFood: 0,
-
       pickedDeliveries: 0,
     });
 
-  const [loading, setLoading] =
-    useState(true);
-
   /*
   ========================================
-  FETCH STATS
-  ========================================
-  */
-
-  const fetchStats =
-    async () => {
-      try {
-        setLoading(true);
-
-        const data =
-          await getDashboardStats();
-
-        /*
-        ========================================
-        SAFE STATE UPDATE
-        ========================================
-        */
-
-        setStats({
-          totalDonations:
-            data?.totalDonations ||
-            0,
-
-          availableFood:
-            data?.availableFood ||
-            0,
-
-          claimedFood:
-            data?.claimedFood ||
-            0,
-
-          deliveredFood:
-            data?.deliveredFood ||
-            0,
-
-          pickedDeliveries:
-            data?.pickedDeliveries ||
-            0,
-        });
-      } catch (error) {
-        console.log(error);
-
-        /*
-        ========================================
-        SAFE FALLBACK
-        ========================================
-        */
-
-        setStats({
-          totalDonations: 0,
-
-          availableFood: 0,
-
-          claimedFood: 0,
-
-          deliveredFood: 0,
-
-          pickedDeliveries: 0,
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-  /*
-  ========================================
-  INITIAL LOAD
+  FETCH DASHBOARD STATS
   ========================================
   */
 
   useEffect(() => {
+
+    const fetchStats =
+      async () => {
+
+        try {
+
+          const data =
+            await getDashboardStats();
+
+          setStats(data);
+
+        } catch (error) {
+
+          console.log(error);
+        }
+      };
+
     fetchStats();
+
   }, []);
 
   /*
   ========================================
-  SOCKET EVENTS
+  CHART DATA
   ========================================
   */
 
-  useEffect(() => {
-    /*
-    ========================================
-    NEW DONATION
-    ========================================
-    */
+  const chartData = [
+    {
+      name: "Available",
+      value:
+        stats.availableFood,
+    },
 
-    socket.on(
-      "newFoodDonation",
-      (data) => {
-        fetchStats();
+    {
+      name: "Claimed",
+      value:
+        stats.claimedFood,
+    },
 
-        addNotification(
-          data?.message ||
-            "New food donated",
-          "success"
-        );
-      }
-    );
-
-    /*
-    ========================================
-    FOOD CLAIMED
-    ========================================
-    */
-
-    socket.on(
-      "foodClaimed",
-      (data) => {
-        fetchStats();
-
-        addNotification(
-          data?.message ||
-            "Food claimed successfully",
-          "info"
-        );
-      }
-    );
-
-    /*
-    ========================================
-    FOOD DELIVERED
-    ========================================
-    */
-
-    socket.on(
-      "foodDelivered",
-      (data) => {
-        fetchStats();
-
-        addNotification(
-          data?.message ||
-            "Food delivered successfully",
-          "success"
-        );
-      }
-    );
-
-    /*
-    ========================================
-    CLEANUP
-    ========================================
-    */
-
-    return () => {
-      socket.off(
-        "newFoodDonation"
-      );
-
-      socket.off(
-        "foodClaimed"
-      );
-
-      socket.off(
-        "foodDelivered"
-      );
-    };
-  }, []);
-
-  /*
-  ========================================
-  LOADING UI
-  ========================================
-  */
-
-  if (loading) {
-    return (
-      <DashboardLayout>
-        <div
-          className="
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          lg:grid-cols-3
-          gap-6
-          p-6
-        "
-        >
-          {Array(6)
-            .fill(0)
-            .map((_, index) => (
-              <StatsCardSkeleton
-                key={index}
-              />
-            ))}
-        </div>
-      </DashboardLayout>
-    );
-  }
+    {
+      name: "Delivered",
+      value:
+        stats.deliveredFood,
+    },
+  ];
 
   return (
-    <DashboardLayout>
+    <>
+      {/* ========================================
+          NAVBAR
+      ======================================== */}
+
+      <Navbar />
+
+      {/* ========================================
+          DASHBOARD CONTAINER
+      ======================================== */}
+
       <div
         className="
-        min-h-screen
-        bg-gray-100
-        p-4
-        md:p-6
-      "
+          p-6
+          bg-gray-100
+          min-h-screen
+        "
       >
-        {/* HEADER */}
+        {/* ========================================
+            PAGE TITLE
+        ======================================== */}
 
-        <div className="mb-10">
-          <h1
-            className="
+        <h1
+          className="
             text-4xl
-            md:text-5xl
             font-bold
-            mb-2
+            mb-8
+            text-gray-800
           "
-          >
-            Welcome,
-            {" "}
-            {user?.name}
-          </h1>
+        >
+          Dashboard
+        </h1>
 
-          <p
-            className="
-            text-gray-500
-            text-lg
-            capitalize
-          "
-          >
-            Role:
-            {" "}
-            {user?.role}
-          </p>
-        </div>
-
-        {/* STATS */}
+        {/* ========================================
+            STATS CARDS
+        ======================================== */}
 
         <div
           className="
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          lg:grid-cols-3
-          gap-6
-        "
+            grid
+            grid-cols-1
+            sm:grid-cols-2
+            lg:grid-cols-4
+            gap-6
+            mb-10
+          "
         >
           <StatsCard
             title="Total Donations"
             value={
               stats.totalDonations
             }
+            color="bg-blue-500"
           />
 
           <StatsCard
@@ -321,6 +154,7 @@ const Dashboard = () => {
             value={
               stats.availableFood
             }
+            color="bg-green-500"
           />
 
           <StatsCard
@@ -328,6 +162,7 @@ const Dashboard = () => {
             value={
               stats.claimedFood
             }
+            color="bg-yellow-500"
           />
 
           <StatsCard
@@ -335,37 +170,63 @@ const Dashboard = () => {
             value={
               stats.deliveredFood
             }
-          />
-
-          <StatsCard
-            title="Picked Deliveries"
-            value={
-              stats.pickedDeliveries
-            }
+            color="bg-purple-500"
           />
         </div>
 
-        {/* CHARTS */}
+        {/* ========================================
+            ANALYTICS CHART
+        ======================================== */}
 
         <div
           className="
-          grid
-          grid-cols-1
-          xl:grid-cols-2
-          gap-6
-          mt-10
-        "
+            bg-white
+            p-6
+            rounded-xl
+            shadow-lg
+          "
         >
-          <AnalyticsChart
-            stats={stats}
-          />
+          <h2
+            className="
+              text-2xl
+              font-bold
+              mb-6
+              text-gray-700
+            "
+          >
+            Food Analytics
+          </h2>
 
-          <CategoryPieChart
-            stats={stats}
-          />
+          <ResponsiveContainer
+            width="100%"
+            height={350}
+          >
+            <BarChart
+              data={chartData}
+            >
+              <XAxis
+                dataKey="name"
+              />
+
+              <YAxis />
+
+              <Tooltip />
+
+              <Bar
+                dataKey="value"
+                fill="#3b82f6"
+                radius={[
+                  8,
+                  8,
+                  0,
+                  0,
+                ]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

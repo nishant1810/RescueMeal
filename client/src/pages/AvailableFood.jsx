@@ -3,35 +3,17 @@ import React, {
   useState,
 } from "react";
 
-import {
-  useNavigate,
-} from "react-router-dom";
+import Navbar
+from "../components/Navbar";
 
-import {
-  ArrowLeft,
-} from "lucide-react";
-
-import toast from "react-hot-toast";
-
-import socket from "../socket";
-
-import FoodCard from "../components/FoodCard";
-
-import TableSkeleton from "../components/TableSkeleton";
+import FoodCard
+from "../components/FoodCard";
 
 import {
   getAllFood,
 } from "../services/foodService";
 
 const AvailableFood = () => {
-  /*
-  ========================================
-  NAVIGATION
-  ========================================
-  */
-
-  const navigate =
-    useNavigate();
 
   /*
   ========================================
@@ -42,38 +24,15 @@ const AvailableFood = () => {
   const [foods, setFoods] =
     useState([]);
 
-  const [filteredFoods,
-    setFilteredFoods] =
-    useState([]);
-
-  const [search, setSearch] =
-    useState("");
-
-  const [categoryFilter,
-    setCategoryFilter] =
-    useState("");
-
-  const [statusFilter,
-    setStatusFilter] =
-    useState("");
-
-  const [loading,
-    setLoading] =
-    useState(true);
-
-  /*
-  ========================================
-  PAGINATION
-  ========================================
-  */
-
-  const [page,
-    setPage] =
+  const [page, setPage] =
     useState(1);
 
   const [totalPages,
     setTotalPages] =
     useState(1);
+
+  const [loading, setLoading] =
+    useState(false);
 
   /*
   ========================================
@@ -83,14 +42,10 @@ const AvailableFood = () => {
 
   const fetchFood =
     async () => {
-      try {
-        setLoading(true);
 
-        /*
-        ========================================
-        API CALL
-        ========================================
-        */
+      try {
+
+        setLoading(true);
 
         const data =
           await getAllFood(
@@ -98,509 +53,233 @@ const AvailableFood = () => {
             6
           );
 
-        /*
-        ========================================
-        SAFE ARRAY
-        ========================================
-        */
-
-        const safeFoods =
-          Array.isArray(
-            data?.foods
-          )
-            ? data.foods
-            : [];
-
-        /*
-        ========================================
-        UPDATE STATE
-        ========================================
-        */
-
-        setFoods(safeFoods);
-
-        setFilteredFoods(
-          safeFoods
+        setFoods(
+          data?.foods || []
         );
 
         setTotalPages(
-          data?.totalPages ||
-            1
+          data?.totalPages || 1
         );
+
       } catch (error) {
+
         console.log(error);
 
-        toast.error(
-          "Failed to load food"
-        );
-
-        setFoods([]);
-
-        setFilteredFoods([]);
-
-        setTotalPages(1);
       } finally {
+
         setLoading(false);
       }
     };
 
   /*
   ========================================
-  INITIAL LOAD
+  USE EFFECT
   ========================================
   */
 
   useEffect(() => {
+
     fetchFood();
+
   }, [page]);
-
-  /*
-  ========================================
-  SOCKET EVENTS
-  ========================================
-  */
-
-  useEffect(() => {
-    socket.on(
-      "newFoodDonation",
-      (data) => {
-        fetchFood();
-
-        toast.success(
-          data?.message ||
-            "New food donated"
-        );
-      }
-    );
-
-    return () => {
-      socket.off(
-        "newFoodDonation"
-      );
-    };
-  }, [page]);
-
-  /*
-  ========================================
-  FILTER LOGIC
-  ========================================
-  */
-
-  useEffect(() => {
-    let updatedFoods =
-      [...foods];
-
-    /*
-    ========================================
-    SEARCH FILTER
-    ========================================
-    */
-
-    if (search) {
-      updatedFoods =
-        updatedFoods.filter(
-          (food) =>
-            food.foodName
-              ?.toLowerCase()
-              .includes(
-                search.toLowerCase()
-              )
-        );
-    }
-
-    /*
-    ========================================
-    CATEGORY FILTER
-    ========================================
-    */
-
-    if (categoryFilter) {
-      updatedFoods =
-        updatedFoods.filter(
-          (food) =>
-            food.category ===
-            categoryFilter
-        );
-    }
-
-    /*
-    ========================================
-    STATUS FILTER
-    ========================================
-    */
-
-    if (statusFilter) {
-      updatedFoods =
-        updatedFoods.filter(
-          (food) =>
-            food.status ===
-            statusFilter
-        );
-    }
-
-    setFilteredFoods(
-      updatedFoods
-    );
-  }, [
-    foods,
-    search,
-    categoryFilter,
-    statusFilter,
-  ]);
-
-  /*
-  ========================================
-  LOADING UI
-  ========================================
-  */
-
-  if (loading) {
-    return (
-      <div className="p-6">
-        <TableSkeleton />
-      </div>
-    );
-  }
 
   return (
-    <div
-      className="
-      min-h-screen
-      bg-gray-100
-      p-4
-      md:p-6
-    "
-    >
-      {/* HEADER */}
+    <>
+      {/* ========================================
+          NAVBAR
+      ======================================== */}
+
+      <Navbar />
+
+      {/* ========================================
+          PAGE
+      ======================================== */}
 
       <div
         className="
-        flex
-        flex-col
-        lg:flex-row
-        lg:justify-between
-        lg:items-center
-        gap-4
-        mb-8
-      "
-      >
-        {/* LEFT */}
-
-        <div
-          className="
-          flex
-          items-center
-          gap-4
-        "
-        >
-          {/* BACK BUTTON */}
-
-          <button
-            onClick={() =>
-              navigate(
-                "/dashboard"
-              )
-            }
-            className="
-            flex
-            items-center
-            gap-2
-            bg-black
-            text-white
-            px-4
-            py-2
-            rounded-lg
-            hover:bg-gray-800
-            transition
-          "
-          >
-            <ArrowLeft
-              size={18}
-            />
-
-            Back
-          </button>
-
-          {/* TITLE */}
-
-          <h1
-            className="
-            text-3xl
-            md:text-4xl
-            font-bold
-          "
-          >
-            Available Food
-          </h1>
-        </div>
-
-        {/* TOTAL */}
-
-        <div
-          className="
+          min-h-screen
           bg-white
-          px-5
-          py-3
-          rounded-xl
-          shadow-md
-          font-semibold
+          text-black
+          p-6
         "
-        >
-          Total Food:
-          {" "}
-          {filteredFoods.length}
-        </div>
-      </div>
-
-      {/* FILTER SECTION */}
-
-      <div
-        className="
-        bg-white
-        p-4
-        rounded-2xl
-        shadow-md
-        mb-8
-        grid
-        grid-cols-1
-        md:grid-cols-3
-        gap-4
-      "
       >
-        {/* SEARCH */}
+        {/* ========================================
+            HEADING
+        ======================================== */}
 
-        <input
-          type="text"
-          placeholder="Search food..."
-          value={search}
-          onChange={(e) =>
-            setSearch(
-              e.target.value
-            )
-          }
+        <h1
           className="
-          border
-          p-3
-          rounded-lg
-          focus:outline-none
-          focus:ring-2
-          focus:ring-green-500
-        "
-        />
-
-        {/* CATEGORY */}
-
-        <select
-          value={
-            categoryFilter
-          }
-          onChange={(e) =>
-            setCategoryFilter(
-              e.target.value
-            )
-          }
-          className="
-          border
-          p-3
-          rounded-lg
-          focus:outline-none
-          focus:ring-2
-          focus:ring-green-500
-        "
-        >
-          <option value="">
-            All Categories
-          </option>
-
-          <option value="Veg">
-            Veg
-          </option>
-
-          <option value="Non-Veg">
-            Non-Veg
-          </option>
-
-          <option value="Packed Food">
-            Packed Food
-          </option>
-
-          <option value="Bakery">
-            Bakery
-          </option>
-        </select>
-
-        {/* STATUS */}
-
-        <select
-          value={
-            statusFilter
-          }
-          onChange={(e) =>
-            setStatusFilter(
-              e.target.value
-            )
-          }
-          className="
-          border
-          p-3
-          rounded-lg
-          focus:outline-none
-          focus:ring-2
-          focus:ring-green-500
-        "
-        >
-          <option value="">
-            All Status
-          </option>
-
-          <option value="available">
-            Available
-          </option>
-
-          <option value="claimed">
-            Claimed
-          </option>
-
-          <option value="delivered">
-            Delivered
-          </option>
-        </select>
-      </div>
-
-      {/* EMPTY STATE */}
-
-      {filteredFoods.length ===
-      0 ? (
-        <div
-          className="
-          bg-white
-          p-10
-          rounded-2xl
-          shadow-md
-          text-center
-        "
-        >
-          <h2
-            className="
-            text-2xl
+            text-4xl
             font-bold
-            text-gray-600
-            mb-2
+            mb-8
+            text-center
           "
-          >
-            No Food Found
-          </h2>
+        >
+          Available Food
+        </h1>
 
-          <p
-            className="
-            text-gray-500
-          "
-          >
-            Try changing search
-            or filters.
-          </p>
-        </div>
-      ) : (
-        <>
-          {/* FOOD GRID */}
+        {/* ========================================
+            LOADING
+        ======================================== */}
+
+        {loading ? (
 
           <div
             className="
-            grid
-            grid-cols-1
-            md:grid-cols-2
-            lg:grid-cols-3
-            gap-8
-          "
+              text-center
+              text-xl
+              mt-20
+            "
           >
-            {filteredFoods.map(
-              (food) => (
-                <FoodCard
-                  key={
-                    food._id
-                  }
-                  food={food}
-                  refreshFood={
-                    fetchFood
-                  }
-                />
-              )
-            )}
+            Loading food...
           </div>
 
-          {/* PAGINATION */}
+        ) : foods.length === 0 ? (
+
+          /* ========================================
+              EMPTY STATE
+          ======================================== */
 
           <div
             className="
-            flex
-            justify-center
-            items-center
-            gap-4
-            mt-10
-          "
+              text-center
+              mt-20
+            "
           >
-            {/* PREVIOUS */}
-
-            <button
-              disabled={
-                page === 1
-              }
-              onClick={() =>
-                setPage(
-                  page - 1
-                )
-              }
+            <h2
               className="
-              px-5
-              py-2
-              rounded-lg
-              bg-black
-              text-white
-              disabled:bg-gray-400
-            "
+                text-2xl
+                font-semibold
+              "
             >
-              Previous
-            </button>
-
-            {/* PAGE INFO */}
-
-            <span
-              className="
-              font-semibold
-              text-lg
-            "
-            >
-              Page {page} of{" "}
-              {totalPages}
-            </span>
-
-            {/* NEXT */}
-
-            <button
-              disabled={
-                page ===
-                totalPages
-              }
-              onClick={() =>
-                setPage(
-                  page + 1
-                )
-              }
-              className="
-              px-5
-              py-2
-              rounded-lg
-              bg-black
-              text-white
-              disabled:bg-gray-400
-            "
-            >
-              Next
-            </button>
+              No Food Available
+            </h2>
           </div>
-        </>
-      )}
-    </div>
+
+        ) : (
+
+          <>
+            {/* ========================================
+                FOOD GRID
+            ======================================== */}
+
+            <div
+              className="
+                grid
+                grid-cols-1
+                md:grid-cols-2
+                lg:grid-cols-3
+                gap-8
+              "
+            >
+              {foods.map(
+                (food) => (
+                  <FoodCard
+                    key={
+                      food._id
+                    }
+
+                    food={food}
+
+                    refreshFood={
+                      fetchFood
+                    }
+                  />
+                )
+              )}
+            </div>
+
+            {/* ========================================
+                PAGINATION
+            ======================================== */}
+
+            <div
+              className="
+                flex
+                justify-center
+                items-center
+                gap-4
+                mt-10
+              "
+            >
+              {/* PREVIOUS */}
+
+              <button
+                onClick={() =>
+                  setPage(
+                    (prev) =>
+                      Math.max(
+                        prev - 1,
+                        1
+                      )
+                  )
+                }
+
+                disabled={
+                  page === 1
+                }
+
+                className="
+                  bg-blue-500
+                  text-white
+                  px-5
+                  py-2
+                  rounded-lg
+                  hover:bg-blue-600
+                  disabled:bg-gray-500
+                "
+              >
+                Previous
+              </button>
+
+              {/* PAGE */}
+
+              <span
+                className="
+                  text-lg
+                  font-semibold
+                "
+              >
+                Page {page}
+                {" "}of{" "}
+                {totalPages}
+              </span>
+
+              {/* NEXT */}
+
+              <button
+                onClick={() =>
+                  setPage(
+                    (prev) =>
+                      Math.min(
+                        prev + 1,
+                        totalPages
+                      )
+                  )
+                }
+
+                disabled={
+                  page ===
+                  totalPages
+                }
+
+                className="
+                  bg-blue-500
+                  text-white
+                  px-5
+                  py-2
+                  rounded-lg
+                  hover:bg-blue-600
+                  disabled:bg-gray-500
+                "
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

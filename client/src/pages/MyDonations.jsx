@@ -1,25 +1,17 @@
-import React, {
-  useEffect,
-  useState,
-} from "react";
+import React, {useEffect,useState,} from "react";
 
-import {
-  useNavigate,
-} from "react-router-dom";
+import {useNavigate,} from "react-router-dom";
 
-import {
-  ArrowLeft,
-} from "lucide-react";
+import {ArrowLeft,} from "lucide-react";
 
-import DashboardLayout from "../layouts/DashboardLayout";
+import Navbar from "../components/Navbar";
 
 import TableSkeleton from "../components/TableSkeleton";
 
-import {
-  getMyDonations,
-} from "../services/foodService";
+import {getMyDonations,} from "../services/foodService";
 
 const MyDonations = () => {
+
   /*
   ========================================
   NAVIGATION
@@ -49,17 +41,13 @@ const MyDonations = () => {
 
   const fetchDonations =
     async () => {
+
       try {
+
         setLoading(true);
 
         const foodsData =
           await getMyDonations();
-
-        /*
-        ========================================
-        SAFE ARRAY CHECK
-        ========================================
-        */
 
         setFoods(
           Array.isArray(
@@ -68,11 +56,15 @@ const MyDonations = () => {
             ? foodsData
             : []
         );
+
       } catch (error) {
+
         console.log(error);
 
         setFoods([]);
+
       } finally {
+
         setLoading(false);
       }
     };
@@ -84,107 +76,107 @@ const MyDonations = () => {
   */
 
   useEffect(() => {
+
     fetchDonations();
+
   }, []);
 
   /*
   ========================================
-  LOADING UI
+  LOADING
   ========================================
   */
 
   if (loading) {
     return (
-      <DashboardLayout>
-        <div className="p-6">
+      <>
+        <Navbar />
+
+        <div
+          className="
+            min-h-screen
+            bg-gray-900
+            p-6
+          "
+        >
           <TableSkeleton />
         </div>
-      </DashboardLayout>
+      </>
     );
   }
 
   return (
-    <DashboardLayout>
+    <>
+      {/* ========================================
+          NAVBAR
+      ======================================== */}
+
+      <Navbar />
+
+      {/* ========================================
+          PAGE
+      ======================================== */}
+
       <div
         className="
-        min-h-screen
-        bg-gray-100
-        p-4
-        md:p-6
-      "
+          min-h-screen
+          bg-gray-800
+          text-white
+          p-4
+          md:p-6
+        "
       >
-        {/* HEADER */}
+        {/* ========================================
+            HEADER
+        ======================================== */}
 
         <div
           className="
-          flex
-          flex-col
-          md:flex-row
-          md:items-center
-          md:justify-between
-          gap-4
-          mb-8
-        "
+            flex
+            flex-col
+            md:flex-row
+            md:items-center
+            md:justify-between
+            gap-4
+            mb-8
+          "
         >
+          {/* LEFT */}
+
           <div
             className="
-            flex
-            items-center
-            gap-4
-          "
-          >
-            {/* BACK BUTTON */}
-
-            <button
-              onClick={() =>
-                navigate(
-                  "/dashboard"
-                )
-              }
-              className="
               flex
               items-center
-              gap-2
-              bg-black
-              text-white
-              px-4
-              py-2
-              rounded-lg
-              hover:bg-gray-800
-              transition
+              gap-4
             "
-            >
-              <ArrowLeft
-                size={18}
-              />
-
-              Back
-            </button>
+          >
 
             {/* TITLE */}
 
             <h1
               className="
-              text-3xl
-              md:text-4xl
-              font-bold
-            "
+                text-3xl
+                md:text-4xl
+                font-bold
+              "
             >
               My Donations
             </h1>
           </div>
 
-          {/* COUNT */}
+          {/* TOTAL COUNT */}
 
           <div
             className="
-            bg-white
-            px-5
-            py-3
-            rounded-xl
-            shadow-md
-            font-semibold
-          "
+              bg-gray-800
+              px-5
+              py-3
+              rounded-xl
+              shadow-lg
+              font-semibold
+              border
+              border-gray-700
+            "
           >
             Total Donations:
             {" "}
@@ -192,33 +184,39 @@ const MyDonations = () => {
           </div>
         </div>
 
-        {/* EMPTY STATE */}
+        {/* ========================================
+            EMPTY STATE
+        ======================================== */}
 
         {foods.length === 0 ? (
+
           <div
             className="
-            bg-white
-            p-10
-            rounded-2xl
-            shadow-md
-            text-center
-          "
+              bg-gray-800
+              p-10
+              rounded-2xl
+              shadow-xl
+              text-center
+              border
+              border-gray-700
+            "
           >
             <h2
               className="
-              text-2xl
-              font-bold
-              text-gray-600
-              mb-2
-            "
+                text-3xl
+                font-bold
+                text-white
+                mb-3
+              "
             >
               No Donations Yet
             </h2>
 
             <p
               className="
-              text-gray-500
-            "
+                text-gray-400
+                text-lg
+              "
             >
               Start helping people
               by donating food.
@@ -230,43 +228,50 @@ const MyDonations = () => {
                   "/donate-food"
                 )
               }
+
               className="
-              mt-6
-              bg-green-500
-              hover:bg-green-600
-              text-white
-              px-6
-              py-3
-              rounded-lg
-              font-semibold
-              transition
-            "
+                mt-6
+                bg-blue-500
+                hover:bg-blue-600
+                text-white
+                px-6
+                py-3
+                rounded-xl
+                font-semibold
+                transition
+              "
             >
               Donate Food
             </button>
           </div>
+
         ) : (
+
           <div
             className="
-            overflow-x-auto
-            bg-white
-            rounded-2xl
-            shadow-lg
-          "
+              overflow-x-auto
+              bg-gray-800
+              rounded-2xl
+              shadow-2xl
+              border
+              border-gray-700
+            "
           >
             <table
               className="
-              w-full
-              min-w-[900px]
-            "
+                w-full
+                min-w-[900px]
+              "
             >
-              {/* TABLE HEADER */}
+              {/* ========================================
+                  TABLE HEADER
+              ======================================== */}
 
               <thead
                 className="
-                bg-green-500
-                text-white
-              "
+                  bg-blue-500
+                  text-white
+                "
               >
                 <tr>
                   <th className="p-4 text-left">
@@ -295,28 +300,33 @@ const MyDonations = () => {
                 </tr>
               </thead>
 
-              {/* TABLE BODY */}
+              {/* ========================================
+                  TABLE BODY
+              ======================================== */}
 
               <tbody>
                 {foods.map(
                   (food) => (
+
                     <tr
                       key={
                         food._id
                       }
+
                       className="
-                      border-b
-                      hover:bg-gray-50
-                      transition
-                    "
+                        border-b
+                        border-gray-700
+                        hover:bg-gray-700
+                        transition
+                      "
                     >
                       {/* FOOD */}
 
                       <td
                         className="
-                        p-4
-                        font-semibold
-                      "
+                          p-4
+                          font-semibold
+                        "
                       >
                         {
                           food.foodName
@@ -335,9 +345,9 @@ const MyDonations = () => {
 
                       <td
                         className="
-                        p-4
-                        capitalize
-                      "
+                          p-4
+                          capitalize
+                        "
                       >
                         {
                           food.category
@@ -355,14 +365,18 @@ const MyDonations = () => {
                             text-sm
                             font-semibold
                             capitalize
+
                             ${
                               food.status ===
                               "available"
-                                ? "bg-green-100 text-green-700"
+                                ? "bg-green-500 text-white"
+
                                 : food.status ===
                                     "claimed"
-                                  ? "bg-yellow-100 text-yellow-700"
-                                  : "bg-blue-100 text-blue-700"
+
+                                ? "bg-yellow-500 text-black"
+
+                                : "bg-blue-500 text-white"
                             }
                           `}
                         >
@@ -397,7 +411,7 @@ const MyDonations = () => {
           </div>
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

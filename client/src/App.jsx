@@ -6,29 +6,53 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import Home from "./pages/Home";
+/*
+========================================
+PAGES
+========================================
+*/
 
-import Login from "./pages/Login";
+import Home
+from "./pages/Home";
 
-import Register from "./pages/Register";
+import Login
+from "./pages/Login";
 
-import Dashboard from "./pages/Dashboard";
+import Register
+from "./pages/Register";
 
-import DonateFood from "./pages/DonateFood";
+import Dashboard
+from "./pages/Dashboard";
 
-import AvailableFood from "./pages/AvailableFood";
+import DonateFood
+from "./pages/DonateFood";
 
-import MyDonations from "./pages/MyDonations";
+import AvailableFood
+from "./pages/AvailableFood";
 
-import ClaimedFood from "./pages/ClaimedFood";
+import MyDonations
+from "./pages/MyDonations";
 
-import Deliveries from "./pages/Deliveries";
+import ClaimedFood
+from "./pages/ClaimedFood";
 
-import ProtectedRoute from "./routes/ProtectedRoute";
+import Deliveries
+from "./pages/Deliveries";
+
+/*
+========================================
+PROTECTED ROUTE
+========================================
+*/
+
+import ProtectedRoute
+from "./routes/ProtectedRoute";
 
 function App() {
+
   return (
     <Routes>
+
       {/* ========================================
           PUBLIC ROUTES
       ======================================== */}
@@ -69,24 +93,21 @@ function App() {
         }
       />
 
+      {/* ========================================
+          DONOR ROUTES
+      ======================================== */}
+
       {/* DONATE FOOD */}
 
       <Route
         path="/donate-food"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute
+            allowedRoles={[
+              "donor",
+            ]}
+          >
             <DonateFood />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* AVAILABLE FOOD */}
-
-      <Route
-        path="/available-food"
-        element={
-          <ProtectedRoute>
-            <AvailableFood />
           </ProtectedRoute>
         }
       />
@@ -96,8 +117,31 @@ function App() {
       <Route
         path="/my-donations"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute
+            allowedRoles={[
+              "donor",
+            ]}
+          >
             <MyDonations />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ========================================
+          NGO ROUTES
+      ======================================== */}
+
+      {/* AVAILABLE FOOD */}
+
+      <Route
+        path="/available-food"
+        element={
+          <ProtectedRoute
+            allowedRoles={[
+              "ngo",
+            ]}
+          >
+            <AvailableFood />
           </ProtectedRoute>
         }
       />
@@ -107,18 +151,30 @@ function App() {
       <Route
         path="/claimed-food"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute
+            allowedRoles={[
+              "ngo",
+            ]}
+          >
             <ClaimedFood />
           </ProtectedRoute>
         }
       />
+
+      {/* ========================================
+          VOLUNTEER ROUTES
+      ======================================== */}
 
       {/* DELIVERIES */}
 
       <Route
         path="/deliveries"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute
+            allowedRoles={[
+              "volunteer",
+            ]}
+          >
             <Deliveries />
           </ProtectedRoute>
         }
@@ -137,6 +193,7 @@ function App() {
           />
         }
       />
+
     </Routes>
   );
 }

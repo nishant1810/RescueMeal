@@ -1,21 +1,15 @@
-import React, {
-  useState,
-  useEffect,
-} from "react";
+import React, {useState,useEffect,} from "react";
 
-import {
-  useNavigate,
-} from "react-router-dom";
+import {useNavigate,} from "react-router-dom";
 
 import toast from "react-hot-toast";
 
-import DashboardLayout from "../layouts/DashboardLayout";
+import Navbar from "../components/Navbar";
 
-import {
-  donateFood,
-} from "../services/foodService";
+import { donateFood,} from "../services/foodService";
 
 const DonateFood = () => {
+
   /*
   ========================================
   NAVIGATION
@@ -34,17 +28,11 @@ const DonateFood = () => {
   const [formData, setFormData] =
     useState({
       foodName: "",
-
       quantity: "",
-
       category: "",
-
       location: "",
-
       expiryTime: "",
-
       description: "",
-
       foodImage: null,
     });
 
@@ -61,22 +49,28 @@ const DonateFood = () => {
   */
 
   useEffect(() => {
+
     return () => {
+
       if (preview) {
         URL.revokeObjectURL(
           preview
         );
       }
     };
+
   }, [preview]);
 
   /*
   ========================================
-  HANDLE INPUT CHANGE
+  HANDLE CHANGE
   ========================================
   */
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e
+  ) => {
+
     const {
       name,
       value,
@@ -91,13 +85,14 @@ const DonateFood = () => {
 
   /*
   ========================================
-  HANDLE IMAGE CHANGE
+  IMAGE CHANGE
   ========================================
   */
 
   const handleImageChange = (
     e
   ) => {
+
     const file =
       e.target.files[0];
 
@@ -105,7 +100,7 @@ const DonateFood = () => {
 
     /*
     ========================================
-    VALIDATE TYPE
+    VALIDATE IMAGE
     ========================================
     */
 
@@ -130,7 +125,7 @@ const DonateFood = () => {
       5 * 1024 * 1024
     ) {
       return toast.error(
-        "Image size must be less than 5MB"
+        "Image must be less than 5MB"
       );
     }
 
@@ -148,26 +143,18 @@ const DonateFood = () => {
 
     /*
     ========================================
-    REMOVE OLD PREVIEW
-    ========================================
-    */
-
-    if (preview) {
-      URL.revokeObjectURL(
-        preview
-      );
-    }
-
-    /*
-    ========================================
-    CREATE PREVIEW
+    PREVIEW
     ========================================
     */
 
     const imagePreview =
-      URL.createObjectURL(file);
+      URL.createObjectURL(
+        file
+      );
 
-    setPreview(imagePreview);
+    setPreview(
+      imagePreview
+    );
   };
 
   /*
@@ -176,308 +163,237 @@ const DonateFood = () => {
   ========================================
   */
 
-  const handleSubmit = async (
-    e
-  ) => {
-    e.preventDefault();
+  const handleSubmit =
+    async (e) => {
 
-    try {
-      /*
-      ========================================
-      VALIDATION
-      ========================================
-      */
+      e.preventDefault();
 
-      if (
-        !formData.foodName.trim() ||
-        !formData.quantity ||
-        !formData.category ||
-        !formData.location.trim() ||
-        !formData.expiryTime
-      ) {
-        return toast.error(
-          "Please fill all required fields"
-        );
-      }
+      try {
 
-      /*
-      ========================================
-      QUANTITY VALIDATION
-      ========================================
-      */
+        /*
+        ========================================
+        VALIDATION
+        ========================================
+        */
 
-      if (
-        Number(
-          formData.quantity
-        ) <= 0
-      ) {
-        return toast.error(
-          "Quantity must be greater than 0"
-        );
-      }
+        if (
+          !formData.foodName ||
+          !formData.quantity ||
+          !formData.category ||
+          !formData.location ||
+          !formData.expiryTime
+        ) {
+          return toast.error(
+            "Please fill all required fields"
+          );
+        }
 
-      /*
-      ========================================
-      EXPIRY VALIDATION
-      ========================================
-      */
+        setLoading(true);
 
-      const currentTime =
-        new Date();
+        /*
+        ========================================
+        CREATE FORM DATA
+        ========================================
+        */
 
-      const expiryDate =
-        new Date(
-          formData.expiryTime
-        );
+        const submitData =
+          new FormData();
 
-      if (
-        expiryDate <=
-        currentTime
-      ) {
-        return toast.error(
-          "Expiry time must be in the future"
-        );
-      }
+        Object.keys(
+          formData
+        ).forEach((key) => {
 
-      setLoading(true);
+          if (
+            formData[key]
+          ) {
+            submitData.append(
+              key,
+              formData[key]
+            );
+          }
+        });
 
-      /*
-      ========================================
-      CREATE FORM DATA
-      ========================================
-      */
+        /*
+        ========================================
+        API CALL
+        ========================================
+        */
 
-      const submitData =
-        new FormData();
-
-      submitData.append(
-        "foodName",
-        formData.foodName
-      );
-
-      submitData.append(
-        "quantity",
-        formData.quantity
-      );
-
-      submitData.append(
-        "category",
-        formData.category
-      );
-
-      submitData.append(
-        "location",
-        formData.location
-      );
-
-      submitData.append(
-        "expiryTime",
-        formData.expiryTime
-      );
-
-      submitData.append(
-        "description",
-        formData.description
-      );
-
-      /*
-      ========================================
-      IMAGE
-      ========================================
-      */
-
-      if (
-        formData.foodImage
-      ) {
-        submitData.append(
-          "foodImage",
-          formData.foodImage
-        );
-      }
-
-      /*
-      ========================================
-      API CALL
-      ========================================
-      */
-
-      const response =
         await donateFood(
           submitData
         );
 
-      console.log(
-        "Donation Response:",
-        response
-      );
+        /*
+        ========================================
+        SUCCESS
+        ========================================
+        */
 
-      /*
-      ========================================
-      SUCCESS
-      ========================================
-      */
-
-      toast.success(
-        "Food donated successfully"
-      );
-
-      /*
-      ========================================
-      RESET FORM
-      ========================================
-      */
-
-      setFormData({
-        foodName: "",
-
-        quantity: "",
-
-        category: "",
-
-        location: "",
-
-        expiryTime: "",
-
-        description: "",
-
-        foodImage: null,
-      });
-
-      /*
-      ========================================
-      RESET PREVIEW
-      ========================================
-      */
-
-      if (preview) {
-        URL.revokeObjectURL(
-          preview
+        toast.success(
+          "Food Donated Successfully"
         );
+
+        /*
+        ========================================
+        RESET
+        ========================================
+        */
+
+        setFormData({
+          foodName: "",
+          quantity: "",
+          category: "",
+          location: "",
+          expiryTime: "",
+          description: "",
+          foodImage: null,
+        });
+
+        setPreview("");
+
+        /*
+        ========================================
+        REDIRECT
+        ========================================
+        */
+
+        setTimeout(() => {
+
+          navigate(
+            "/my-donations"
+          );
+
+        }, 1000);
+
+      } catch (error) {
+
+        console.log(error);
+
+        toast.error(
+          error.response?.data
+            ?.message ||
+            "Donation Failed"
+        );
+
+      } finally {
+
+        setLoading(false);
       }
-
-      setPreview("");
-
-      /*
-      ========================================
-      RESET FILE INPUT
-      ========================================
-      */
-
-      const fileInput =
-        document.getElementById(
-          "foodImage"
-        );
-
-      if (fileInput) {
-        fileInput.value = "";
-      }
-
-      /*
-      ========================================
-      REDIRECT
-      ========================================
-      */
-
-      setTimeout(() => {
-        navigate(
-          "/my-donations"
-        );
-      }, 1000);
-    } catch (error) {
-      console.log(error);
-
-      toast.error(
-        error.response?.data
-          ?.message ||
-          "Donation failed"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   return (
-    <DashboardLayout>
+    <>
+      {/* ========================================
+          NAVBAR
+      ======================================== */}
+
+      <Navbar />
+
+      {/* ========================================
+          PAGE
+      ======================================== */}
+
       <div
         className="
-        min-h-screen
-        bg-gray-100
-        p-4
-        md:p-6
-      "
+          min-h-screen
+          bg-white
+          text-gray-900
+          px-4
+          py-10
+        "
       >
+        {/* ========================================
+            CONTAINER
+        ======================================== */}
+
         <div
           className="
-          max-w-4xl
-          mx-auto
-        "
+            max-w-4xl
+            mx-auto
+          "
         >
+          {/* ========================================
+              CARD
+          ======================================== */}
+
           <div
             className="
-            bg-white
-            rounded-3xl
-            shadow-xl
-            p-6
-            md:p-10
-          "
+              bg-white
+              rounded-3xl
+              shadow-2xl
+              p-8
+              md:p-10
+            "
           >
-            {/* HEADER */}
+            {/* ========================================
+                HEADER
+            ======================================== */}
 
-            <div className="mb-8">
+            <div
+              className="
+                mb-10
+              "
+            >
               <h1
                 className="
-                text-4xl
-                md:text-5xl
-                font-bold
-                mb-2
-              "
+                  text-5xl
+                  font-bold
+                  mb-3
+                "
               >
                 Donate Food
               </h1>
 
               <p
                 className="
-                text-gray-500
-                text-lg
-              "
+                  text-gray-600
+                  text-lg
+                "
               >
                 Help reduce food waste
                 and support communities.
               </p>
             </div>
 
-            {/* FORM */}
+            {/* ========================================
+                FORM
+            ======================================== */}
 
             <form
               onSubmit={
                 handleSubmit
               }
+
               className="
-              space-y-6
-            "
+                space-y-6
+              "
             >
               {/* FOOD NAME */}
 
               <input
                 type="text"
                 name="foodName"
+                placeholder="Food Name"
                 value={
                   formData.foodName
                 }
-                placeholder="Food Name"
                 onChange={
                   handleChange
                 }
+
                 className="
-                w-full
-                border
-                border-gray-300
-                p-4
-                rounded-xl
-                focus:outline-none
-                focus:ring-2
-                focus:ring-green-500
-              "
+                  w-full
+                  bg-gray-100
+                  border
+                  border-gray-600
+                  text-black
+                  placeholder-gray-400
+                  p-4
+                  rounded-xl
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-blue-500
+                "
               />
 
               {/* QUANTITY */}
@@ -485,23 +401,27 @@ const DonateFood = () => {
               <input
                 type="number"
                 name="quantity"
+                placeholder="Quantity"
                 value={
                   formData.quantity
                 }
-                placeholder="Quantity"
                 onChange={
                   handleChange
                 }
+
                 className="
-                w-full
-                border
-                border-gray-300
-                p-4
-                rounded-xl
-                focus:outline-none
-                focus:ring-2
-                focus:ring-green-500
-              "
+                  w-full
+                  bg-gray-100
+                  border
+                  border-gray-600
+                  text-black
+                  placeholder-gray-400
+                  p-4
+                  rounded-xl
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-blue-500
+                "
               />
 
               {/* CATEGORY */}
@@ -514,16 +434,19 @@ const DonateFood = () => {
                 onChange={
                   handleChange
                 }
+
                 className="
-                w-full
-                border
-                border-gray-300
-                p-4
-                rounded-xl
-                focus:outline-none
-                focus:ring-2
-                focus:ring-green-500
-              "
+                  w-full
+                  bg-gray-100
+                  border
+                  border-gray-600
+                  text-black
+                  p-4
+                  rounded-xl
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-blue-500
+                "
               >
                 <option value="">
                   Select Category
@@ -551,23 +474,27 @@ const DonateFood = () => {
               <input
                 type="text"
                 name="location"
+                placeholder="Pickup Location"
                 value={
                   formData.location
                 }
-                placeholder="Pickup Location"
                 onChange={
                   handleChange
                 }
+
                 className="
-                w-full
-                border
-                border-gray-300
-                p-4
-                rounded-xl
-                focus:outline-none
-                focus:ring-2
-                focus:ring-green-500
-              "
+                  w-full
+                  bg-gray-100
+                  border
+                  border-gray-600
+                  text-black
+                  placeholder-gray-400
+                  p-4
+                  rounded-xl
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-blue-500
+                "
               />
 
               {/* EXPIRY */}
@@ -581,40 +508,47 @@ const DonateFood = () => {
                 onChange={
                   handleChange
                 }
+
                 className="
-                w-full
-                border
-                border-gray-300
-                p-4
-                rounded-xl
-                focus:outline-none
-                focus:ring-2
-                focus:ring-green-500
-              "
+                  w-full
+                  bg-gray-100
+                  border
+                  border-gray-600
+                  text-black
+                  p-4
+                  rounded-xl
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-blue-500
+                "
               />
 
               {/* DESCRIPTION */}
 
               <textarea
                 name="description"
+                placeholder="Description"
                 value={
                   formData.description
                 }
-                placeholder="Description"
                 onChange={
                   handleChange
                 }
+
                 className="
-                w-full
-                border
-                border-gray-300
-                p-4
-                rounded-xl
-                h-32
-                focus:outline-none
-                focus:ring-2
-                focus:ring-green-500
-              "
+                  w-full
+                  h-32
+                  bg-gray-100
+                  border
+                  border-gray-600
+                  text-black
+                  placeholder-gray-400
+                  p-4
+                  rounded-xl
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-blue-500
+                "
               />
 
               {/* IMAGE */}
@@ -627,13 +561,16 @@ const DonateFood = () => {
                   onChange={
                     handleImageChange
                   }
+
                   className="
-                  w-full
-                  border
-                  border-gray-300
-                  p-4
-                  rounded-xl
-                "
+                    w-full
+                    bg-gray-100
+                    border
+                    border-gray-600
+                    text-black
+                    p-4
+                    rounded-xl
+                  "
                 />
 
                 {/* PREVIEW */}
@@ -642,14 +579,15 @@ const DonateFood = () => {
                   <img
                     src={preview}
                     alt="preview"
+
                     className="
-                    mt-4
-                    w-full
-                    h-72
-                    object-cover
-                    rounded-2xl
-                    shadow-md
-                  "
+                      mt-5
+                      w-full
+                      h-72
+                      object-cover
+                      rounded-2xl
+                      shadow-lg
+                    "
                   />
                 )}
               </div>
@@ -659,18 +597,20 @@ const DonateFood = () => {
               <button
                 type="submit"
                 disabled={loading}
+
                 className="
-                w-full
-                bg-green-500
-                hover:bg-green-600
-                disabled:bg-gray-400
-                text-white
-                py-4
-                rounded-xl
-                text-lg
-                font-semibold
-                transition
-              "
+                  w-full
+                  bg-blue-500
+                  hover:bg-blue-600
+                  disabled:bg-gray-500
+                  text-white
+                  py-4
+                  rounded-xl
+                  text-lg
+                  font-semibold
+                  transition
+                  duration-300
+                "
               >
                 {loading
                   ? "Submitting..."
@@ -680,7 +620,7 @@ const DonateFood = () => {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

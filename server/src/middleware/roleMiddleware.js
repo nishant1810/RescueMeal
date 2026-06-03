@@ -1,18 +1,31 @@
-const authorizeRoles =
-  (...roles) =>
-  (req, res, next) => {
-    if (
-      !roles.includes(req.user.role)
-    ) {
-      return res.status(403).json({
-        success: false,
+const roleMiddleware =
+  (...roles) => {
+    return (
+      req,
+      res,
+      next
+    ) => {
+      /*
+      ========================================
+      ROLE CHECK
+      ========================================
+      */
 
-        message:
-          "Access denied: insufficient permissions",
-      });
-    }
+      if (
+        !roles.includes(
+          req.user.role
+        )
+      ) {
+        return res.status(403).json({
+          success: false,
 
-    next();
+          message:
+            "Access denied",
+        });
+      }
+
+      next();
+    };
   };
 
-export default authorizeRoles;
+export default roleMiddleware;

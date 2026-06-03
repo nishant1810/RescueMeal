@@ -12,15 +12,48 @@ import morgan from "morgan";
 
 import rateLimit from "express-rate-limit";
 
-import authRoutes from "./routes/auth.routes.js";
+import dotenv from "dotenv";
 
-import foodRoutes from "./routes/food.routes.js";
+/*
+========================================
+ROUTES
+========================================
+*/
 
-import userRoutes from "./routes/user.routes.js";
+import authRoutes
+from "./routes/auth.routes.js";
 
-import notFoundMiddleware from "./middleware/notFoundMiddleware.js";
+import foodRoutes
+from "./routes/food.routes.js";
 
-import errorMiddleware from "./middleware/errorMiddleware.js";
+import userRoutes
+from "./routes/user.routes.js";
+
+/*
+========================================
+MIDDLEWARE
+========================================
+*/
+
+import notFoundMiddleware
+from "./middleware/notFoundMiddleware.js";
+
+import errorMiddleware
+from "./middleware/errorMiddleware.js";
+
+/*
+========================================
+ENV CONFIG
+========================================
+*/
+
+dotenv.config();
+
+/*
+========================================
+APP
+========================================
+*/
 
 const app = express();
 
@@ -41,7 +74,8 @@ CORS
 app.use(
   cors({
     origin:
-      process.env.CLIENT_URL ||
+      process.env
+        .CLIENT_URL ||
       "http://localhost:5173",
 
     credentials: true,
@@ -50,7 +84,13 @@ app.use(
       "GET",
       "POST",
       "PUT",
+      "PATCH",
       "DELETE",
+    ],
+
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
     ],
   })
 );
@@ -63,13 +103,18 @@ SECURITY MIDDLEWARE
 
 app.use(
   helmet({
-    crossOriginResourcePolicy: false,
+    crossOriginResourcePolicy:
+      false,
   })
 );
 
-app.use(compression());
+app.use(
+  compression()
+);
 
-app.use(cookieParser());
+app.use(
+  cookieParser()
+);
 
 /*
 ========================================
@@ -77,7 +122,14 @@ LOGGER
 ========================================
 */
 
-app.use(morgan("dev"));
+if (
+  process.env.NODE_ENV !==
+  "production"
+) {
+  app.use(
+    morgan("dev")
+  );
+}
 
 /*
 ========================================
@@ -110,7 +162,12 @@ const limiter =
     windowMs:
       15 * 60 * 1000,
 
-    max: 100,
+    max:
+      process.env
+        .NODE_ENV ===
+      "production"
+        ? 100
+        : 1000,
 
     standardHeaders: true,
 
@@ -120,7 +177,7 @@ const limiter =
       success: false,
 
       message:
-        "Too many requests from this IP",
+        "Too many requests from this IP. Please try again later.",
     },
   });
 
@@ -141,14 +198,17 @@ HEALTH CHECK
 ========================================
 */
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
+app.get(
+  "/",
+  (req, res) => {
+    res.status(200).json({
+      success: true,
 
-    message:
-      "RescueMeal API Running Successfully",
-  });
-});
+      message:
+        "RescueMeal API Running Successfully",
+    });
+  }
+);
 
 /*
 ========================================
@@ -173,7 +233,7 @@ app.use(
 
 /*
 ========================================
-NOT FOUND MIDDLEWARE
+404 HANDLER
 ========================================
 */
 
@@ -190,5 +250,11 @@ GLOBAL ERROR HANDLER
 app.use(
   errorMiddleware
 );
+
+/*
+========================================
+EXPORT APP
+========================================
+*/
 
 export default app;

@@ -3,32 +3,33 @@ import React from "react";
 const StatsCard = ({
   title,
   value,
+  color,
 }) => {
   return (
     <div
-      className="
-      bg-white
-      rounded-2xl
-      shadow-lg
-      p-6
-    "
+      className={`
+        p-6
+        rounded-xl
+        shadow-lg
+        text-white
+        ${color}
+      `}
     >
       <h2
         className="
-        text-gray-500
-        text-lg
-        mb-2
-      "
+          text-lg
+          font-semibold
+        "
       >
         {title}
       </h2>
 
       <p
         className="
-        text-4xl
-        font-bold
-        text-green-500
-      "
+          text-4xl
+          font-bold
+          mt-4
+        "
       >
         {value}
       </p>

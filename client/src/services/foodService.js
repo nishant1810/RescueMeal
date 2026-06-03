@@ -36,26 +36,50 @@ GET ALL FOOD
 */
 
 export const getAllFood =
-  async () => {
+  async (
+    page = 1,
+    limit = 6
+  ) => {
     try {
       const { data } =
         await api.get(
-          "/food/all"
+          `/food/all?page=${page}&limit=${limit}`
         );
 
       /*
-      Backend returns:
-      {
-        success: true,
-        foods: []
-      }
+      ========================================
+      SAFE RESPONSE
+      ========================================
       */
 
-      return data.foods || [];
+      return {
+        foods:
+          data?.foods || [],
+
+        currentPage:
+          data?.currentPage ||
+          1,
+
+        totalPages:
+          data?.totalPages ||
+          1,
+
+        totalFoods:
+          data?.totalFoods ||
+          0,
+      };
     } catch (error) {
       console.log(error);
 
-      return [];
+      return {
+        foods: [],
+
+        currentPage: 1,
+
+        totalPages: 1,
+
+        totalFoods: 0,
+      };
     }
   };
 
@@ -95,16 +119,15 @@ export const getMyDonations =
           "/food/my-donations"
         );
 
-      console.log(
-        "MY DONATIONS:",
-        data
-      );
-
       /*
-      IMPORTANT FIX
+      ========================================
+      SAFE RESPONSE
+      ========================================
       */
 
-      return data.foods || [];
+      return (
+        data?.foods || []
+      );
     } catch (error) {
       console.log(error);
 
@@ -126,7 +149,15 @@ export const getClaimedFood =
           "/food/claimed-food"
         );
 
-      return data.foods || [];
+      /*
+      ========================================
+      SAFE RESPONSE
+      ========================================
+      */
+
+      return (
+        data?.foods || []
+      );
     } catch (error) {
       console.log(error);
 
@@ -149,25 +180,37 @@ export const getDashboardStats =
         );
 
       /*
+      ========================================
       SAFE STATS
+      ========================================
       */
 
       return (
-        data.stats || {
-          totalFood: 0,
+        data?.stats || {
+          totalDonations: 0,
+
           availableFood: 0,
+
           claimedFood: 0,
+
           deliveredFood: 0,
+
+          pickedDeliveries: 0,
         }
       );
     } catch (error) {
       console.log(error);
 
       return {
-        totalFood: 0,
+        totalDonations: 0,
+
         availableFood: 0,
+
         claimedFood: 0,
+
         deliveredFood: 0,
+
+        pickedDeliveries: 0,
       };
     }
   };
@@ -186,7 +229,15 @@ export const getVolunteerDeliveries =
           "/food/volunteer-deliveries"
         );
 
-      return data.foods || [];
+      /*
+      ========================================
+      SAFE RESPONSE
+      ========================================
+      */
+
+      return (
+        data?.foods || []
+      );
     } catch (error) {
       console.log(error);
 

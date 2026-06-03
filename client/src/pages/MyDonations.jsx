@@ -13,6 +13,8 @@ import {
 
 import DashboardLayout from "../layouts/DashboardLayout";
 
+import TableSkeleton from "../components/TableSkeleton";
+
 import {
   getMyDonations,
 } from "../services/foodService";
@@ -53,26 +55,19 @@ const MyDonations = () => {
         const foodsData =
           await getMyDonations();
 
-        console.log(
-          "FETCHED DONATIONS:",
-          foodsData
-        );
-
         /*
         ========================================
         SAFE ARRAY CHECK
         ========================================
         */
 
-        if (
+        setFoods(
           Array.isArray(
             foodsData
           )
-        ) {
-          setFoods(foodsData);
-        } else {
-          setFoods([]);
-        }
+            ? foodsData
+            : []
+        );
       } catch (error) {
         console.log(error);
 
@@ -94,17 +89,6 @@ const MyDonations = () => {
 
   /*
   ========================================
-  DEBUG
-  ========================================
-  */
-
-  console.log(
-    "FOODS STATE:",
-    foods
-  );
-
-  /*
-  ========================================
   LOADING UI
   ========================================
   */
@@ -112,23 +96,8 @@ const MyDonations = () => {
   if (loading) {
     return (
       <DashboardLayout>
-        <div
-          className="
-          min-h-screen
-          flex
-          items-center
-          justify-center
-          bg-gray-100
-        "
-        >
-          <h1
-            className="
-            text-3xl
-            font-bold
-          "
-          >
-            Loading...
-          </h1>
+        <div className="p-6">
+          <TableSkeleton />
         </div>
       </DashboardLayout>
     );
@@ -140,7 +109,8 @@ const MyDonations = () => {
         className="
         min-h-screen
         bg-gray-100
-        p-6
+        p-4
+        md:p-6
       "
       >
         {/* HEADER */}
@@ -148,49 +118,78 @@ const MyDonations = () => {
         <div
           className="
           flex
-          items-center
+          flex-col
+          md:flex-row
+          md:items-center
+          md:justify-between
           gap-4
           mb-8
         "
         >
-          {/* BACK BUTTON */}
-
-          <button
-            onClick={() =>
-              navigate(
-                "/dashboard"
-              )
-            }
+          <div
             className="
             flex
             items-center
-            gap-2
-            bg-black
-            text-white
-            px-4
-            py-2
-            rounded-lg
-            hover:bg-gray-800
-            transition
+            gap-4
           "
           >
-            <ArrowLeft
-              size={18}
-            />
+            {/* BACK BUTTON */}
 
-            Back
-          </button>
+            <button
+              onClick={() =>
+                navigate(
+                  "/dashboard"
+                )
+              }
+              className="
+              flex
+              items-center
+              gap-2
+              bg-black
+              text-white
+              px-4
+              py-2
+              rounded-lg
+              hover:bg-gray-800
+              transition
+            "
+            >
+              <ArrowLeft
+                size={18}
+              />
 
-          {/* TITLE */}
+              Back
+            </button>
 
-          <h1
+            {/* TITLE */}
+
+            <h1
+              className="
+              text-3xl
+              md:text-4xl
+              font-bold
+            "
+            >
+              My Donations
+            </h1>
+          </div>
+
+          {/* COUNT */}
+
+          <div
             className="
-            text-4xl
-            font-bold
+            bg-white
+            px-5
+            py-3
+            rounded-xl
+            shadow-md
+            font-semibold
           "
           >
-            My Donations
-          </h1>
+            Total Donations:
+            {" "}
+            {foods.length}
+          </div>
         </div>
 
         {/* EMPTY STATE */}
@@ -200,7 +199,7 @@ const MyDonations = () => {
             className="
             bg-white
             p-10
-            rounded-xl
+            rounded-2xl
             shadow-md
             text-center
           "
@@ -208,26 +207,57 @@ const MyDonations = () => {
             <h2
               className="
               text-2xl
-              font-semibold
+              font-bold
               text-gray-600
+              mb-2
             "
             >
               No Donations Yet
             </h2>
+
+            <p
+              className="
+              text-gray-500
+            "
+            >
+              Start helping people
+              by donating food.
+            </p>
+
+            <button
+              onClick={() =>
+                navigate(
+                  "/donate-food"
+                )
+              }
+              className="
+              mt-6
+              bg-green-500
+              hover:bg-green-600
+              text-white
+              px-6
+              py-3
+              rounded-lg
+              font-semibold
+              transition
+            "
+            >
+              Donate Food
+            </button>
           </div>
         ) : (
           <div
             className="
             overflow-x-auto
+            bg-white
+            rounded-2xl
+            shadow-lg
           "
           >
             <table
               className="
               w-full
-              bg-white
-              shadow-lg
-              rounded-xl
-              overflow-hidden
+              min-w-[900px]
             "
             >
               {/* TABLE HEADER */}
@@ -280,9 +310,14 @@ const MyDonations = () => {
                       transition
                     "
                     >
-                      {/* FOOD NAME */}
+                      {/* FOOD */}
 
-                      <td className="p-4 font-medium">
+                      <td
+                        className="
+                        p-4
+                        font-semibold
+                      "
+                      >
                         {
                           food.foodName
                         }
@@ -298,7 +333,12 @@ const MyDonations = () => {
 
                       {/* CATEGORY */}
 
-                      <td className="p-4 capitalize">
+                      <td
+                        className="
+                        p-4
+                        capitalize
+                      "
+                      >
                         {
                           food.category
                         }
@@ -306,25 +346,30 @@ const MyDonations = () => {
 
                       {/* STATUS */}
 
-                      <td
-                        className={`
-                        p-4
-                        font-semibold
-                        capitalize
-                        ${
-                          food.status ===
-                          "available"
-                            ? "text-green-600"
-                            : food.status ===
-                                "claimed"
-                              ? "text-yellow-500"
-                              : "text-blue-500"
-                        }
-                      `}
-                      >
-                        {
-                          food.status
-                        }
+                      <td className="p-4">
+                        <span
+                          className={`
+                            px-3
+                            py-1
+                            rounded-full
+                            text-sm
+                            font-semibold
+                            capitalize
+                            ${
+                              food.status ===
+                              "available"
+                                ? "bg-green-100 text-green-700"
+                                : food.status ===
+                                    "claimed"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : "bg-blue-100 text-blue-700"
+                            }
+                          `}
+                        >
+                          {
+                            food.status
+                          }
+                        </span>
                       </td>
 
                       {/* LOCATION */}
@@ -338,9 +383,11 @@ const MyDonations = () => {
                       {/* EXPIRY */}
 
                       <td className="p-4">
-                        {new Date(
-                          food.expiryTime
-                        ).toLocaleString()}
+                        {food.expiryTime
+                          ? new Date(
+                              food.expiryTime
+                            ).toLocaleString()
+                          : "N/A"}
                       </td>
                     </tr>
                   )

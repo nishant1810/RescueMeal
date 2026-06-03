@@ -17,14 +17,37 @@ import {
 import { useAuth } from "../context/AuthContext";
 
 import slide1 from "../assets/ImgDisplay.jpg";
+
 import slide2 from "../assets/info-img.jpg";
+
 import slide3 from "../assets/pic-1.avif";
+
 import slide4 from "../assets/pexels-mehmet-turgut-kirkgoz-11576242.jpg";
 
 const Register = () => {
-  const navigate = useNavigate();
+  /*
+  ========================================
+  NAVIGATION
+  ========================================
+  */
 
-  const { login } = useAuth();
+  const navigate =
+    useNavigate();
+
+  /*
+  ========================================
+  AUTH
+  ========================================
+  */
+
+  const { login } =
+    useAuth();
+
+  /*
+  ========================================
+  SLIDES
+  ========================================
+  */
 
   const slides = [
     slide1,
@@ -33,38 +56,77 @@ const Register = () => {
     slide4,
   ];
 
+  /*
+  ========================================
+  STATE
+  ========================================
+  */
+
   const [currentSlide, setCurrentSlide] =
     useState(0);
+
+  const [loading, setLoading] =
+    useState(false);
 
   const [formData, setFormData] =
     useState({
       name: "",
+
       email: "",
+
       password: "",
+
       role: "donor",
     });
 
+  /*
+  ========================================
+  AUTO SLIDER
+  ========================================
+  */
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) =>
-        prev === slides.length - 1
-          ? 0
-          : prev + 1
-      );
-    }, 4000);
+    const interval =
+      setInterval(() => {
+        setCurrentSlide(
+          (prev) =>
+            prev ===
+            slides.length - 1
+              ? 0
+              : prev + 1
+        );
+      }, 4000);
 
     return () =>
       clearInterval(interval);
   }, [slides.length]);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
+  /*
+  ========================================
+  HANDLE CHANGE
+  ========================================
+  */
 
-      [e.target.name]:
-        e.target.value,
-    });
+  const handleChange = (
+    e
+  ) => {
+    const {
+      name,
+      value,
+    } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+
+      [name]: value,
+    }));
   };
+
+  /*
+  ========================================
+  HANDLE SUBMIT
+  ========================================
+  */
 
   const handleSubmit = async (
     e
@@ -72,22 +134,90 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const data =
-        await registerUser(formData);
+      /*
+      ========================================
+      VALIDATION
+      ========================================
+      */
 
-      login(data.user, data.token);
+      if (
+        !formData.name.trim() ||
+        !formData.email.trim() ||
+        !formData.password.trim()
+      ) {
+        return toast.error(
+          "Please fill all fields"
+        );
+      }
+
+      /*
+      ========================================
+      PASSWORD VALIDATION
+      ========================================
+      */
+
+      if (
+        formData.password
+          .length < 6
+      ) {
+        return toast.error(
+          "Password must be at least 6 characters"
+        );
+      }
+
+      setLoading(true);
+
+      /*
+      ========================================
+      REGISTER API
+      ========================================
+      */
+
+      const data =
+        await registerUser(
+          formData
+        );
+
+      /*
+      ========================================
+      LOGIN USER
+      ========================================
+      */
+
+      login(
+        data.user,
+        data.token
+      );
+
+      /*
+      ========================================
+      SUCCESS
+      ========================================
+      */
 
       toast.success(
         "Registration Successful"
       );
 
-      navigate("/dashboard");
+      /*
+      ========================================
+      REDIRECT
+      ========================================
+      */
+
+      navigate(
+        "/dashboard"
+      );
     } catch (error) {
+      console.log(error);
+
       toast.error(
         error.response?.data
           ?.message ||
           "Registration Failed"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -100,7 +230,7 @@ const Register = () => {
       text-white
     "
     >
-      {/* SLIDES */}
+      {/* BACKGROUND SLIDES */}
 
       <div
         className="
@@ -109,7 +239,10 @@ const Register = () => {
       "
       >
         {slides.map(
-          (slide, index) => (
+          (
+            slide,
+            index
+          ) => (
             <img
               key={index}
               src={slide}
@@ -123,7 +256,8 @@ const Register = () => {
                 transition-opacity
                 duration-1000
                 ${
-                  index === currentSlide
+                  index ===
+                  currentSlide
                     ? "opacity-100"
                     : "opacity-0"
                 }
@@ -193,6 +327,7 @@ const Register = () => {
               to="/"
               className="
               hover:text-green-400
+              transition
             "
             >
               About
@@ -202,6 +337,7 @@ const Register = () => {
               to="/login"
               className="
               hover:text-green-400
+              transition
             "
             >
               Login
@@ -232,6 +368,7 @@ const Register = () => {
             rounded-2xl
             p-6
             md:p-8
+            shadow-2xl
           "
           >
             {/* TITLE */}
@@ -251,7 +388,9 @@ const Register = () => {
             {/* FORM */}
 
             <form
-              onSubmit={handleSubmit}
+              onSubmit={
+                handleSubmit
+              }
               className="
               space-y-6
             "
@@ -273,8 +412,13 @@ const Register = () => {
                 <input
                   type="text"
                   name="name"
+                  value={
+                    formData.name
+                  }
                   placeholder="Enter your name"
-                  onChange={handleChange}
+                  onChange={
+                    handleChange
+                  }
                   className="
                   w-full
                   bg-white/10
@@ -307,8 +451,13 @@ const Register = () => {
                 <input
                   type="email"
                   name="email"
+                  value={
+                    formData.email
+                  }
                   placeholder="Enter your email"
-                  onChange={handleChange}
+                  onChange={
+                    handleChange
+                  }
                   className="
                   w-full
                   bg-white/10
@@ -341,8 +490,13 @@ const Register = () => {
                 <input
                   type="password"
                   name="password"
+                  value={
+                    formData.password
+                  }
                   placeholder="Enter your password"
-                  onChange={handleChange}
+                  onChange={
+                    handleChange
+                  }
                   className="
                   w-full
                   bg-white/10
@@ -374,7 +528,12 @@ const Register = () => {
 
                 <select
                   name="role"
-                  onChange={handleChange}
+                  value={
+                    formData.role
+                  }
+                  onChange={
+                    handleChange
+                  }
                   className="
                   w-full
                   bg-white/10
@@ -389,21 +548,27 @@ const Register = () => {
                 >
                   <option
                     value="donor"
-                    className="text-black"
+                    className="
+                    text-black
+                  "
                   >
                     Donor
                   </option>
 
                   <option
                     value="ngo"
-                    className="text-black"
+                    className="
+                    text-black
+                  "
                   >
                     NGO
                   </option>
 
                   <option
                     value="volunteer"
-                    className="text-black"
+                    className="
+                    text-black
+                  "
                   >
                     Volunteer
                   </option>
@@ -423,9 +588,11 @@ const Register = () => {
               >
                 <button
                   type="submit"
+                  disabled={loading}
                   className="
                   bg-green-500
                   hover:bg-green-600
+                  disabled:bg-gray-500
                   py-4
                   rounded-lg
                   text-lg
@@ -433,7 +600,9 @@ const Register = () => {
                   transition
                 "
                 >
-                  REGISTER
+                  {loading
+                    ? "Registering..."
+                    : "REGISTER"}
                 </button>
 
                 <Link
@@ -498,7 +667,9 @@ const Register = () => {
               <button
                 key={index}
                 onClick={() =>
-                  setCurrentSlide(index)
+                  setCurrentSlide(
+                    index
+                  )
                 }
                 className={`
                   w-4
@@ -506,7 +677,8 @@ const Register = () => {
                   rounded-full
                   transition
                   ${
-                    index === currentSlide
+                    index ===
+                    currentSlide
                       ? "bg-white"
                       : "bg-gray-500"
                   }

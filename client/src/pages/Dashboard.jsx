@@ -5,11 +5,17 @@ import React, {
 
 import DashboardLayout from "../layouts/DashboardLayout";
 
+import {
+  useNotification,
+} from "../context/NotificationContext";
+
 import AnalyticsChart from "../components/AnalyticsChart";
 
 import CategoryPieChart from "../components/CategoryPieChart";
 
 import StatsCard from "../components/StatsCard";
+
+import StatsCardSkeleton from "../components/StatsCardSkeleton";
 
 import socket from "../socket";
 
@@ -20,12 +26,28 @@ import {
 import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
+  /*
+  ========================================
+  AUTH
+  ========================================
+  */
+
   const { user } =
     useAuth();
 
   /*
   ========================================
-  SAFE INITIAL STATE
+  NOTIFICATIONS
+  ========================================
+  */
+
+  const {
+    addNotification,
+  } = useNotification();
+
+  /*
+  ========================================
+  STATE
   ========================================
   */
 
@@ -54,13 +76,10 @@ const Dashboard = () => {
   const fetchStats =
     async () => {
       try {
+        setLoading(true);
+
         const data =
           await getDashboardStats();
-
-        console.log(
-          "Dashboard Stats:",
-          data
-        );
 
         /*
         ========================================
@@ -94,7 +113,7 @@ const Dashboard = () => {
 
         /*
         ========================================
-        PREVENT UI CRASH
+        SAFE FALLBACK
         ========================================
         */
 
@@ -131,35 +150,80 @@ const Dashboard = () => {
   */
 
   useEffect(() => {
+    /*
+    ========================================
+    NEW DONATION
+    ========================================
+    */
+
     socket.on(
       "newFoodDonation",
-      fetchStats
+      (data) => {
+        fetchStats();
+
+        addNotification(
+          data?.message ||
+            "New food donated",
+          "success"
+        );
+      }
     );
+
+    /*
+    ========================================
+    FOOD CLAIMED
+    ========================================
+    */
 
     socket.on(
       "foodClaimed",
-      fetchStats
+      (data) => {
+        fetchStats();
+
+        addNotification(
+          data?.message ||
+            "Food claimed successfully",
+          "info"
+        );
+      }
     );
+
+    /*
+    ========================================
+    FOOD DELIVERED
+    ========================================
+    */
 
     socket.on(
       "foodDelivered",
-      fetchStats
+      (data) => {
+        fetchStats();
+
+        addNotification(
+          data?.message ||
+            "Food delivered successfully",
+          "success"
+        );
+      }
     );
+
+    /*
+    ========================================
+    CLEANUP
+    ========================================
+    */
 
     return () => {
       socket.off(
-        "newFoodDonation",
-        fetchStats
+        "newFoodDonation"
       );
 
       socket.off(
-        "foodClaimed",
-        fetchStats
+        "foodClaimed"
       );
 
       socket.off(
-        "foodDelivered",
-        fetchStats
+        "foodDelivered"
       );
     };
   }, []);
@@ -175,20 +239,21 @@ const Dashboard = () => {
       <DashboardLayout>
         <div
           className="
-          min-h-screen
-          flex
-          items-center
-          justify-center
+          grid
+          grid-cols-1
+          sm:grid-cols-2
+          lg:grid-cols-3
+          gap-6
+          p-6
         "
         >
-          <h1
-            className="
-            text-3xl
-            font-bold
-          "
-          >
-            Loading...
-          </h1>
+          {Array(6)
+            .fill(0)
+            .map((_, index) => (
+              <StatsCardSkeleton
+                key={index}
+              />
+            ))}
         </div>
       </DashboardLayout>
     );
@@ -224,6 +289,7 @@ const Dashboard = () => {
             className="
             text-gray-500
             text-lg
+            capitalize
           "
           >
             Role:

@@ -1,19 +1,33 @@
 import React from "react";
+
 import ReactDOM from "react-dom/client";
-
-import App from "./App";
-
-import "./index.css";
 
 import {
   BrowserRouter,
 } from "react-router-dom";
 
+import { Toaster }
+from "react-hot-toast";
+
+import "react-loading-skeleton/dist/skeleton.css";
+
+import "./index.css";
+
+import App from "./App";
+
 import {
   AuthProvider,
 } from "./context/AuthContext";
 
-import { Toaster } from "react-hot-toast";
+import {
+  NotificationProvider,
+} from "./context/NotificationContext";
+
+/*
+========================================
+ROOT RENDER
+========================================
+*/
 
 ReactDOM.createRoot(
   document.getElementById("root")
@@ -21,9 +35,21 @@ ReactDOM.createRoot(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <Toaster />
+        <NotificationProvider>
+          {/* TOAST */}
 
-        <App />
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+            toastOptions={{
+              duration: 3000,
+            }}
+          />
+
+          {/* APP */}
+
+          <App />
+        </NotificationProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

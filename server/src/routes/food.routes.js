@@ -1,8 +1,8 @@
 import express from "express";
 
-import upload from "../middleware/upload.js";
+import upload from "../middleware/uploadMiddleware.js";
 
-import protect from "../middleware/authMiddleware.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 import {
   donateFood,
@@ -12,8 +12,7 @@ import {
   getDashboardStats,
 } from "../controllers/food.js";
 
-const router =
-  express.Router();
+const router = express.Router();
 
 /*
 ========================================
@@ -23,13 +22,8 @@ DONATE FOOD
 
 router.post(
   "/donate",
-
-  protect,
-
-  upload.single(
-    "foodImage"
-  ),
-
+  authMiddleware,
+  upload.single("foodImage"),
   donateFood
 );
 
@@ -41,23 +35,19 @@ GET ALL FOOD
 
 router.get(
   "/all",
-
-  protect,
-
+  authMiddleware,
   getAllFood
 );
 
 /*
 ========================================
-MY DONATIONS
+GET MY DONATIONS
 ========================================
 */
 
 router.get(
   "/my-donations",
-
-  protect,
-
+  authMiddleware,
   getMyDonations
 );
 
@@ -69,9 +59,7 @@ CLAIM FOOD
 
 router.put(
   "/claim/:id",
-
-  protect,
-
+  authMiddleware,
   claimFood
 );
 
@@ -83,9 +71,7 @@ DASHBOARD STATS
 
 router.get(
   "/stats",
-
-  protect,
-
+  authMiddleware,
   getDashboardStats
 );
 

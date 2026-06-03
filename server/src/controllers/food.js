@@ -13,16 +13,6 @@ export const donateFood =
     try {
       /*
       ========================================
-      DEBUG
-      ========================================
-      */
-
-      console.log(req.body);
-
-      console.log(req.file);
-
-      /*
-      ========================================
       GET FORM DATA
       ========================================
       */
@@ -45,6 +35,7 @@ export const donateFood =
       if (
         !foodName ||
         !quantity ||
+        !category ||
         !location ||
         !expiryTime
       ) {
@@ -77,13 +68,14 @@ export const donateFood =
           description,
 
           foodImage:
-            req.file
-              ? req.file.path
-              : "",
+            req.file?.path ||
+            "",
 
-          donor: req.user.id,
+          donor:
+            req.user._id,
 
-          status: "available",
+          status:
+            "available",
         });
 
       /*
@@ -96,7 +88,7 @@ export const donateFood =
         "newFoodDonation",
         {
           message:
-            "New Food Donation",
+            "New Food Donation Added",
 
           food,
         }
@@ -123,7 +115,7 @@ export const donateFood =
         success: false,
 
         message:
-          error.message,
+          "Failed to donate food",
       });
     }
   };
@@ -137,9 +129,47 @@ GET ALL FOOD
 export const getAllFood =
   async (req, res) => {
     try {
+      /*
+      ========================================
+      PAGINATION
+      ========================================
+      */
+
+      const page =
+        Number(
+          req.query.page
+        ) || 1;
+
+      const limit =
+        Number(
+          req.query.limit
+        ) || 6;
+
+      const skip =
+        (page - 1) * limit;
+
+      /*
+      ========================================
+      TOTAL FOOD
+      ========================================
+      */
+
+      const totalFoods =
+        await Food.countDocuments({
+          status:
+            "available",
+        });
+
+      /*
+      ========================================
+      FETCH FOOD
+      ========================================
+      */
+
       const foods =
         await Food.find({
-          status: "available",
+          status:
+            "available",
         })
           .populate(
             "donor",
@@ -147,12 +177,31 @@ export const getAllFood =
           )
           .sort({
             createdAt: -1,
-          });
+          })
+          .skip(skip)
+          .limit(limit);
+
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
 
       res.status(200).json({
         success: true,
 
         foods,
+
+        currentPage:
+          page,
+
+        totalPages:
+          Math.ceil(
+            totalFoods /
+              limit
+          ),
+
+        totalFoods,
       });
     } catch (error) {
       console.log(error);
@@ -161,7 +210,7 @@ export const getAllFood =
         success: false,
 
         message:
-          error.message,
+          "Failed to fetch food",
       });
     }
   };
@@ -177,15 +226,11 @@ export const getMyDonations =
     try {
       const foods =
         await Food.find({
-          donor: req.user.id,
+          donor:
+            req.user._id,
         }).sort({
           createdAt: -1,
         });
-
-      console.log(
-        "MY DONATIONS:",
-        foods
-      );
 
       res.status(200).json({
         success: true,
@@ -213,10 +258,22 @@ CLAIM FOOD
 export const claimFood =
   async (req, res) => {
     try {
+      /*
+      ========================================
+      FIND FOOD
+      ========================================
+      */
+
       const food =
         await Food.findById(
           req.params.id
         );
+
+      /*
+      ========================================
+      VALIDATION
+      ========================================
+      */
 
       if (!food) {
         return res.status(404).json({
@@ -227,10 +284,29 @@ export const claimFood =
         });
       }
 
-      food.status = "claimed";
+      if (
+        food.status !==
+        "available"
+      ) {
+        return res.status(400).json({
+          success: false,
+
+          message:
+            "Food already claimed",
+        });
+      }
+
+      /*
+      ========================================
+      UPDATE FOOD
+      ========================================
+      */
+
+      food.status =
+        "claimed";
 
       food.claimedBy =
-        req.user.id;
+        req.user._id;
 
       await food.save();
 
@@ -240,9 +316,21 @@ export const claimFood =
       ========================================
       */
 
-      io.emit("foodClaimed", {
-        food,
-      });
+      io.emit(
+        "foodClaimed",
+        {
+          message:
+            "Food Claimed",
+
+          food,
+        }
+      );
+
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
 
       res.status(200).json({
         success: true,
@@ -259,7 +347,7 @@ export const claimFood =
         success: false,
 
         message:
-          error.message,
+          "Failed to claim food",
       });
     }
   };
@@ -275,7 +363,8 @@ export const getClaimedFood =
     try {
       const foods =
         await Food.find({
-          status: "claimed",
+          status:
+            "claimed",
         })
           .populate(
             "claimedBy",
@@ -297,7 +386,7 @@ export const getClaimedFood =
         success: false,
 
         message:
-          error.message,
+          "Failed to fetch claimed food",
       });
     }
   };
@@ -315,6 +404,12 @@ export const assignDelivery =
         volunteerId,
       } = req.body;
 
+      /*
+      ========================================
+      FIND FOOD
+      ========================================
+      */
+
       const food =
         await Food.findById(
           req.params.id
@@ -329,10 +424,22 @@ export const assignDelivery =
         });
       }
 
+      /*
+      ========================================
+      ASSIGN VOLUNTEER
+      ========================================
+      */
+
       food.volunteer =
         volunteerId;
 
       await food.save();
+
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
 
       res.status(200).json({
         success: true,
@@ -349,7 +456,7 @@ export const assignDelivery =
         success: false,
 
         message:
-          error.message,
+          "Failed to assign volunteer",
       });
     }
   };
@@ -363,6 +470,12 @@ MARK DELIVERED
 export const markDelivered =
   async (req, res) => {
     try {
+      /*
+      ========================================
+      FIND FOOD
+      ========================================
+      */
+
       const food =
         await Food.findById(
           req.params.id
@@ -377,10 +490,38 @@ export const markDelivered =
         });
       }
 
+      /*
+      ========================================
+      UPDATE STATUS
+      ========================================
+      */
+
       food.status =
         "delivered";
 
       await food.save();
+
+      /*
+      ========================================
+      SOCKET EVENT
+      ========================================
+      */
+
+      io.emit(
+        "foodDelivered",
+        {
+          message:
+            "Food Delivered",
+
+          food,
+        }
+      );
+
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
 
       res.status(200).json({
         success: true,
@@ -397,7 +538,7 @@ export const markDelivered =
         success: false,
 
         message:
-          error.message,
+          "Failed to mark delivery",
       });
     }
   };
@@ -414,7 +555,7 @@ export const getVolunteerDeliveries =
       const foods =
         await Food.find({
           volunteer:
-            req.user.id,
+            req.user._id,
         }).sort({
           createdAt: -1,
         });
@@ -431,16 +572,10 @@ export const getVolunteerDeliveries =
         success: false,
 
         message:
-          error.message,
+          "Failed to fetch deliveries",
       });
     }
   };
-
-/*
-========================================
-GET DASHBOARD STATS
-========================================
-*/
 
 /*
 ========================================
@@ -453,7 +588,7 @@ export const getDashboardStats =
     try {
       /*
       ========================================
-      CURRENT USER
+      USER
       ========================================
       */
 
@@ -462,7 +597,7 @@ export const getDashboardStats =
 
       /*
       ========================================
-      TOTAL DONATIONS
+      STATS
       ========================================
       */
 
@@ -470,12 +605,6 @@ export const getDashboardStats =
         await Food.countDocuments({
           donor: userId,
         });
-
-      /*
-      ========================================
-      AVAILABLE FOOD
-      ========================================
-      */
 
       const availableFood =
         await Food.countDocuments({
@@ -485,12 +614,6 @@ export const getDashboardStats =
             "available",
         });
 
-      /*
-      ========================================
-      CLAIMED FOOD
-      ========================================
-      */
-
       const claimedFood =
         await Food.countDocuments({
           donor: userId,
@@ -498,12 +621,6 @@ export const getDashboardStats =
           status:
             "claimed",
         });
-
-      /*
-      ========================================
-      DELIVERED FOOD
-      ========================================
-      */
 
       const deliveredFood =
         await Food.countDocuments({
@@ -513,15 +630,10 @@ export const getDashboardStats =
             "delivered",
         });
 
-      /*
-      ========================================
-      PICKED DELIVERIES
-      ========================================
-      */
-
       const pickedDeliveries =
         await Food.countDocuments({
-          volunteer: userId,
+          volunteer:
+            userId,
         });
 
       /*

@@ -1,14 +1,20 @@
-import { io } from "socket.io-client";
+import { io }
+from "socket.io-client";
 
 const socket = io(
   "http://localhost:5000",
   {
     transports: [
       "websocket",
-      "polling",
     ],
 
-    withCredentials: true,
+    autoConnect: true,
+
+    reconnection: true,
+
+    reconnectionAttempts: 5,
+
+    reconnectionDelay: 1000,
   }
 );
 

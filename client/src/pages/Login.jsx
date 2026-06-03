@@ -17,14 +17,37 @@ import {
 import { useAuth } from "../context/AuthContext";
 
 import slide1 from "../assets/ImgDisplay.jpg";
+
 import slide2 from "../assets/info-img.jpg";
+
 import slide3 from "../assets/pic-1.avif";
+
 import slide4 from "../assets/pexels-mehmet-turgut-kirkgoz-11576242.jpg";
 
 const Login = () => {
-  const navigate = useNavigate();
+  /*
+  ========================================
+  NAVIGATION
+  ========================================
+  */
 
-  const { login } = useAuth();
+  const navigate =
+    useNavigate();
+
+  /*
+  ========================================
+  AUTH CONTEXT
+  ========================================
+  */
+
+  const { login } =
+    useAuth();
+
+  /*
+  ========================================
+  SLIDES
+  ========================================
+  */
 
   const slides = [
     slide1,
@@ -33,36 +56,73 @@ const Login = () => {
     slide4,
   ];
 
+  /*
+  ========================================
+  STATE
+  ========================================
+  */
+
   const [currentSlide, setCurrentSlide] =
     useState(0);
+
+  const [loading, setLoading] =
+    useState(false);
 
   const [formData, setFormData] =
     useState({
       email: "",
+
       password: "",
     });
 
+  /*
+  ========================================
+  AUTO SLIDER
+  ========================================
+  */
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) =>
-        prev === slides.length - 1
-          ? 0
-          : prev + 1
-      );
-    }, 4000);
+    const interval =
+      setInterval(() => {
+        setCurrentSlide(
+          (prev) =>
+            prev ===
+            slides.length - 1
+              ? 0
+              : prev + 1
+        );
+      }, 4000);
 
     return () =>
       clearInterval(interval);
   }, [slides.length]);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
+  /*
+  ========================================
+  HANDLE CHANGE
+  ========================================
+  */
 
-      [e.target.name]:
-        e.target.value,
-    });
+  const handleChange = (
+    e
+  ) => {
+    const {
+      name,
+      value,
+    } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+
+      [name]: value,
+    }));
   };
+
+  /*
+  ========================================
+  HANDLE SUBMIT
+  ========================================
+  */
 
   const handleSubmit = async (
     e
@@ -70,22 +130,74 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const data =
-        await loginUser(formData);
+      /*
+      ========================================
+      VALIDATION
+      ========================================
+      */
 
-      login(data.user, data.token);
+      if (
+        !formData.email.trim() ||
+        !formData.password.trim()
+      ) {
+        return toast.error(
+          "Please fill all fields"
+        );
+      }
+
+      setLoading(true);
+
+      /*
+      ========================================
+      LOGIN API
+      ========================================
+      */
+
+      const data =
+        await loginUser(
+          formData
+        );
+
+      /*
+      ========================================
+      SAVE USER
+      ========================================
+      */
+
+      login(
+        data.user,
+        data.token
+      );
+
+      /*
+      ========================================
+      SUCCESS
+      ========================================
+      */
 
       toast.success(
         "Login Successful"
       );
 
-      navigate("/dashboard");
+      /*
+      ========================================
+      REDIRECT
+      ========================================
+      */
+
+      navigate(
+        "/dashboard"
+      );
     } catch (error) {
+      console.log(error);
+
       toast.error(
         error.response?.data
           ?.message ||
           "Login Failed"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,7 +210,7 @@ const Login = () => {
       text-white
     "
     >
-      {/* SLIDES */}
+      {/* BACKGROUND SLIDES */}
 
       <div
         className="
@@ -107,7 +219,10 @@ const Login = () => {
       "
       >
         {slides.map(
-          (slide, index) => (
+          (
+            slide,
+            index
+          ) => (
             <img
               key={index}
               src={slide}
@@ -121,7 +236,8 @@ const Login = () => {
                 transition-opacity
                 duration-1000
                 ${
-                  index === currentSlide
+                  index ===
+                  currentSlide
                     ? "opacity-100"
                     : "opacity-0"
                 }
@@ -191,6 +307,7 @@ const Login = () => {
               to="/"
               className="
               hover:text-green-400
+              transition
             "
             >
               About
@@ -200,6 +317,7 @@ const Login = () => {
               to="/register"
               className="
               hover:text-green-400
+              transition
             "
             >
               Register
@@ -229,8 +347,11 @@ const Login = () => {
             rounded-2xl
             p-6
             md:p-10
+            shadow-2xl
           "
           >
+            {/* TITLE */}
+
             <h1
               className="
               text-5xl
@@ -243,12 +364,18 @@ const Login = () => {
               Login
             </h1>
 
+            {/* FORM */}
+
             <form
-              onSubmit={handleSubmit}
+              onSubmit={
+                handleSubmit
+              }
               className="
               space-y-8
             "
             >
+              {/* EMAIL */}
+
               <div>
                 <label
                   className="
@@ -265,8 +392,13 @@ const Login = () => {
                 <input
                   type="email"
                   name="email"
+                  value={
+                    formData.email
+                  }
                   placeholder="Enter your email"
-                  onChange={handleChange}
+                  onChange={
+                    handleChange
+                  }
                   className="
                   w-full
                   bg-white/10
@@ -281,6 +413,8 @@ const Login = () => {
                 "
                 />
               </div>
+
+              {/* PASSWORD */}
 
               <div>
                 <label
@@ -298,8 +432,13 @@ const Login = () => {
                 <input
                   type="password"
                   name="password"
+                  value={
+                    formData.password
+                  }
                   placeholder="Enter your password"
-                  onChange={handleChange}
+                  onChange={
+                    handleChange
+                  }
                   className="
                   w-full
                   bg-white/10
@@ -315,6 +454,8 @@ const Login = () => {
                 />
               </div>
 
+              {/* BUTTONS */}
+
               <div
                 className="
                 grid
@@ -325,16 +466,21 @@ const Login = () => {
               >
                 <button
                   type="submit"
+                  disabled={loading}
                   className="
                   bg-green-500
                   hover:bg-green-600
+                  disabled:bg-gray-500
                   py-4
                   rounded-lg
                   text-lg
                   font-bold
+                  transition
                 "
                 >
-                  LOGIN
+                  {loading
+                    ? "Logging In..."
+                    : "LOGIN"}
                 </button>
 
                 <Link
@@ -349,6 +495,7 @@ const Login = () => {
                   flex
                   items-center
                   justify-center
+                  transition
                 "
                 >
                   REGISTER

@@ -1,8 +1,15 @@
 import axios from "axios";
 
+/*
+========================================
+AXIOS INSTANCE
+========================================
+*/
+
 const api = axios.create({
   baseURL:
-    "http://localhost:5000/api/v1",
+    import.meta.env
+      .VITE_API_URL,
 
   headers: {
     "Content-Type":
@@ -23,12 +30,24 @@ api.interceptors.request.use(
         "token"
       );
 
+    /*
+    ========================================
+    ADD TOKEN
+    ========================================
+    */
+
     if (token) {
       config.headers.Authorization =
         `Bearer ${token}`;
     }
 
     return config;
+  },
+
+  (error) => {
+    return Promise.reject(
+      error
+    );
   }
 );
 

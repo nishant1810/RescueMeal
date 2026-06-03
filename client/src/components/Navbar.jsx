@@ -15,11 +15,19 @@ import {
   Bell,
   PlusCircle,
   PackageCheck,
+  Search,
+  X,
 } from "lucide-react";
 
 import {
   useNavigate,
 } from "react-router-dom";
+
+import {
+  useNotification,
+} from "../context/NotificationContext";
+
+import toast from "react-hot-toast";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -32,6 +40,17 @@ const Navbar = () => {
 
   const { user, logout } =
     useAuth();
+
+  /*
+  ========================================
+  NOTIFICATIONS
+  ========================================
+  */
+
+  const {
+    notifications,
+    removeNotification,
+  } = useNotification();
 
   /*
   ========================================
@@ -51,16 +70,40 @@ const Navbar = () => {
   const [open, setOpen] =
     useState(false);
 
-  const menuRef = useRef();
+  const [
+    notificationOpen,
+    setNotificationOpen,
+  ] = useState(false);
+
+  const [search, setSearch] =
+    useState("");
 
   /*
   ========================================
-  CLOSE MENU
+  REFS
+  ========================================
+  */
+
+  const menuRef =
+    useRef();
+
+  const notificationRef =
+    useRef();
+
+  /*
+  ========================================
+  CLOSE MENU OUTSIDE CLICK
   ========================================
   */
 
   useEffect(() => {
     const handler = (e) => {
+      /*
+      ========================================
+      PROFILE MENU
+      ========================================
+      */
+
       if (
         menuRef.current &&
         !menuRef.current.contains(
@@ -68,6 +111,23 @@ const Navbar = () => {
         )
       ) {
         setOpen(false);
+      }
+
+      /*
+      ========================================
+      NOTIFICATION PANEL
+      ========================================
+      */
+
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(
+          e.target
+        )
+      ) {
+        setNotificationOpen(
+          false
+        );
       }
     };
 
@@ -98,17 +158,67 @@ const Navbar = () => {
           .toUpperCase() +
         user?.role?.slice(1);
 
+  /*
+  ========================================
+  HANDLE SEARCH
+  ========================================
+  */
+
+  const handleSearch = (
+    e
+  ) => {
+    if (
+      e.key === "Enter"
+    ) {
+      if (
+        search.trim() === ""
+      ) {
+        return toast.error(
+          "Enter something to search"
+        );
+      }
+
+      toast.success(
+        `Searching for "${search}"`
+      );
+
+      navigate(
+        `/available-food?search=${search}`
+      );
+    }
+  };
+
+  /*
+  ========================================
+  HANDLE LOGOUT
+  ========================================
+  */
+
+  const handleLogout =
+    () => {
+      logout();
+
+      toast.success(
+        "Logged out successfully"
+      );
+
+      navigate("/login");
+    };
+
   return (
     <div
       className="
       bg-[#1f1f1f]
       border-b
       border-gray-800
-      px-6
+      px-4
+      md:px-6
       py-4
       flex
       justify-between
       items-center
+      gap-4
+      relative
     "
     >
       {/* LEFT */}
@@ -117,6 +227,7 @@ const Navbar = () => {
         <h1
           className="
           text-2xl
+          md:text-3xl
           font-bold
           text-white
         "
@@ -124,7 +235,13 @@ const Navbar = () => {
           RescueMeal
         </h1>
 
-        <p className="text-gray-400">
+        <p
+          className="
+          text-gray-400
+          hidden
+          md:block
+        "
+        >
           Smart Food Rescue &
           Distribution Platform
         </p>
@@ -136,17 +253,208 @@ const Navbar = () => {
         className="
         flex
         items-center
-        gap-5
+        gap-4
       "
       >
+        {/* SEARCH */}
+
+        <div
+          className="
+          hidden
+          md:flex
+          items-center
+          bg-[#2c2c2c]
+          px-4
+          py-2
+          rounded-xl
+          w-[320px]
+        "
+        >
+          <Search
+            size={18}
+            className="
+            text-gray-400
+          "
+          />
+
+          <input
+            type="text"
+            placeholder="Search food, NGOs..."
+            value={search}
+            onChange={(e) =>
+              setSearch(
+                e.target.value
+              )
+            }
+            onKeyDown={
+              handleSearch
+            }
+            className="
+            bg-transparent
+            outline-none
+            px-3
+            text-white
+            w-full
+            placeholder:text-gray-500
+          "
+          />
+        </div>
+
         {/* NOTIFICATION */}
 
-        <Bell
-          className="
-          text-gray-300
-          cursor-pointer
-        "
-        />
+        <div
+          className="relative"
+          ref={
+            notificationRef
+          }
+        >
+          <button
+            onClick={() =>
+              setNotificationOpen(
+                !notificationOpen
+              )
+            }
+            className="
+            relative
+            text-gray-300
+            hover:text-white
+            transition
+          "
+          >
+            <Bell size={24} />
+
+            {/* BADGE */}
+
+            {notifications.length >
+              0 && (
+              <span
+                className="
+                absolute
+                -top-1
+                -right-1
+                bg-red-500
+                text-white
+                text-xs
+                w-5
+                h-5
+                rounded-full
+                flex
+                items-center
+                justify-center
+              "
+              >
+                {
+                  notifications.length
+                }
+              </span>
+            )}
+          </button>
+
+          {/* NOTIFICATION DROPDOWN */}
+
+          {notificationOpen && (
+            <div
+              className="
+              absolute
+              right-0
+              mt-4
+              w-[340px]
+              bg-[#2a2a2a]
+              rounded-2xl
+              shadow-2xl
+              p-4
+              z-50
+              border
+              border-gray-700
+            "
+            >
+              <h2
+                className="
+                text-white
+                text-xl
+                font-bold
+                mb-4
+              "
+              >
+                Notifications
+              </h2>
+
+              {notifications.length ===
+              0 ? (
+                <p
+                  className="
+                  text-gray-400
+                "
+                >
+                  No notifications
+                </p>
+              ) : (
+                <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                  {notifications.map(
+                    (
+                      notification
+                    ) => (
+                      <div
+                        key={
+                          notification.id
+                        }
+                        className="
+                        bg-[#3a3a3a]
+                        p-3
+                        rounded-xl
+                        flex
+                        justify-between
+                        items-start
+                        gap-3
+                      "
+                      >
+                        <div>
+                          <p
+                            className="
+                            text-white
+                            text-sm
+                          "
+                          >
+                            {
+                              notification.message
+                            }
+                          </p>
+
+                          <span
+                            className="
+                            text-xs
+                            text-gray-400
+                          "
+                          >
+                            {new Date(
+                              notification.createdAt
+                            ).toLocaleTimeString()}
+                          </span>
+                        </div>
+
+                        <button
+                          onClick={() =>
+                            removeNotification(
+                              notification.id
+                            )
+                          }
+                          className="
+                          text-red-400
+                          hover:text-red-300
+                        "
+                        >
+                          <X
+                            size={16}
+                          />
+                        </button>
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* PROFILE */}
 
@@ -154,6 +462,8 @@ const Navbar = () => {
           className="relative"
           ref={menuRef}
         >
+          {/* PROFILE BUTTON */}
+
           <button
             onClick={() =>
               setOpen(!open)
@@ -166,14 +476,18 @@ const Navbar = () => {
             flex
             items-center
             justify-center
+            hover:scale-105
+            transition
           "
           >
             <User
-              className="text-gray-700"
+              className="
+              text-gray-700
+            "
             />
           </button>
 
-          {/* DROPDOWN */}
+          {/* PROFILE DROPDOWN */}
 
           {open && (
             <div
@@ -181,13 +495,16 @@ const Navbar = () => {
               absolute
               right-0
               mt-4
-              w-[390px]
+              w-[360px]
+              md:w-[390px]
               bg-[#2a2a2a]
               rounded-3xl
               shadow-2xl
               p-6
               z-50
               text-white
+              border
+              border-gray-700
             "
             >
               {/* USER */}
@@ -213,14 +530,17 @@ const Navbar = () => {
                 >
                   <User
                     size={42}
-                    className="text-gray-500"
+                    className="
+                    text-gray-500
+                  "
                   />
                 </div>
 
                 <div>
                   <h2
                     className="
-                    text-4xl
+                    text-3xl
+                    md:text-4xl
                     font-bold
                   "
                   >
@@ -251,8 +571,6 @@ const Navbar = () => {
                 mb-8
               "
               >
-                {/* DASHBOARD */}
-
                 <button
                   onClick={() =>
                     navigate(
@@ -275,12 +593,10 @@ const Navbar = () => {
                     size={28}
                   />
 
-                  <p className="text-lg">
+                  <p className="text-sm md:text-lg">
                     Dashboard
                   </p>
                 </button>
-
-                {/* ROLE BASED */}
 
                 {user?.role ===
                   "donor" && (
@@ -306,7 +622,7 @@ const Navbar = () => {
                       size={28}
                     />
 
-                    <p className="text-lg">
+                    <p className="text-sm md:text-lg">
                       Donate
                     </p>
                   </button>
@@ -336,7 +652,7 @@ const Navbar = () => {
                       size={28}
                     />
 
-                    <p className="text-lg">
+                    <p className="text-sm md:text-lg">
                       Claims
                     </p>
                   </button>
@@ -366,13 +682,11 @@ const Navbar = () => {
                       size={28}
                     />
 
-                    <p className="text-lg">
+                    <p className="text-sm md:text-lg">
                       Delivery
                     </p>
                   </button>
                 )}
-
-                {/* DONATIONS */}
 
                 <button
                   onClick={() =>
@@ -396,7 +710,7 @@ const Navbar = () => {
                     size={28}
                   />
 
-                  <p className="text-lg">
+                  <p className="text-sm md:text-lg">
                     Donations
                   </p>
                 </button>
@@ -404,9 +718,7 @@ const Navbar = () => {
 
               {/* MENU */}
 
-              <div className="space-y-6">
-                {/* ROLE */}
-
+              <div className="space-y-5">
                 <div
                   className="
                   flex
@@ -420,11 +732,10 @@ const Navbar = () => {
                     size={22}
                   />
 
-                  Role:{" "}
+                  Role:
+                  {" "}
                   {roleLabel}
                 </div>
-
-                {/* SETTINGS */}
 
                 <button
                   className="
@@ -445,10 +756,10 @@ const Navbar = () => {
                   Settings
                 </button>
 
-                {/* LOGOUT */}
-
                 <button
-                  onClick={logout}
+                  onClick={
+                    handleLogout
+                  }
                   className="
                   flex
                   items-center

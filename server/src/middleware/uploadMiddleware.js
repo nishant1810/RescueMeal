@@ -4,25 +4,49 @@ import {
   CloudinaryStorage,
 } from "multer-storage-cloudinary";
 
-import cloudinary from "../config/cloudinary.js";
+import cloudinary
+from "../config/cloudinary.js";
+
+/*
+========================================
+CLOUDINARY STORAGE
+========================================
+*/
 
 const storage =
   new CloudinaryStorage({
     cloudinary,
 
-    params: {
-      folder: "rescuemeal-food",
+    params: async (
+      req,
+      file
+    ) => ({
+      folder:
+        "RescueMeal",
 
       allowed_formats: [
         "jpg",
-        "png",
         "jpeg",
+        "png",
+        "webp",
       ],
-    },
+
+      public_id:
+        Date.now() +
+        "-" +
+        file.originalname,
+    }),
   });
 
-const upload = multer({
-  storage,
-});
+/*
+========================================
+UPLOAD MIDDLEWARE
+========================================
+*/
+
+const upload =
+  multer({
+    storage,
+  });
 
 export default upload;

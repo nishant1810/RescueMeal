@@ -1,15 +1,25 @@
 import express from "express";
+
 import cors from "cors";
-import path from "path";
+
 import helmet from "helmet";
+
 import compression from "compression";
+
 import cookieParser from "cookie-parser";
+
 import morgan from "morgan";
+
 import rateLimit from "express-rate-limit";
+
 import authRoutes from "./routes/auth.routes.js";
+
 import foodRoutes from "./routes/food.routes.js";
+
 import userRoutes from "./routes/user.routes.js";
+
 import notFoundMiddleware from "./middleware/notFoundMiddleware.js";
+
 import errorMiddleware from "./middleware/errorMiddleware.js";
 
 const app = express();
@@ -31,6 +41,7 @@ CORS
 app.use(
   cors({
     origin:
+      process.env.CLIENT_URL ||
       "http://localhost:5173",
 
     credentials: true,
@@ -46,7 +57,7 @@ app.use(
 
 /*
 ========================================
-SECURITY
+SECURITY MIDDLEWARE
 ========================================
 */
 
@@ -90,43 +101,28 @@ app.use(
 
 /*
 ========================================
-STATIC FILES
-========================================
-*/
-
-// app.use(
-//   "/uploads",
-
-//   express.static(
-//     path.resolve(
-//       "uploads"
-//     )
-//   )
-// );
-
-/*
-========================================
 RATE LIMITER
 ========================================
 */
 
-const limiter = rateLimit({
-  windowMs:
-    15 * 60 * 1000,
+const limiter =
+  rateLimit({
+    windowMs:
+      15 * 60 * 1000,
 
-  max: 100,
+    max: 100,
 
-  standardHeaders: true,
+    standardHeaders: true,
 
-  legacyHeaders: false,
+    legacyHeaders: false,
 
-  message: {
-    success: false,
+    message: {
+      success: false,
 
-    message:
-      "Too many requests from this IP",
-  },
-});
+      message:
+        "Too many requests from this IP",
+    },
+  });
 
 /*
 ========================================
@@ -134,7 +130,10 @@ APPLY RATE LIMIT
 ========================================
 */
 
-app.use("/api", limiter);
+app.use(
+  "/api",
+  limiter
+);
 
 /*
 ========================================
@@ -147,7 +146,7 @@ app.get("/", (req, res) => {
     success: true,
 
     message:
-      "RescueMeal API Running",
+      "RescueMeal API Running Successfully",
   });
 });
 
@@ -174,7 +173,7 @@ app.use(
 
 /*
 ========================================
-NOT FOUND
+NOT FOUND MIDDLEWARE
 ========================================
 */
 
@@ -184,7 +183,7 @@ app.use(
 
 /*
 ========================================
-ERROR HANDLER
+GLOBAL ERROR HANDLER
 ========================================
 */
 

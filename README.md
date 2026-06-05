@@ -9,18 +9,18 @@ The platform allows donors to donate excess food, NGOs to claim available food, 
 
 ## ✨ Features
 
-- 🔐 JWT Authentication
-- 👥 Role-Based Access Control (RBAC)
-- 🍱 Food Donation System
-- 🏢 NGO Food Claiming
-- 🚚 Volunteer Delivery Management
-- 📊 Analytics Dashboard
-- 🔔 Real-Time Notifications using Socket.IO
-- 🔍 Search, Filter & Pagination
-- 📱 Fully Responsive Design
-- ⚡ RESTful API Architecture
-- 📍 Location-Based Food Discovery
-- ⚡ REST API Architecture
+🔐 JWT Authentication
+👥 Role-Based Access Control (RBAC)
+🍱 Food Donation System
+🏢 NGO Food Claiming
+🚚 Volunteer Delivery Management
+📊 Analytics Dashboard
+🔔 Real-Time Notifications using Socket.IO
+🔍 Search, Filter & Pagination
+📱 Fully Responsive Design
+⚡ RESTful API Architecture
+📍 Location-Based Food Discovery
+⚡ REST API Architecture
 
 ---
 
@@ -116,13 +116,13 @@ RescueMeal/
 ```md
 ## 🚀 Future Improvements
 
-- 🤖 AI-based food expiry prediction
-- 🗺️ Google Maps integration
-- 📧 Email notifications
-- 📱 Progressive Web App (PWA)
-- 🐳 Docker deployment
-- ☁️ Cloud image storage (Cloudinary/AWS S3)
-- 📍 Live delivery tracking
+🤖 AI-based food expiry prediction
+🗺️ Google Maps integration
+📧 Email notifications
+📱 Progressive Web App (PWA)
+🐳 Docker deployment
+☁️ Cloud image storage (Cloudinary/AWS S3)
+📍 Live delivery tracking
 
 ---
 

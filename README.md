@@ -15,11 +15,11 @@ The platform allows donors to donate excess food, NGOs to claim available food, 
 - 🏢 NGO Food Claiming
 - 🚚 Volunteer Delivery Management
 - 📊 Analytics Dashboard
-- 🔔 Real-Time Notifications (Socket.IO)
-- 🔍 Search & Filtering
-- 📄 Pagination
-- 🌙 Modern Dark UI
-- 📱 Responsive Design
+- 🔔 Real-Time Notifications using Socket.IO
+- 🔍 Search, Filter & Pagination
+- 📱 Fully Responsive Design
+- ⚡ RESTful API Architecture
+- 📍 Location-Based Food Discovery
 - ⚡ REST API Architecture
 
 ---
@@ -55,26 +55,39 @@ The platform allows donors to donate excess food, NGOs to claim available food, 
 # 📁 Project Structure
 
 ```bash
-RescueMeal/
+RescueMeal/ 
 │
-├── client/
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-├── server/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── middleware/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── config/
-│   │   └── server.js
-│   │
-│   ├── uploads/
-│   └── package.json
-│
-└── README.md
+├── client/ 
+│     ├── public/ 
+│     ├── src/ 
+│     │    ├── components/ 
+│     │    ├── pages/ 
+│     │    ├── services/ 
+│     │    ├── hooks/ 
+│     │    ├── utils/ 
+│     │    ├── layouts/ 
+│     │    └── App.jsx 
+│     │ 
+│     └── package.json 
+│ 
+├── server/ 
+│     ├── src/ 
+│     │     ├── config/ 
+│     │     ├── controllers/ 
+│     │     ├── middleware/ 
+│     │     ├── models/ 
+│     │     ├── routes/ 
+│     │     ├── utils/ 
+│     │     ├── socket/ 
+│     │     ├── app.js 
+│     │     └── server.js 
+│     │   
+│     ├── uploads/ 
+│     └── package.json 
+│     
+├── .env 
+├── README.md 
+└── package.json
 ````
 
 ---
@@ -103,12 +116,13 @@ RescueMeal/
 ```md
 ## 🚀 Future Improvements
 
-- AI-based food expiry prediction
-- Google Maps integration
-- Email notifications
-- PWA support
-- Admin dashboard
-- Docker deployment
+- 🤖 AI-based food expiry prediction
+- 🗺️ Google Maps integration
+- 📧 Email notifications
+- 📱 Progressive Web App (PWA)
+- 🐳 Docker deployment
+- ☁️ Cloud image storage (Cloudinary/AWS S3)
+- 📍 Live delivery tracking
 
 ---
 

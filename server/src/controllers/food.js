@@ -1,13 +1,12 @@
-import Food from "../models/Food.js";
+import Food
+from "../models/Food.js";
 
-import mongoose from "mongoose";
+import mongoose
+from "mongoose";
 
-import { io } from "../server.js";
+import { io }
+from "../server.js";
 
-
-console.log(
-  "FOOD CONTROLLER LOADED"
-);
 /*
 ========================================
 DONATE FOOD
@@ -16,7 +15,9 @@ DONATE FOOD
 
 export const donateFood =
   async (req, res) => {
+
     try {
+
       /*
       ========================================
       DEBUG LOGS
@@ -46,6 +47,8 @@ export const donateFood =
         location,
         expiryTime,
         description,
+        latitude,
+        longitude,
       } = req.body;
 
       /*
@@ -61,6 +64,7 @@ export const donateFood =
         !location ||
         !expiryTime
       ) {
+
         return res.status(400).json({
           success: false,
 
@@ -77,11 +81,16 @@ export const donateFood =
 
       let imageUrl = "";
 
-      if (req.file) {
-        imageUrl =
-          req.file.path;
-      }
+if (req.file) {
+/*
+  ========================================
+  STORE ONLY FILE NAME
+  ========================================
+  */
 
+  imageUrl =
+    req.file.filename;
+}
       /*
       ========================================
       CREATE FOOD
@@ -90,6 +99,7 @@ export const donateFood =
 
       const food =
         await Food.create({
+
           foodName,
 
           quantity:
@@ -108,6 +118,22 @@ export const donateFood =
 
           donor:
             req.user._id,
+
+          /*
+          ========================================
+          GEO LOCATION
+          ========================================
+          */
+
+          coordinates: {
+  type: "Point",
+
+  coordinates: [
+    Number(longitude) || 0,
+
+    Number(latitude) || 0,
+  ],
+},
 
           status:
             "available",
@@ -143,7 +169,9 @@ export const donateFood =
 
         food,
       });
+
     } catch (error) {
+
       /*
       ========================================
       ERROR LOG
@@ -173,7 +201,9 @@ GET ALL FOOD
 
 export const getAllFood =
   async (req, res) => {
+
     try {
+
       /*
       ========================================
       PAGINATION
@@ -216,15 +246,20 @@ export const getAllFood =
           status:
             "available",
         })
+
           .populate(
             "donor",
             "name email"
           )
+
           .sort({
             createdAt: -1,
           })
+
           .skip(skip)
+
           .limit(limit)
+
           .lean();
 
       /*
@@ -243,13 +278,14 @@ export const getAllFood =
 
         totalPages:
           Math.ceil(
-            totalFoods /
-              limit
+            totalFoods / limit
           ),
 
         totalFoods,
       });
+
     } catch (error) {
+
       console.log(
         "GET ALL FOOD ERROR:",
         error
@@ -273,15 +309,19 @@ GET MY DONATIONS
 
 export const getMyDonations =
   async (req, res) => {
+
     try {
+
       const foods =
         await Food.find({
           donor:
             req.user._id,
         })
+
           .sort({
             createdAt: -1,
           })
+
           .lean();
 
       return res.status(200).json({
@@ -289,7 +329,9 @@ export const getMyDonations =
 
         foods,
       });
+
     } catch (error) {
+
       console.log(
         "MY DONATIONS ERROR:",
         error
@@ -313,7 +355,9 @@ CLAIM FOOD
 
 export const claimFood =
   async (req, res) => {
+
     try {
+
       /*
       ========================================
       VALID OBJECT ID
@@ -325,6 +369,7 @@ export const claimFood =
           req.params.id
         )
       ) {
+
         return res.status(400).json({
           success: false,
 
@@ -332,6 +377,12 @@ export const claimFood =
             "Invalid food ID",
         });
       }
+
+      /*
+      ========================================
+      FIND FOOD
+      ========================================
+      */
 
       const food =
         await Food.findById(
@@ -345,6 +396,7 @@ export const claimFood =
       */
 
       if (!food) {
+
         return res.status(404).json({
           success: false,
 
@@ -363,6 +415,7 @@ export const claimFood =
         food.status !==
         "available"
       ) {
+
         return res.status(400).json({
           success: false,
 
@@ -401,6 +454,12 @@ export const claimFood =
         }
       );
 
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
+
       return res.status(200).json({
         success: true,
 
@@ -409,7 +468,9 @@ export const claimFood =
 
         food,
       });
+
     } catch (error) {
+
       console.log(
         "CLAIM FOOD ERROR:",
         error
@@ -433,23 +494,29 @@ GET CLAIMED FOOD
 
 export const getClaimedFood =
   async (req, res) => {
+
     try {
+
       const foods =
         await Food.find({
           status:
             "claimed",
         })
+
           .populate(
             "claimedBy",
             "name email"
           )
+
           .populate(
             "donor",
             "name email"
           )
+
           .sort({
             createdAt: -1,
           })
+
           .lean();
 
       return res.status(200).json({
@@ -457,7 +524,9 @@ export const getClaimedFood =
 
         foods,
       });
+
     } catch (error) {
+
       console.log(
         "GET CLAIMED FOOD ERROR:",
         error
@@ -481,7 +550,9 @@ ASSIGN DELIVERY
 
 export const assignDelivery =
   async (req, res) => {
+
     try {
+
       const {
         volunteerId,
       } = req.body;
@@ -493,6 +564,7 @@ export const assignDelivery =
       */
 
       if (!volunteerId) {
+
         return res.status(400).json({
           success: false,
 
@@ -501,12 +573,19 @@ export const assignDelivery =
         });
       }
 
+      /*
+      ========================================
+      FIND FOOD
+      ========================================
+      */
+
       const food =
         await Food.findById(
           req.params.id
         );
 
       if (!food) {
+
         return res.status(404).json({
           success: false,
 
@@ -524,6 +603,7 @@ export const assignDelivery =
       if (
         food.volunteer
       ) {
+
         return res.status(400).json({
           success: false,
 
@@ -541,7 +621,16 @@ export const assignDelivery =
       food.volunteer =
         volunteerId;
 
+      food.status =
+        "picked";
+
       await food.save();
+
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
 
       return res.status(200).json({
         success: true,
@@ -551,7 +640,9 @@ export const assignDelivery =
 
         food,
       });
+
     } catch (error) {
+
       console.log(
         "ASSIGN DELIVERY ERROR:",
         error
@@ -575,7 +666,9 @@ MARK DELIVERED
 
 export const markDelivered =
   async (req, res) => {
+
     try {
+
       const food =
         await Food.findById(
           req.params.id
@@ -588,6 +681,7 @@ export const markDelivered =
       */
 
       if (!food) {
+
         return res.status(404).json({
           success: false,
 
@@ -606,6 +700,7 @@ export const markDelivered =
         food.status ===
         "delivered"
       ) {
+
         return res.status(400).json({
           success: false,
 
@@ -641,6 +736,12 @@ export const markDelivered =
         }
       );
 
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
+
       return res.status(200).json({
         success: true,
 
@@ -649,7 +750,9 @@ export const markDelivered =
 
         food,
       });
+
     } catch (error) {
+
       console.log(
         "MARK DELIVERED ERROR:",
         error
@@ -673,19 +776,24 @@ VOLUNTEER DELIVERIES
 
 export const getVolunteerDeliveries =
   async (req, res) => {
+
     try {
+
       const foods =
         await Food.find({
           volunteer:
             req.user._id,
         })
+
           .populate(
             "donor",
             "name email"
           )
+
           .sort({
             createdAt: -1,
           })
+
           .lean();
 
       return res.status(200).json({
@@ -693,7 +801,9 @@ export const getVolunteerDeliveries =
 
         foods,
       });
+
     } catch (error) {
+
       console.log(
         "VOLUNTEER DELIVERY ERROR:",
         error
@@ -717,55 +827,78 @@ GET DASHBOARD STATS
 
 export const getDashboardStats =
   async (req, res) => {
+
     try {
-      const userId =
-        req.user._id;
 
       /*
       ========================================
-      PARALLEL QUERIES
+      TOTAL DONATIONS
       ========================================
       */
 
-      const [
-        totalDonations,
-        availableFood,
-        claimedFood,
-        deliveredFood,
-        pickedDeliveries,
-      ] = await Promise.all([
-        Food.countDocuments({
-          donor: userId,
-        }),
+      const totalDonations =
+        await Food.countDocuments();
 
-        Food.countDocuments({
-          donor: userId,
+      /*
+      ========================================
+      AVAILABLE FOOD
+      ========================================
+      */
+
+      const availableFood =
+        await Food.countDocuments({
           status:
             "available",
-        }),
+        });
 
-        Food.countDocuments({
-          donor: userId,
+      /*
+      ========================================
+      CLAIMED FOOD
+      ========================================
+      */
+
+      const claimedFood =
+        await Food.countDocuments({
           status:
             "claimed",
-        }),
+        });
 
-        Food.countDocuments({
-          donor: userId,
+      /*
+      ========================================
+      DELIVERED FOOD
+      ========================================
+      */
+
+      const deliveredFood =
+        await Food.countDocuments({
           status:
             "delivered",
-        }),
+        });
 
-        Food.countDocuments({
-          volunteer:
-            userId,
-        }),
-      ]);
+      /*
+      ========================================
+      PICKED DELIVERIES
+      ========================================
+      */
 
-      return res.status(200).json({
+      const pickedDeliveries =
+        await Food.countDocuments({
+          status:
+            "picked",
+        });
+
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
+
+      res.status(200).json({
+
         success: true,
 
         stats: {
+
           totalDonations,
 
           availableFood,
@@ -777,9 +910,126 @@ export const getDashboardStats =
           pickedDeliveries,
         },
       });
+
     } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+
+        success: false,
+
+        message:
+          "Error fetching dashboard stats",
+      });
+    }
+  };
+  
+/* ========================================
+ GET NEARBY FOOD
+ ========================================
+*/
+
+export const getNearbyFood =
+  async (req, res) => {
+
+    try {
+
+      /*
+      ========================================
+      QUERY PARAMS
+      ========================================
+      */
+
+      const {
+        lat,
+        lng,
+        distance = 5000,
+      } = req.query;
+
+      /*
+      ========================================
+      VALIDATION
+      ========================================
+      */
+
+      if (
+        !lat ||
+        !lng
+      ) {
+
+        return res.status(400).json({
+          success: false,
+
+          message:
+            "Latitude and longitude are required",
+        });
+      }
+
+      /*
+      ========================================
+      GEO SEARCH
+      ========================================
+      */
+
+      const foods =
+        await Food.find({
+
+          status:
+            "available",
+
+          coordinates: {
+            $near: {
+
+              $geometry: {
+                type: "Point",
+
+                coordinates: [
+                  Number(lng),
+                  Number(lat),
+                ],
+              },
+
+              /*
+              ========================================
+              MAX DISTANCE
+              ========================================
+              */
+
+              $maxDistance:
+                Number(distance),
+            },
+          },
+        })
+
+          .populate(
+            "donor",
+            "name email"
+          )
+
+          .sort({
+            createdAt: -1,
+          });
+
+      /*
+      ========================================
+      RESPONSE
+      ========================================
+      */
+
+      return res.status(200).json({
+        success: true,
+
+        count:
+          foods.length,
+
+        foods,
+      });
+
+    } catch (error) {
+
       console.log(
-        "DASHBOARD STATS ERROR:",
+        "NEARBY FOOD ERROR:",
         error
       );
 
@@ -788,7 +1038,7 @@ export const getDashboardStats =
 
         message:
           error.message ||
-          "Failed to fetch dashboard stats",
+          "Failed to fetch nearby food",
       });
     }
   };

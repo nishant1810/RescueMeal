@@ -1,26 +1,41 @@
-import mongoose from "mongoose";
+import mongoose
+from "mongoose";
 
 const foodSchema =
   new mongoose.Schema(
     {
+      /*
+      ========================================
+      FOOD DETAILS
+      ========================================
+      */
+
       foodName: {
         type: String,
         required: true,
+
+        trim: true,
       },
 
       quantity: {
         type: Number,
         required: true,
+
+        min: 1,
       },
 
       category: {
         type: String,
         required: true,
+
+        trim: true,
       },
 
       location: {
         type: String,
         required: true,
+
+        trim: true,
       },
 
       expiryTime: {
@@ -30,11 +45,43 @@ const foodSchema =
 
       description: {
         type: String,
+
+        trim: true,
       },
 
       foodImage: {
         type: String,
+
+        default: "",
       },
+
+      /*
+      ========================================
+      GEO LOCATION
+      ========================================
+      */
+
+      coordinates: {
+        type: {
+          type: String,
+
+          enum: ["Point"],
+
+          default: "Point",
+        },
+
+        coordinates: {
+          type: [Number],
+
+          default: [0, 0],
+        },
+      },
+
+      /*
+      ========================================
+      DONOR
+      ========================================
+      */
 
       donor: {
         type:
@@ -46,6 +93,12 @@ const foodSchema =
         required: true,
       },
 
+      /*
+      ========================================
+      CLAIMED NGO
+      ========================================
+      */
+
       claimedBy: {
         type:
           mongoose.Schema.Types
@@ -53,6 +106,12 @@ const foodSchema =
 
         ref: "User",
       },
+
+      /*
+      ========================================
+      VOLUNTEER
+      ========================================
+      */
 
       volunteer: {
         type:
@@ -62,26 +121,51 @@ const foodSchema =
         ref: "User",
       },
 
+      /*
+      ========================================
+      FOOD STATUS
+      ========================================
+      */
+
       status: {
         type: String,
 
         enum: [
           "available",
           "claimed",
+          "picked",
           "delivered",
         ],
 
         default: "available",
       },
     },
+
     {
       timestamps: true,
     }
   );
 
-const Food = mongoose.model(
-  "Food",
-  foodSchema
-);
+/*
+========================================
+GEO SPATIAL INDEX
+========================================
+*/
+
+foodSchema.index({
+  coordinates: "2dsphere",
+});
+
+/*
+========================================
+MODEL
+========================================
+*/
+
+const Food =
+  mongoose.model(
+    "Food",
+    foodSchema
+  );
 
 export default Food;

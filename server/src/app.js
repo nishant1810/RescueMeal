@@ -1,18 +1,12 @@
 import express from "express";
-
 import cors from "cors";
-
 import helmet from "helmet";
-
 import compression from "compression";
-
 import cookieParser from "cookie-parser";
-
 import morgan from "morgan";
-
 import rateLimit from "express-rate-limit";
-
 import dotenv from "dotenv";
+import path from "path";
 
 /*
 ========================================
@@ -20,14 +14,9 @@ ROUTES
 ========================================
 */
 
-import authRoutes
-from "./routes/auth.routes.js";
-
-import foodRoutes
-from "./routes/food.routes.js";
-
-import userRoutes
-from "./routes/user.routes.js";
+import authRoutes from "./routes/auth.routes.js";
+import foodRoutes from "./routes/food.routes.js";
+import userRoutes from "./routes/user.routes.js";
 
 /*
 ========================================
@@ -35,11 +24,8 @@ MIDDLEWARE
 ========================================
 */
 
-import notFoundMiddleware
-from "./middleware/notFoundMiddleware.js";
-
-import errorMiddleware
-from "./middleware/errorMiddleware.js";
+import notFoundMiddleware from "./middleware/notFoundMiddleware.js";
+import errorMiddleware from "./middleware/errorMiddleware.js";
 
 /*
 ========================================
@@ -74,8 +60,7 @@ CORS
 app.use(
   cors({
     origin:
-      process.env
-        .CLIENT_URL ||
+      process.env.CLIENT_URL ||
       "http://localhost:5173",
 
     credentials: true,
@@ -103,18 +88,13 @@ SECURITY MIDDLEWARE
 
 app.use(
   helmet({
-    crossOriginResourcePolicy:
-      false,
+    crossOriginResourcePolicy: false,
   })
 );
 
-app.use(
-  compression()
-);
+app.use(compression());
 
-app.use(
-  cookieParser()
-);
+app.use(cookieParser());
 
 /*
 ========================================
@@ -126,9 +106,7 @@ if (
   process.env.NODE_ENV !==
   "production"
 ) {
-  app.use(
-    morgan("dev")
-  );
+  app.use(morgan("dev"));
 }
 
 /*
@@ -146,9 +124,21 @@ app.use(
 app.use(
   express.urlencoded({
     extended: true,
-
     limit: "30mb",
   })
+);
+
+/*
+========================================
+STATIC FOLDER
+========================================
+*/
+
+app.use(
+  "/uploads",
+  express.static(
+    path.join(process.cwd(), "uploads")
+  )
 );
 
 /*
@@ -157,29 +147,27 @@ RATE LIMITER
 ========================================
 */
 
-const limiter =
-  rateLimit({
-    windowMs:
-      15 * 60 * 1000,
+const limiter = rateLimit({
+  windowMs:
+    15 * 60 * 1000,
 
-    max:
-      process.env
-        .NODE_ENV ===
-      "production"
-        ? 100
-        : 1000,
+  max:
+    process.env.NODE_ENV ===
+    "production"
+      ? 100
+      : 1000,
 
-    standardHeaders: true,
+  standardHeaders: true,
 
-    legacyHeaders: false,
+  legacyHeaders: false,
 
-    message: {
-      success: false,
+  message: {
+    success: false,
 
-      message:
-        "Too many requests from this IP. Please try again later.",
-    },
-  });
+    message:
+      "Too many requests from this IP. Please try again later.",
+  },
+});
 
 /*
 ========================================
@@ -187,10 +175,7 @@ APPLY RATE LIMIT
 ========================================
 */
 
-app.use(
-  "/api",
-  limiter
-);
+app.use("/api", limiter);
 
 /*
 ========================================
@@ -198,17 +183,14 @@ HEALTH CHECK
 ========================================
 */
 
-app.get(
-  "/",
-  (req, res) => {
-    res.status(200).json({
-      success: true,
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
 
-      message:
-        "RescueMeal API Running Successfully",
-    });
-  }
-);
+    message:
+      "RescueMeal API Running Successfully",
+  });
+});
 
 /*
 ========================================
@@ -237,9 +219,7 @@ app.use(
 ========================================
 */
 
-app.use(
-  notFoundMiddleware
-);
+app.use(notFoundMiddleware);
 
 /*
 ========================================
@@ -247,9 +227,7 @@ GLOBAL ERROR HANDLER
 ========================================
 */
 
-app.use(
-  errorMiddleware
-);
+app.use(errorMiddleware);
 
 /*
 ========================================

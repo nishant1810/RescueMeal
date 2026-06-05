@@ -1,20 +1,20 @@
-import { io }
-from "socket.io-client";
+import {io,} from "socket.io-client";
+
+/*
+========================================
+SOCKET CONNECTION
+========================================
+*/
 
 const socket = io(
-  "http://localhost:5000",
+  import.meta.env
+    .VITE_API_URL,
   {
     transports: [
       "websocket",
     ],
 
-    autoConnect: true,
-
-    reconnection: true,
-
-    reconnectionAttempts: 5,
-
-    reconnectionDelay: 1000,
+    withCredentials: true,
   }
 );
 

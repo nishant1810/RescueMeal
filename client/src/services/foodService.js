@@ -1,4 +1,5 @@
-import api from "../api/axios";
+import api
+from "../api/axios";
 
 /*
 ========================================
@@ -8,11 +9,16 @@ DONATE FOOD
 
 export const donateFood =
   async (formData) => {
+
     try {
+
       const { data } =
         await api.post(
+
           "/food/donate",
+
           formData,
+
           {
             headers: {
               "Content-Type":
@@ -22,8 +28,13 @@ export const donateFood =
         );
 
       return data;
+
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        "DONATE FOOD ERROR:",
+        error
+      );
 
       throw error;
     }
@@ -40,9 +51,12 @@ export const getAllFood =
     page = 1,
     limit = 6
   ) => {
+
     try {
+
       const { data } =
         await api.get(
+
           `/food/all?page=${page}&limit=${limit}`
         );
 
@@ -57,19 +71,21 @@ export const getAllFood =
           data?.foods || [],
 
         currentPage:
-          data?.currentPage ||
-          1,
+          data?.currentPage || 1,
 
         totalPages:
-          data?.totalPages ||
-          1,
+          data?.totalPages || 1,
 
         totalFoods:
-          data?.totalFoods ||
-          0,
+          data?.totalFoods || 0,
       };
+
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        "GET ALL FOOD ERROR:",
+        error
+      );
 
       return {
         foods: [],
@@ -85,21 +101,78 @@ export const getAllFood =
 
 /*
 ========================================
+GET NEARBY FOOD
+========================================
+*/
+
+export const getNearbyFood =
+  async (
+    lat,
+    lng,
+    distance = 5000
+  ) => {
+
+    try {
+
+      const { data } =
+        await api.get(
+
+          `/food/nearby?lat=${lat}&lng=${lng}&distance=${distance}`
+        );
+
+      /*
+      ========================================
+      SAFE RESPONSE
+      ========================================
+      */
+
+      return {
+        foods:
+          data?.foods || [],
+
+        count:
+          data?.count || 0,
+      };
+
+    } catch (error) {
+
+      console.log(
+        "GET NEARBY FOOD ERROR:",
+        error
+      );
+
+      return {
+        foods: [],
+
+        count: 0,
+      };
+    }
+  };
+
+/*
+========================================
 CLAIM FOOD
 ========================================
 */
 
 export const claimFood =
   async (id) => {
+
     try {
+
       const { data } =
         await api.put(
           `/food/claim/${id}`
         );
 
       return data;
+
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        "CLAIM FOOD ERROR:",
+        error
+      );
 
       throw error;
     }
@@ -113,23 +186,24 @@ MY DONATIONS
 
 export const getMyDonations =
   async () => {
+
     try {
+
       const { data } =
         await api.get(
           "/food/my-donations"
         );
 
-      /*
-      ========================================
-      SAFE RESPONSE
-      ========================================
-      */
-
       return (
         data?.foods || []
       );
+
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        "MY DONATIONS ERROR:",
+        error
+      );
 
       return [];
     }
@@ -143,23 +217,24 @@ CLAIMED FOOD
 
 export const getClaimedFood =
   async () => {
+
     try {
+
       const { data } =
         await api.get(
           "/food/claimed-food"
         );
 
-      /*
-      ========================================
-      SAFE RESPONSE
-      ========================================
-      */
-
       return (
         data?.foods || []
       );
+
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        "CLAIMED FOOD ERROR:",
+        error
+      );
 
       return [];
     }
@@ -173,20 +248,17 @@ DASHBOARD STATS
 
 export const getDashboardStats =
   async () => {
+
     try {
+
       const { data } =
         await api.get(
           "/food/stats"
         );
 
-      /*
-      ========================================
-      SAFE STATS
-      ========================================
-      */
-
       return (
         data?.stats || {
+
           totalDonations: 0,
 
           availableFood: 0,
@@ -198,10 +270,16 @@ export const getDashboardStats =
           pickedDeliveries: 0,
         }
       );
+
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        "DASHBOARD STATS ERROR:",
+        error
+      );
 
       return {
+
         totalDonations: 0,
 
         availableFood: 0,
@@ -223,23 +301,24 @@ VOLUNTEER DELIVERIES
 
 export const getVolunteerDeliveries =
   async () => {
+
     try {
+
       const { data } =
         await api.get(
           "/food/volunteer-deliveries"
         );
 
-      /*
-      ========================================
-      SAFE RESPONSE
-      ========================================
-      */
-
       return (
         data?.foods || []
       );
+
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        "VOLUNTEER DELIVERIES ERROR:",
+        error
+      );
 
       return [];
     }
@@ -256,18 +335,27 @@ export const assignDelivery =
     foodId,
     volunteerId
   ) => {
+
     try {
+
       const { data } =
         await api.put(
+
           `/food/assign/${foodId}`,
+
           {
             volunteerId,
           }
         );
 
       return data;
+
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        "ASSIGN DELIVERY ERROR:",
+        error
+      );
 
       throw error;
     }
@@ -281,15 +369,22 @@ MARK DELIVERED
 
 export const markDelivered =
   async (id) => {
+
     try {
+
       const { data } =
         await api.put(
           `/food/mark-delivered/${id}`
         );
 
       return data;
+
     } catch (error) {
-      console.log(error);
+
+      console.log(
+        "MARK DELIVERED ERROR:",
+        error
+      );
 
       throw error;
     }

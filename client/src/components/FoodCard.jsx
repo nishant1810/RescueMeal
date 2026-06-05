@@ -1,14 +1,13 @@
 import React from "react";
 
 import toast from "react-hot-toast";
-
-import {
-  claimFood,
-} from "../services/foodService";
+import {getDistance,}from "geolib";
+import {claimFood,} from "../services/foodService";
 
 const FoodCard = ({
   food,
   refreshFood,
+  userLocation,
 }) => {
   const handleClaim =
     async () => {
@@ -30,6 +29,72 @@ const FoodCard = ({
         );
       }
     };
+
+    /*
+========================================
+DISTANCE
+========================================
+*/
+
+let distance =
+  null;
+
+if (
+  userLocation?.lat &&
+  userLocation?.lng &&
+  food?.coordinates?.coordinates
+) {
+
+  /*
+  ========================================
+  MONGODB GEO FORMAT
+  [lng, lat]
+  ========================================
+  */
+
+  const [
+    foodLng,
+    foodLat,
+  ] =
+    food.coordinates.coordinates;
+
+  /*
+  ========================================
+  DISTANCE IN METERS
+  ========================================
+  */
+
+  const distanceMeters =
+    getDistance(
+
+      {
+        latitude:
+          userLocation.lat,
+
+        longitude:
+          userLocation.lng,
+      },
+
+      {
+        latitude:
+          foodLat,
+
+        longitude:
+          foodLng,
+      }
+    );
+
+  /*
+  ========================================
+  KM FORMAT
+  ========================================
+  */
+
+  distance =
+    (
+      distanceMeters / 1000
+    ).toFixed(1);
+}
 
   return (
     <div

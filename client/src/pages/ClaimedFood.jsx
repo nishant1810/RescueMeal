@@ -3,14 +3,31 @@ import React, {
   useState,
 } from "react";
 
-import Navbar
-from "../components/Navbar";
+import {
+  Package,
+  MapPin,
+  Tag,
+  CheckCircle,
+} from "lucide-react";
+
+import Navbar from "../components/Navbar";
 
 import {
   getClaimedFood,
 } from "../services/foodService";
 
 const ClaimedFood = () => {
+
+  /*
+  ========================================
+  BASE URL
+  ========================================
+  */
+
+  const BASE_URL =
+    import.meta.env
+      .VITE_API_URL ||
+    "http://localhost:5000";
 
   /*
   ========================================
@@ -41,12 +58,17 @@ const ClaimedFood = () => {
           await getClaimedFood();
 
         setFoods(
-          data || []
+          Array.isArray(data)
+            ? data
+            : []
         );
 
       } catch (error) {
 
-        console.log(error);
+        console.log(
+          "Claimed Food Error:",
+          error
+        );
 
       } finally {
 
@@ -81,195 +103,419 @@ const ClaimedFood = () => {
       <div
         className="
           min-h-screen
-          bg-white
-          text-black
-          p-6
+          bg-gradient-to-br
+          from-slate-50
+          via-orange-50
+          to-blue-50
+          py-10
         "
       >
         {/* ========================================
-            HEADING
+            CONTAINER
         ======================================== */}
 
-        <h1
+        <div
           className="
-            text-4xl
-            font-bold
-            mb-10
-            text-center
+            max-w-7xl
+            mx-auto
+            px-4
+            sm:px-6
+            lg:px-8
           "
         >
-          Claimed Food
-        </h1>
-
-        {/* ========================================
-            LOADING
-        ======================================== */}
-
-        {loading ? (
+          {/* ========================================
+              PAGE HEADER
+          ======================================== */}
 
           <div
             className="
-              text-center
-              text-xl
-              mt-20
+              flex
+              flex-col
+              lg:flex-row
+              lg:items-center
+              lg:justify-between
+              gap-6
+              mb-10
             "
           >
-            Loading claimed food...
-          </div>
+            {/* LEFT */}
 
-        ) : foods.length === 0 ? (
+            <div>
+              <h1
+                className="
+                  text-4xl
+                  md:text-5xl
+                  font-bold
+                  text-slate-900
+                "
+              >
+                Claimed Food
+              </h1>
 
-          /* ========================================
-              EMPTY STATE
-          ======================================== */
+              <p
+                className="
+                  text-slate-500
+                  mt-3
+                  text-lg
+                "
+              >
+                Food claimed by NGO
+              </p>
+            </div>
 
-          <div
-            className="
-              text-center
-              mt-20
-            "
-          >
-            <h2
+            {/* TOTAL CARD */}
+
+            <div
               className="
-                text-2xl
-                font-semibold
+                bg-white/90
+                backdrop-blur-md
+                border
+                border-white/50
+                shadow-xl
+                rounded-3xl
+                px-8
+                py-5
+                min-w-[180px]
               "
             >
-              No Claimed Food Found
-            </h2>
+              <p
+                className="
+                  text-slate-500
+                  text-sm
+                  mb-1
+                "
+              >
+                Total Claimed
+              </p>
+
+              <h2
+                className="
+                  text-4xl
+                  font-bold
+                  text-orange-500
+                "
+              >
+                {foods.length}
+              </h2>
+            </div>
           </div>
 
-        ) : (
+          {/* ========================================
+              LOADING
+          ======================================== */}
 
-          /* ========================================
-              FOOD GRID
-          ======================================== */
+          {loading ? (
 
-          <div
-            className="
-              grid
-              grid-cols-1
-              md:grid-cols-2
-              lg:grid-cols-3
-              gap-8
-            "
-          >
-            {foods.map(
-              (food) => (
+            <div
+              className="
+                flex
+                justify-center
+                items-center
+                h-[50vh]
+              "
+            >
+              <h2
+                className="
+                  text-2xl
+                  font-semibold
+                  text-slate-600
+                "
+              >
+                Loading claimed food...
+              </h2>
+            </div>
 
-                <div
-                  key={
-                    food._id
-                  }
+          ) : foods.length === 0 ? (
 
-                  className="
-                    bg-gray-800
-                    shadow-xl
-                    rounded-2xl
-                    p-6
-                    border
-                    border-gray-700
-                    hover:border-blue-500
-                    transition
-                  "
-                >
-                  {/* FOOD NAME */}
+            /* ========================================
+                EMPTY STATE
+            ======================================== */
 
-                  <h2
-                    className="
-                      text-2xl
-                      font-bold
-                      mb-5
-                    "
-                  >
-                    {
-                      food.foodName
-                    }
-                  </h2>
+            <div
+              className="
+                bg-white
+                rounded-3xl
+                shadow-xl
+                p-16
+                text-center
+              "
+            >
+              <h2
+                className="
+                  text-3xl
+                  font-bold
+                  text-slate-800
+                  mb-4
+                "
+              >
+                No Claimed Food Found
+              </h2>
 
-                  {/* DETAILS */}
+              <p
+                className="
+                  text-slate-500
+                  text-lg
+                "
+              >
+                No food has been claimed yet.
+              </p>
+            </div>
 
-                  <div
-                    className="
-                      space-y-2
-                      text-gray-300
-                    "
-                  >
-                    <p>
-                      <span
-                        className="
-                          font-semibold
-                          text-white
-                        "
-                      >
-                        Quantity:
-                      </span>
-                      {" "}
-                      {
-                        food.quantity
-                      }
-                    </p>
+          ) : (
 
-                    <p>
-                      <span
-                        className="
-                          font-semibold
-                          text-white
-                        "
-                      >
-                        Category:
-                      </span>
-                      {" "}
-                      {
-                        food.category
-                      }
-                    </p>
+            /* ========================================
+                FOOD GRID
+            ======================================== */
 
-                    <p>
-                      <span
-                        className="
-                          font-semibold
-                          text-white
-                        "
-                      >
-                        Location:
-                      </span>
-                      {" "}
-                      {
-                        food.location
-                      }
-                    </p>
-                  </div>
+            <div
+              className="
+                grid
+                grid-cols-1
+                md:grid-cols-2
+                xl:grid-cols-3
+                gap-8
+              "
+            >
+              {foods.map(
+                (food) => {
 
-                  {/* STATUS */}
+                  /*
+                  ========================================
+                  IMAGE URL
+                  ========================================
+                  */
 
-                  <div
-                    className="
-                      mt-6
-                    "
-                  >
-                    <span
+                  const imageUrl =
+                    food.foodImage
+
+                      ? food.foodImage.startsWith("http")
+
+                        ? food.foodImage
+
+                        : `${BASE_URL}/${food.foodImage.replace(/^\/+/, "")}`
+
+                      : `https://source.unsplash.com/600x400/?${food.foodName},food`;
+
+                  return (
+
+                    <div
+                      key={food._id}
+
                       className="
-                        bg-orange-500
-                        text-white
-                        px-4
-                        py-2
-                        rounded-full
-                        text-sm
-                        font-semibold
-                        capitalize
+                        bg-white/90
+                        backdrop-blur-md
+                        rounded-3xl
+                        overflow-hidden
+                        shadow-lg
+                        hover:shadow-2xl
+                        transition-all
+                        duration-300
+                        border
+                        border-white/50
+                        group
                       "
                     >
-                      {
-                        food.status
-                      }
-                    </span>
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-        )}
+                      {/* ========================================
+                          IMAGE
+                      ======================================== */}
+
+                      <div
+                        className="
+                          relative
+                          overflow-hidden
+                        "
+                      >
+                        <img
+                          src={"https://placehold.co/600x400?text=Food"}
+
+                          alt={food.foodName}
+
+                          onError={(e) => {
+
+                            e.target.src =
+                              `https://source.unsplash.com/600x400/?${food.foodName},food`;
+                          }}
+
+                          className="
+                            w-full
+                            h-64
+                            object-cover
+                            transition-transform
+                            duration-500
+                            group-hover:scale-105
+                          "
+                        />
+
+                        {/* STATUS */}
+
+                        <div
+                          className="
+                            absolute
+                            top-4
+                            right-4
+                          "
+                        >
+                          <span
+                            className="
+                              bg-orange-500
+                              text-white
+                              px-4
+                              py-2
+                              rounded-full
+                              text-sm
+                              font-semibold
+                              shadow-lg
+                              capitalize
+                            "
+                          >
+                            {food.status}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* ========================================
+                          CONTENT
+                      ======================================== */}
+
+                      <div
+                        className="
+                          p-6
+                        "
+                      >
+                        {/* FOOD NAME */}
+
+                        <h2
+                          className="
+                            text-2xl
+                            font-bold
+                            text-slate-900
+                            mb-5
+                          "
+                        >
+                          {food.foodName}
+                        </h2>
+
+                        {/* DETAILS */}
+
+                        <div
+                          className="
+                            space-y-4
+                            text-slate-600
+                          "
+                        >
+                          {/* QUANTITY */}
+
+                          <div
+                            className="
+                              flex
+                              items-center
+                              gap-3
+                            "
+                          >
+                            <Package
+                              size={18}
+
+                              className="
+                                text-blue-500
+                              "
+                            />
+
+                            <span>
+                              Quantity:
+                              {" "}
+                              <strong>
+                                {food.quantity}
+                              </strong>
+                            </span>
+                          </div>
+
+                          {/* CATEGORY */}
+
+                          <div
+                            className="
+                              flex
+                              items-center
+                              gap-3
+                            "
+                          >
+                            <Tag
+                              size={18}
+
+                              className="
+                                text-purple-500
+                              "
+                            />
+
+                            <span
+                              className="
+                                capitalize
+                              "
+                            >
+                              Category:
+                              {" "}
+                              <strong>
+                                {food.category}
+                              </strong>
+                            </span>
+                          </div>
+
+                          {/* LOCATION */}
+
+                          <div
+                            className="
+                              flex
+                              items-center
+                              gap-3
+                            "
+                          >
+                            <MapPin
+                              size={18}
+
+                              className="
+                                text-red-500
+                              "
+                            />
+
+                            <span>
+                              {food.location}
+                            </span>
+                          </div>
+
+                          {/* STATUS */}
+
+                          <div
+                            className="
+                              flex
+                              items-center
+                              gap-3
+                            "
+                          >
+                            <CheckCircle
+                              size={18}
+
+                              className="
+                                text-green-500
+                              "
+                            />
+
+                            <span
+                              className="
+                                capitalize
+                                font-medium
+                              "
+                            >
+                              {food.status}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

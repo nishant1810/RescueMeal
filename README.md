@@ -7,61 +7,23 @@ The platform allows donors to donate excess food, NGOs to claim available food, 
 
 ---
 
-# 🚀 Features
+## ✨ Features
 
-## 👤 Authentication & Authorization
-- JWT-based authentication
-- Secure login & registration
-- Role-based access:
-  - Donor
-  - NGO
-  - Volunteer
-
----
-
-## 🍛 Food Donation System
-- Donate food with:
-  - Food image
-  - Quantity
-  - Category
-  - Expiry time
-  - Pickup location
-  - Description
-
-- Image upload support using Multer
+- 🔐 JWT Authentication
+- 👥 Role-Based Access Control (RBAC)
+- 🍱 Food Donation System
+- 🏢 NGO Food Claiming
+- 🚚 Volunteer Delivery Management
+- 📊 Analytics Dashboard
+- 🔔 Real-Time Notifications (Socket.IO)
+- 🔍 Search & Filtering
+- 📄 Pagination
+- 🌙 Modern Dark UI
+- 📱 Responsive Design
+- ⚡ REST API Architecture
 
 ---
 
-## 🏢 NGO Dashboard
-- View all available food
-- Claim food donations
-- Real-time updates using Socket.IO
-
----
-
-## 🚚 Volunteer System
-- Assign deliveries
-- Track delivery status
-- Mark food as delivered
-
----
-
-## 📊 Dashboard Analytics
-- Total donations
-- Available food
-- Claimed food
-- Delivered food
-- Delivery tracking
-- Interactive charts using Recharts
-
----
-
-## ⚡ Real-Time Features
-- Real-time food updates
-- Live dashboard refresh
-- Socket.IO integration
-
----
 
 # 🛠️ Tech Stack
 
@@ -88,6 +50,7 @@ The platform allows donors to donate excess food, NGOs to claim available food, 
 - Express Middleware
 
 ---
+
 
 # 📁 Project Structure
 
@@ -116,92 +79,6 @@ RescueMeal/
 
 ---
 
-# ⚙️ Installation
-
-## 1️⃣ Clone Repository
-
-```bash
-git clone https://github.com/nishant1810/RescueMeal.git
-```
-
----
-
-## 2️⃣ Install Client Dependencies
-
-```bash
-cd client
-npm install
-```
-
----
-
-## 3️⃣ Install Server Dependencies
-
-```bash
-cd ../server
-npm install
-```
-
----
-
-# 🔐 Environment Variables
-
-Create `.env` inside `server/`
-
-```env
-PORT=5000
-
-MONGO_URI=your_mongodb_connection
-
-JWT_SECRET=your_secret_key
-```
-
----
-
-# ▶️ Run Project
-
-## Start Backend
-
-```bash
-cd server
-npm run dev
-```
-
----
-
-## Start Frontend
-
-```bash
-cd client
-npm run dev
-```
-
----
-
-# 🌐 API Routes
-
-## Auth Routes
-
-<!-- | Method | Endpoint                | Description   |
-| ------ | ----------------------- | ------------- |
-| POST   | `/api/v1/auth/register` | Register user |
-| POST   | `/api/v1/auth/login`    | Login user    | -->
-
----
-
-<!-- ## Food Routes
-
-| Method | Endpoint                    | Description     |
-| ------ | --------------------------- | --------------- |
-| POST   | `/api/v1/food/donate`       | Donate food     |
-| GET    | `/api/v1/food/all`          | Get all food    |
-| PUT    | `/api/v1/food/claim/:id`    | Claim food      |
-| GET    | `/api/v1/food/my-donations` | Donor food      |
-| GET    | `/api/v1/food/claimed-food` | Claimed food    |
-| GET    | `/api/v1/food/stats`        | Dashboard stats | -->
-
----
-
 # 📸 Screenshots
 
 ## 🏠 Home Page
@@ -220,21 +97,21 @@ npm run dev
 
 ---
 
-# 🔥 Future Improvements
 
-* Google Maps integration
-* Live delivery tracking
-* Email notifications
-* AI-based food expiry prediction
-* PWA support
-* Docker deployment
-* Cloudinary image storage
-* Admin dashboard
+# FUTURE IMPROVEMENTS
+
+```md
+## 🚀 Future Improvements
+
+- AI-based food expiry prediction
+- Google Maps integration
+- Email notifications
+- PWA support
+- Admin dashboard
+- Docker deployment
 
 ---
 
-
----
 
 # 👨‍💻 Author
 

@@ -1,4 +1,5 @@
-import express from "express";
+import express
+from "express";
 
 /*
 ========================================
@@ -39,7 +40,10 @@ import {
   markDelivered,
 
   getVolunteerDeliveries,
-} from "../controllers/food.js";
+
+  getNearbyFood,
+}
+from "../controllers/food.js";
 
 /*
 ========================================
@@ -53,6 +57,7 @@ const router =
 /*
 ========================================
 DONATE FOOD
+DONOR ONLY
 ========================================
 */
 
@@ -61,16 +66,9 @@ router.post(
 
   authMiddleware,
 
-  /*
-  ========================================
-  TEMPORARILY REMOVE ROLE MIDDLEWARE
-  FOR TESTING IMAGE UPLOAD
-  ========================================
-  */
-
-  // roleMiddleware(
-  //   "donor"
-  // ),
+  roleMiddleware(
+    "donor"
+  ),
 
   upload.single(
     "foodImage"
@@ -82,6 +80,7 @@ router.post(
 /*
 ========================================
 GET ALL FOOD
+NGO ONLY
 ========================================
 */
 
@@ -99,7 +98,27 @@ router.get(
 
 /*
 ========================================
+GET NEARBY FOOD
+NGO ONLY
+========================================
+*/
+
+router.get(
+  "/nearby",
+
+  authMiddleware,
+
+  roleMiddleware(
+    "ngo"
+  ),
+
+  getNearbyFood
+);
+
+/*
+========================================
 GET MY DONATIONS
+DONOR ONLY
 ========================================
 */
 
@@ -118,6 +137,7 @@ router.get(
 /*
 ========================================
 CLAIM FOOD
+NGO ONLY
 ========================================
 */
 
@@ -136,6 +156,7 @@ router.put(
 /*
 ========================================
 GET CLAIMED FOOD
+NGO ONLY
 ========================================
 */
 
@@ -154,6 +175,7 @@ router.get(
 /*
 ========================================
 ASSIGN DELIVERY
+NGO ONLY
 ========================================
 */
 
@@ -172,6 +194,7 @@ router.put(
 /*
 ========================================
 MARK DELIVERED
+VOLUNTEER ONLY
 ========================================
 */
 
@@ -190,6 +213,7 @@ router.put(
 /*
 ========================================
 VOLUNTEER DELIVERIES
+VOLUNTEER ONLY
 ========================================
 */
 
@@ -208,6 +232,7 @@ router.get(
 /*
 ========================================
 DASHBOARD STATS
+ALL AUTHENTICATED USERS
 ========================================
 */
 

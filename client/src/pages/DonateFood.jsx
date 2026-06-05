@@ -1,12 +1,21 @@
-import React, {useState,useEffect,} from "react";
+import React, {
+  useState,
+  useEffect,
+} from "react";
 
-import {useNavigate,} from "react-router-dom";
+import {
+  useNavigate,
+} from "react-router-dom";
 
-import toast from "react-hot-toast";
+import toast
+from "react-hot-toast";
 
-import Navbar from "../components/Navbar";
+import Navbar
+from "../components/Navbar";
 
-import { donateFood,} from "../services/foodService";
+import {
+  donateFood,
+} from "../services/foodService";
 
 const DonateFood = () => {
 
@@ -33,7 +42,17 @@ const DonateFood = () => {
       location: "",
       expiryTime: "",
       description: "",
-      foodImage: null,
+      foodImage: "",
+
+      /*
+      ========================================
+      GEO LOCATION
+      ========================================
+      */
+
+      latitude: "",
+
+      longitude: "",
     });
 
   const [preview, setPreview] =
@@ -41,6 +60,43 @@ const DonateFood = () => {
 
   const [loading, setLoading] =
     useState(false);
+
+  /*
+  ========================================
+  GET USER LOCATION
+  ========================================
+  */
+
+  useEffect(() => {
+
+    navigator.geolocation.getCurrentPosition(
+
+      (position) => {
+
+        setFormData(
+          (prev) => ({
+            ...prev,
+
+            latitude:
+              position.coords.latitude,
+
+            longitude:
+              position.coords.longitude,
+          })
+        );
+      },
+
+      (error) => {
+
+        console.log(error);
+
+        toast.error(
+          "Location access denied"
+        );
+      }
+    );
+
+  }, []);
 
   /*
   ========================================
@@ -53,6 +109,7 @@ const DonateFood = () => {
     return () => {
 
       if (preview) {
+
         URL.revokeObjectURL(
           preview
         );
@@ -67,21 +124,22 @@ const DonateFood = () => {
   ========================================
   */
 
-  const handleChange = (
-    e
-  ) => {
+  const handleChange =
+    (e) => {
 
-    const {
-      name,
-      value,
-    } = e.target;
+      const {
+        name,
+        value,
+      } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
+      setFormData(
+        (prev) => ({
+          ...prev,
 
-      [name]: value,
-    }));
-  };
+          [name]: value,
+        })
+      );
+    };
 
   /*
   ========================================
@@ -89,73 +147,76 @@ const DonateFood = () => {
   ========================================
   */
 
-  const handleImageChange = (
-    e
-  ) => {
+  const handleImageChange =
+    (e) => {
 
-    const file =
-      e.target.files[0];
+      const file =
+        e.target.files[0];
 
-    if (!file) return;
+      if (!file) return;
 
-    /*
-    ========================================
-    VALIDATE IMAGE
-    ========================================
-    */
+      /*
+      ========================================
+      VALIDATE IMAGE
+      ========================================
+      */
 
-    if (
-      !file.type.startsWith(
-        "image/"
-      )
-    ) {
-      return toast.error(
-        "Please upload a valid image"
-      );
-    }
+      if (
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
 
-    /*
-    ========================================
-    VALIDATE SIZE
-    ========================================
-    */
+        return toast.error(
+          "Please upload a valid image"
+        );
+      }
 
-    if (
-      file.size >
-      5 * 1024 * 1024
-    ) {
-      return toast.error(
-        "Image must be less than 5MB"
-      );
-    }
+      /*
+      ========================================
+      VALIDATE SIZE
+      ========================================
+      */
 
-    /*
-    ========================================
-    UPDATE STATE
-    ========================================
-    */
+      if (
+        file.size >
+        5 * 1024 * 1024
+      ) {
 
-    setFormData((prev) => ({
-      ...prev,
+        return toast.error(
+          "Image must be less than 5MB"
+        );
+      }
 
-      foodImage: file,
-    }));
+      /*
+      ========================================
+      UPDATE STATE
+      ========================================
+      */
 
-    /*
-    ========================================
-    PREVIEW
-    ========================================
-    */
+      setFormData(
+        (prev) => ({
+          ...prev,
 
-    const imagePreview =
-      URL.createObjectURL(
-        file
+          foodImage: file,
+        })
       );
 
-    setPreview(
-      imagePreview
-    );
-  };
+      /*
+      ========================================
+      IMAGE PREVIEW
+      ========================================
+      */
+
+      const imagePreview =
+        URL.createObjectURL(
+          file
+        );
+
+      setPreview(
+        imagePreview
+      );
+    };
 
   /*
   ========================================
@@ -183,6 +244,7 @@ const DonateFood = () => {
           !formData.location ||
           !formData.expiryTime
         ) {
+
           return toast.error(
             "Please fill all required fields"
           );
@@ -204,8 +266,10 @@ const DonateFood = () => {
         ).forEach((key) => {
 
           if (
-            formData[key]
+            formData[key] !==
+            null
           ) {
+
             submitData.append(
               key,
               formData[key]
@@ -235,7 +299,7 @@ const DonateFood = () => {
 
         /*
         ========================================
-        RESET
+        RESET FORM
         ========================================
         */
 
@@ -246,7 +310,13 @@ const DonateFood = () => {
           location: "",
           expiryTime: "",
           description: "",
-          foodImage: null,
+          foodImage: "",
+
+          latitude:
+            formData.latitude,
+
+          longitude:
+            formData.longitude,
         });
 
         setPreview("");
@@ -296,7 +366,10 @@ const DonateFood = () => {
       <div
         className="
           min-h-screen
-          bg-white
+          bg-gradient-to-br
+          from-slate-50
+          via-orange-50
+          to-blue-50
           text-gray-900
           px-4
           py-10
@@ -385,9 +458,7 @@ const DonateFood = () => {
                   w-full
                   bg-gray-100
                   border
-                  border-gray-600
-                  text-black
-                  placeholder-gray-400
+                  border-gray-300
                   p-4
                   rounded-xl
                   focus:outline-none
@@ -413,9 +484,7 @@ const DonateFood = () => {
                   w-full
                   bg-gray-100
                   border
-                  border-gray-600
-                  text-black
-                  placeholder-gray-400
+                  border-gray-300
                   p-4
                   rounded-xl
                   focus:outline-none
@@ -439,8 +508,7 @@ const DonateFood = () => {
                   w-full
                   bg-gray-100
                   border
-                  border-gray-600
-                  text-black
+                  border-gray-300
                   p-4
                   rounded-xl
                   focus:outline-none
@@ -452,19 +520,19 @@ const DonateFood = () => {
                   Select Category
                 </option>
 
-                <option value="Veg">
+                <option value="veg">
                   Veg
                 </option>
 
-                <option value="Non-Veg">
+                <option value="non-veg">
                   Non-Veg
                 </option>
 
-                <option value="Packed Food">
+                <option value="packed food">
                   Packed Food
                 </option>
 
-                <option value="Bakery">
+                <option value="bakery">
                   Bakery
                 </option>
               </select>
@@ -486,9 +554,7 @@ const DonateFood = () => {
                   w-full
                   bg-gray-100
                   border
-                  border-gray-600
-                  text-black
-                  placeholder-gray-400
+                  border-gray-300
                   p-4
                   rounded-xl
                   focus:outline-none
@@ -513,8 +579,7 @@ const DonateFood = () => {
                   w-full
                   bg-gray-100
                   border
-                  border-gray-600
-                  text-black
+                  border-gray-300
                   p-4
                   rounded-xl
                   focus:outline-none
@@ -540,9 +605,7 @@ const DonateFood = () => {
                   h-32
                   bg-gray-100
                   border
-                  border-gray-600
-                  text-black
-                  placeholder-gray-400
+                  border-gray-300
                   p-4
                   rounded-xl
                   focus:outline-none
@@ -566,8 +629,7 @@ const DonateFood = () => {
                     w-full
                     bg-gray-100
                     border
-                    border-gray-600
-                    text-black
+                    border-gray-300
                     p-4
                     rounded-xl
                   "
@@ -576,6 +638,7 @@ const DonateFood = () => {
                 {/* PREVIEW */}
 
                 {preview && (
+
                   <img
                     src={preview}
                     alt="preview"
@@ -596,6 +659,7 @@ const DonateFood = () => {
 
               <button
                 type="submit"
+
                 disabled={loading}
 
                 className="

@@ -3,12 +3,22 @@ import React from "react";
 import {
   Link,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 
 const Navbar = () => {
 
+  /*
+  ========================================
+  NAVIGATION
+  ========================================
+  */
+
   const navigate =
     useNavigate();
+
+  const location =
+    useLocation();
 
   /*
   ========================================
@@ -46,144 +56,255 @@ const Navbar = () => {
       navigate("/login");
     };
 
+  /*
+  ========================================
+  ACTIVE LINK
+  ========================================
+  */
+
+  const activeLink =
+    (path) => {
+
+      return location.pathname === path
+        ? `
+          text-orange-500
+          font-semibold
+        `
+        : `
+          text-gray-700
+          hover:text-orange-500
+        `;
+    };
+
   return (
     <nav
       className="
-        bg-gray-900
-        text-white
-        px-6
-        py-4
-        shadow-lg
-        flex
-        justify-between
-        items-center
+        sticky
+        top-0
+        z-50
+        bg-white
+        shadow-md
       "
     >
       {/* ========================================
-          LOGO
-      ======================================== */}
-
-      <Link
-        to="/dashboard"
-        className="
-          text-2xl
-          font-bold
-        "
-      >
-        RescueMeal
-      </Link>
-
-      {/* ========================================
-          NAV LINKS
+          CONTAINER
       ======================================== */}
 
       <div
         className="
+          max-w-7xl
+          mx-auto
+          px-4
+          py-4
           flex
-          gap-6
+          justify-between
           items-center
         "
       >
-        {/* DASHBOARD */}
+        {/* ========================================
+            LOGO
+        ======================================== */}
 
         <Link
           to="/dashboard"
+
           className="
-            hover:text-gray-200
+            text-3xl
+            font-extrabold
+            tracking-tight
+            text-orange-500
           "
         >
-          Dashboard
+          RescueMeal
         </Link>
 
         {/* ========================================
-            DONOR NAVBAR
+            NAV LINKS
         ======================================== */}
 
-        {role ===
-          "donor" && (
-          <>
-            <Link
-              to="/donate-food"
-              className="
-                hover:text-gray-200
-              "
-            >
-              Donate
-            </Link>
-
-            <Link
-              to="/my-donations"
-              className="
-                hover:text-gray-200
-              "
-            >
-              Donations
-            </Link>
-          </>
-        )}
-
-        {/* ========================================
-            NGO NAVBAR
-        ======================================== */}
-
-        {role ===
-          "ngo" && (
-          <>
-            <Link
-              to="/available-food"
-              className="
-                hover:text-gray-200
-              "
-            >
-              Food
-            </Link>
-
-            <Link
-              to="/claimed-food"
-              className="
-                hover:text-gray-200
-              "
-            >
-              Claimed
-            </Link>
-          </>
-        )}
-
-        {/* ========================================
-            VOLUNTEER NAVBAR
-        ======================================== */}
-
-        {role ===
-          "volunteer" && (
-          <Link
-            to="/deliveries"
-            className="
-              hover:text-gray-200
-            "
-          >
-            Deliveries
-          </Link>
-        )}
-
-        {/* ========================================
-            LOGOUT
-        ======================================== */}
-
-        <button
-          onClick={
-            handleLogout
-          }
-
+        <div
           className="
-            bg-red-500
-            px-4
-            py-2
-            rounded-lg
-            hover:bg-red-600
+            flex
+            items-center
+            gap-6
           "
         >
-          Logout
-        </button>
+          {/* DASHBOARD */}
+
+          <Link
+            to="/dashboard"
+
+            className={`
+              transition-all
+              duration-200
+              ${activeLink(
+                "/dashboard"
+              )}
+            `}
+          >
+            Dashboard
+          </Link>
+
+          {/* ========================================
+              DONOR LINKS
+          ======================================== */}
+
+          {
+            role === "donor" && (
+              <>
+                <Link
+                  to="/donate-food"
+
+                  className={`
+                    transition-all
+                    duration-200
+                    ${activeLink(
+                      "/donate-food"
+                    )}
+                  `}
+                >
+                  Donate
+                </Link>
+
+                <Link
+                  to="/my-donations"
+
+                  className={`
+                    transition-all
+                    duration-200
+                    ${activeLink(
+                      "/my-donations"
+                    )}
+                  `}
+                >
+                  Donations
+                </Link>
+              </>
+            )
+          }
+
+          {/* ========================================
+              NGO LINKS
+          ======================================== */}
+
+          {
+            role === "ngo" && (
+              <>
+                <Link
+                  to="/available-food"
+
+                  className={`
+                    transition-all
+                    duration-200
+                    ${activeLink(
+                      "/available-food"
+                    )}
+                  `}
+                >
+                  Food
+                </Link>
+
+                <Link
+                  to="/claimed-food"
+
+                  className={`
+                    transition-all
+                    duration-200
+                    ${activeLink(
+                      "/claimed-food"
+                    )}
+                  `}
+                >
+                  Claimed
+                </Link>
+              </>
+            )
+          }
+
+          {/* ========================================
+              VOLUNTEER LINKS
+          ======================================== */}
+
+          {
+            role ===
+              "volunteer" && (
+
+              <Link
+                to="/deliveries"
+
+                className={`
+                  transition-all
+                  duration-200
+                  ${activeLink(
+                    "/deliveries"
+                  )}
+                `}
+              >
+                Deliveries
+              </Link>
+            )
+          }
+
+          {/* ========================================
+              ROLE BADGE
+          ======================================== */}
+
+          <div
+            className={`
+              px-3
+              py-1
+              rounded-full
+              text-xs
+              font-semibold
+              uppercase
+              tracking-wide
+              ${
+                role === "ngo"
+                  ? `
+                    bg-green-100
+                    text-green-700
+                  `
+                  : role ===
+                    "donor"
+                  ? `
+                    bg-blue-100
+                    text-blue-700
+                  `
+                  : `
+                    bg-purple-100
+                    text-purple-700
+                  `
+              }
+            `}
+          >
+            {role}
+          </div>
+
+          {/* ========================================
+              LOGOUT BUTTON
+          ======================================== */}
+
+          <button
+            onClick={
+              handleLogout
+            }
+
+            className="
+              bg-orange-500
+              hover:bg-orange-600
+              text-white
+              px-5
+              py-2
+              rounded-xl
+              font-medium
+              transition-all
+              duration-200
+              shadow-sm
+            "
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </nav>
   );

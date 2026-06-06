@@ -1,98 +1,160 @@
-import React from "react";
+import React
+from "react";
 
 import {
   Navigate,
+  useLocation,
 } from "react-router-dom";
 
-import { useAuth }
-from "../context/AuthContext";
+import {
+  useAuth,
+} from "../context/AuthContext";
 
-const ProtectedRoute = ({
-  children,
-  allowedRoles = [],
-}) => {
-  /*
-  ========================================
-  AUTH
-  ========================================
-  */
+/*
+========================================
+PROTECTED ROUTE
+========================================
+*/
 
-  const {
-    user,
-    loading,
-  } = useAuth();
+const ProtectedRoute =
+  ({
+    children,
+    allowedRoles = [],
+  }) => {
 
-  /*
-  ========================================
-  LOADING
-  ========================================
-  */
+    /*
+    ========================================
+    AUTH CONTEXT
+    ========================================
+    */
 
-  if (loading) {
-    return (
-      <div
-        className="
-        min-h-screen
-        flex
-        items-center
-        justify-center
-      "
-      >
-        <h1
+    const {
+
+      user,
+
+      loading,
+
+    } = useAuth();
+
+    /*
+    ========================================
+    CURRENT LOCATION
+    ========================================
+    */
+
+    const location =
+      useLocation();
+
+    /*
+    ========================================
+    LOADING SCREEN
+    ========================================
+    */
+
+    if (loading) {
+
+      return (
+
+        <div
+
           className="
-          text-2xl
-          font-bold
-        "
+
+            min-h-screen
+
+            flex
+
+            items-center
+
+            justify-center
+
+            bg-gray-50
+          "
         >
-          Loading...
-        </h1>
-      </div>
-    );
-  }
 
-  /*
-  ========================================
-  NOT LOGGED IN
-  ========================================
-  */
+          <div
+            className="text-center"
+          >
 
-  if (!user) {
-    return (
-      <Navigate
-        to="/login"
-        replace
-      />
-    );
-  }
+            <h1
 
-  /*
-  ========================================
-  ROLE CHECK
-  ========================================
-  */
+              className="
 
-  if (
-    allowedRoles.length >
-      0 &&
-    !allowedRoles.includes(
-      user.role
-    )
-  ) {
-    return (
-      <Navigate
-        to="/dashboard"
-        replace
-      />
-    );
-  }
+                text-2xl
 
-  /*
-  ========================================
-  ALLOWED
-  ========================================
-  */
+                font-bold
 
-  return children;
-};
+                text-green-600
+              "
+            >
 
-export default ProtectedRoute;
+              Loading...
+
+            </h1>
+
+          </div>
+
+        </div>
+      );
+    }
+
+    /*
+    ========================================
+    NOT AUTHENTICATED
+    ========================================
+    */
+
+    if (!user) {
+
+      return (
+
+        <Navigate
+
+          to="/login"
+
+          state={{
+            from: location,
+          }}
+
+          replace
+        />
+      );
+    }
+
+    /*
+    ========================================
+    ROLE AUTHORIZATION
+    ========================================
+    */
+
+    if (
+
+      allowedRoles.length > 0 &&
+
+      !allowedRoles.includes(
+        user.role
+      )
+
+    ) {
+
+      return (
+
+        <Navigate
+
+          to="/unauthorized"
+
+          replace
+        />
+      );
+    }
+
+    /*
+    ========================================
+    ACCESS GRANTED
+    ========================================
+    */
+
+    return children;
+  };
+
+export default
+ProtectedRoute;

@@ -1,17 +1,44 @@
-import React from "react";
-import "./Card.css";
+import React
+from "react";
 
-const Card = ({ name, des, img }) => {
-  return (
-    <div className="partner-card">
-      <img src={img} alt="Ngo pic" />
-      <div class="card-content">
-        <h2 className="card-heading">{name}</h2>
-        <p className="card-description">{des}</p>
-        <button className="btn-card">Donate Now</button>
+/*
+========================================
+CARD
+========================================
+*/
+
+const Card =
+  ({
+    children,
+
+    className = "",
+  }) => {
+
+    return (
+
+      <div
+
+        className={`
+
+          bg-white
+
+          rounded-xl
+
+          shadow-sm
+
+          border
+
+          p-6
+
+          ${className}
+        `}
+      >
+
+        {children}
+
       </div>
-    </div>
-  );
-};
+    );
+  };
 
-export default Card;
+export default
+Card;

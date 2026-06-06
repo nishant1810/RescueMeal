@@ -1,21 +1,41 @@
-import cloudinary from "cloudinary";
+import dotenv
+from "dotenv";
 
-const cloudinaryV2 =
-  cloudinary.v2;
+dotenv.config();
 
-cloudinaryV2.config({
+import { v2 as cloudinary }
+from "cloudinary";
+
+/*
+========================================
+DEBUG ENV
+========================================
+*/
+
+// console.log(
+
+//   "CLOUDINARY API KEY =>",
+
+//   process.env.CLOUDINARY_API_KEY
+// );
+
+/*
+========================================
+CLOUDINARY CONFIG
+========================================
+*/
+
+cloudinary.config({
+
   cloud_name:
-    process.env
-      .CLOUDINARY_CLOUD_NAME,
+    process.env.CLOUDINARY_CLOUD_NAME,
 
   api_key:
-    process.env
-      .CLOUDINARY_API_KEY,
+    process.env.CLOUDINARY_API_KEY,
 
   api_secret:
-    process.env
-      .CLOUDINARY_API_SECRET,
+    process.env.CLOUDINARY_API_SECRET,
 });
 
 export default
-  cloudinaryV2;
+cloudinary;

@@ -1,5 +1,6 @@
-import mongoose
-from "mongoose";
+import mongoose from "mongoose";
+import {FOOD_STATUS} from "../constants/foodStatus.js";
+
 
 const foodSchema =
   new mongoose.Schema(
@@ -130,12 +131,10 @@ const foodSchema =
       status: {
         type: String,
 
-        enum: [
-          "available",
-          "claimed",
-          "picked",
-          "delivered",
-        ],
+        enum:
+        Object.values(
+          FOOD_STATUS
+        ),
 
         default: "available",
       },
@@ -163,6 +162,8 @@ MODEL
 */
 
 const Food =
+  mongoose.models.Food ||
+
   mongoose.model(
     "Food",
     foodSchema

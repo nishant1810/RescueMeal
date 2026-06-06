@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 import Navbar
-from "../components/Navbar";
+from "../components/layout/Navbar";
 
 import FoodCard
 from "../components/FoodCard";
@@ -21,7 +21,7 @@ from "../components/FoodModal";
 import {
   getAllFood,
   getNearbyFood,
-} from "../services/foodService";
+} from "../services/food.service";
 
 const AvailableFood = () => {
 

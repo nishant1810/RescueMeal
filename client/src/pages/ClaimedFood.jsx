@@ -10,11 +10,11 @@ import {
   CheckCircle,
 } from "lucide-react";
 
-import Navbar from "../components/Navbar";
+import Navbar from "../components/layout/Navbar";
 
 import {
   getClaimedFood,
-} from "../services/foodService";
+} from "../services/food.service";
 
 const ClaimedFood = () => {
 

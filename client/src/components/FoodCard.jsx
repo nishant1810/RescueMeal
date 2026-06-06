@@ -2,7 +2,7 @@ import React from "react";
 
 import toast from "react-hot-toast";
 import {getDistance,}from "geolib";
-import {claimFood,} from "../services/foodService";
+import {claimFood,} from "../services/food.service";
 
 const FoodCard = ({
   food,

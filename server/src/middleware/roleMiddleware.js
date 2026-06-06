@@ -1,10 +1,40 @@
+import { ROLES }
+from "../constants/roles.js";
+
+/*
+========================================
+ROLE MIDDLEWARE
+========================================
+*/
+
 const roleMiddleware =
-  (...roles) => {
+  (...allowedRoles) => {
+
     return (
       req,
       res,
       next
     ) => {
+
+      /*
+      ========================================
+      USER CHECK
+      ========================================
+      */
+
+      if (!req.user) {
+
+        return res
+          .status(401)
+          .json({
+
+            success: false,
+
+            message:
+              "Unauthorized access",
+          });
+      }
+
       /*
       ========================================
       ROLE CHECK
@@ -12,20 +42,33 @@ const roleMiddleware =
       */
 
       if (
-        !roles.includes(
+
+        !allowedRoles.includes(
           req.user.role
         )
-      ) {
-        return res.status(403).json({
-          success: false,
 
-          message:
-            "Access denied",
-        });
+      ) {
+
+        return res
+          .status(403)
+          .json({
+
+            success: false,
+
+            message:
+              "Access denied",
+          });
       }
+
+      /*
+      ========================================
+      NEXT
+      ========================================
+      */
 
       next();
     };
   };
 
-export default roleMiddleware;
+export default
+roleMiddleware;

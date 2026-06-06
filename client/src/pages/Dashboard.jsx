@@ -21,11 +21,11 @@ import {
 } from "lucide-react";
 
 import Navbar
-from "../components/Navbar";
+from "../components/layout/Navbar";
 
 import {
   getDashboardStats,
-} from "../services/foodService";
+} from "../services/food.service";
 
 const Dashboard = () => {
 

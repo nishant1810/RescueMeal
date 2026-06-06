@@ -1,26 +1,60 @@
-import React from "react";
+import React
+from "react";
 
-import ReactDOM from "react-dom/client";
+import ReactDOM
+from "react-dom/client";
 
-import App from "./App";
+import {
+  BrowserRouter,
+} from "react-router-dom";
 
-import "./index.css";
+import {
+  Toaster,
+} from "react-hot-toast";
+
+import App
+from "./App";
+
+import {
+  AuthProvider,
+} from "./context/AuthContext";
+
+/*
+========================================
+GLOBAL STYLES
+========================================
+*/
+
+import "./styles/index.css";
 
 import "leaflet/dist/leaflet.css";
 
-import {BrowserRouter} from "react-router-dom";
+/*
+========================================
+ROOT ELEMENT
+========================================
+*/
 
-import {AuthProvider} from "./context/AuthContext";
+const root =
+  ReactDOM.createRoot(
 
-import {Toaster} from "react-hot-toast";
+    document.getElementById(
+      "root"
+    )
+  );
 
-ReactDOM.createRoot(
-  document.getElementById(
-    "root"
-  )
-).render(
+/*
+========================================
+RENDER APP
+========================================
+*/
+
+root.render(
+
   <React.StrictMode>
+
     <BrowserRouter>
+
       <AuthProvider>
 
         {/* ========================================
@@ -28,13 +62,38 @@ ReactDOM.createRoot(
         ======================================== */}
 
         <Toaster
+
           position="top-right"
+
           reverseOrder={false}
+
+          toastOptions={{
+
+            duration: 3000,
+
+            style: {
+
+              borderRadius:
+                "10px",
+
+              background:
+                "#333",
+
+              color:
+                "#fff",
+            },
+          }}
         />
+
+        {/* ========================================
+            APP
+        ======================================== */}
 
         <App />
 
       </AuthProvider>
+
     </BrowserRouter>
+
   </React.StrictMode>
 );

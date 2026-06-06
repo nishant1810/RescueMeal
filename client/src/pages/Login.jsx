@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 
 import {
   loginUser,
-} from "../services/authService";
+} from "../services/auth.service";
 
 import { useAuth } from "../context/AuthContext";
 

@@ -3,10 +3,21 @@ import cors from "cors";
 import helmet from "helmet";
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+import mongoSanitize from "express-mongo-sanitize";
+import hpp from "hpp";
 import dotenv from "dotenv";
 import path from "path";
+import { fileURLToPath } from "url";
+
+/*
+========================================
+LOGGER
+========================================
+*/
+
+import logger from "./config/logger.js";
+import morganMiddleware from "./middleware/morgan.middleware.js";
 
 /*
 ========================================
@@ -17,6 +28,7 @@ ROUTES
 import authRoutes from "./routes/auth.routes.js";
 import foodRoutes from "./routes/food.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import deliveryRoutes from "./routes/delivery.routes.js";
 
 /*
 ========================================
@@ -45,11 +57,35 @@ const app = express();
 
 /*
 ========================================
+PATH CONFIG
+========================================
+*/
+
+const __filename =
+  fileURLToPath(import.meta.url);
+
+const __dirname =
+  path.dirname(__filename);
+
+/*
+========================================
 TRUST PROXY
 ========================================
 */
 
 app.set("trust proxy", 1);
+
+/*
+========================================
+SECURITY HEADERS
+========================================
+*/
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 
 /*
 ========================================
@@ -82,32 +118,39 @@ app.use(
 
 /*
 ========================================
-SECURITY MIDDLEWARE
+RATE LIMITER
 ========================================
 */
+
+const limiter =
+  rateLimit({
+
+    windowMs:
+      15 * 60 * 1000,
+
+    max:
+      process.env.NODE_ENV ===
+      "production"
+        ? 100
+        : 1000,
+
+    standardHeaders: true,
+
+    legacyHeaders: false,
+
+    message: {
+
+      success: false,
+
+      message:
+        "Too many requests from this IP. Please try again later.",
+    },
+  });
 
 app.use(
-  helmet({
-    crossOriginResourcePolicy: false,
-  })
+  "/api",
+  limiter
 );
-
-app.use(compression());
-
-app.use(cookieParser());
-
-/*
-========================================
-LOGGER
-========================================
-*/
-
-if (
-  process.env.NODE_ENV !==
-  "production"
-) {
-  app.use(morgan("dev"));
-}
 
 /*
 ========================================
@@ -117,65 +160,82 @@ BODY PARSER
 
 app.use(
   express.json({
-    limit: "30mb",
+    limit: "10mb",
   })
 );
 
 app.use(
   express.urlencoded({
     extended: true,
-    limit: "30mb",
+    limit: "10mb",
   })
 );
 
 /*
 ========================================
-STATIC FOLDER
+COOKIE PARSER
+========================================
+*/
+
+app.use(
+  cookieParser()
+);
+
+/*
+========================================
+MONGO SANITIZE
+========================================
+*/
+
+app.use(
+  mongoSanitize()
+);
+
+/*
+========================================
+HPP PROTECTION
+========================================
+*/
+
+app.use(
+  hpp()
+);
+
+/*
+========================================
+COMPRESSION
+========================================
+*/
+
+app.use(
+  compression()
+);
+
+/*
+========================================
+LOGGER
+========================================
+*/
+
+app.use(
+  morganMiddleware
+);
+
+/*
+========================================
+STATIC FILES
 ========================================
 */
 
 app.use(
   "/uploads",
   express.static(
-    path.join(process.cwd(), "uploads")
+    path.join(
+      __dirname,
+      "../uploads"
+    )
   )
 );
-
-/*
-========================================
-RATE LIMITER
-========================================
-*/
-
-const limiter = rateLimit({
-  windowMs:
-    15 * 60 * 1000,
-
-  max:
-    process.env.NODE_ENV ===
-    "production"
-      ? 100
-      : 1000,
-
-  standardHeaders: true,
-
-  legacyHeaders: false,
-
-  message: {
-    success: false,
-
-    message:
-      "Too many requests from this IP. Please try again later.",
-  },
-});
-
-/*
-========================================
-APPLY RATE LIMIT
-========================================
-*/
-
-app.use("/api", limiter);
 
 /*
 ========================================
@@ -183,14 +243,19 @@ HEALTH CHECK
 ========================================
 */
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
+app.get(
+  "/",
+  (req, res) => {
 
-    message:
-      "RescueMeal API Running Successfully",
-  });
-});
+    res.status(200).json({
+
+      success: true,
+
+      message:
+        "RescueMeal API Running Successfully",
+    });
+  }
+);
 
 /*
 ========================================
@@ -213,13 +278,20 @@ app.use(
   userRoutes
 );
 
+app.use(
+  "/api/v1/delivery",
+  deliveryRoutes
+);
+
 /*
 ========================================
 404 HANDLER
 ========================================
 */
 
-app.use(notFoundMiddleware);
+app.use(
+  notFoundMiddleware
+);
 
 /*
 ========================================
@@ -227,7 +299,9 @@ GLOBAL ERROR HANDLER
 ========================================
 */
 
-app.use(errorMiddleware);
+app.use(
+  errorMiddleware
+);
 
 /*
 ========================================

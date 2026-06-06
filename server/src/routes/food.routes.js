@@ -16,13 +16,42 @@ from "../middleware/authMiddleware.js";
 import roleMiddleware
 from "../middleware/roleMiddleware.js";
 
+import validate
+from "../middleware/zodValidation.middleware.js";
+
 /*
 ========================================
-CONTROLLERS
+VALIDATORS
 ========================================
 */
 
 import {
+
+  donateFoodSchema,
+
+  claimFoodSchema,
+
+  nearbyFoodSchema,
+
+} from "../validators/food.validation.js";
+
+/*
+========================================
+CONSTANTS
+========================================
+*/
+
+import { ROLES }
+from "../constants/roles.js";
+
+/*
+========================================
+FOOD CONTROLLERS
+========================================
+*/
+
+import {
+
   donateFood,
 
   getAllFood,
@@ -35,15 +64,23 @@ import {
 
   getClaimedFood,
 
-  assignDelivery,
+  getNearbyFood,
+
+} from "../controllers/food.controller.js";
+
+/*
+========================================
+DELIVERY CONTROLLERS
+========================================
+*/
+
+import {
 
   markDelivered,
 
   getVolunteerDeliveries,
 
-  getNearbyFood,
-}
-from "../controllers/food.js";
+} from "../controllers/delivery.controller.js";
 
 /*
 ========================================
@@ -58,20 +95,26 @@ const router =
 ========================================
 DONATE FOOD
 DONOR ONLY
+POST /api/v1/food/donate
 ========================================
 */
 
 router.post(
+
   "/donate",
 
   authMiddleware,
 
   roleMiddleware(
-    "donor"
+    ROLES.DONOR
   ),
 
   upload.single(
     "foodImage"
+  ),
+
+  validate(
+    donateFoodSchema
   ),
 
   donateFood
@@ -81,16 +124,18 @@ router.post(
 ========================================
 GET ALL FOOD
 NGO ONLY
+GET /api/v1/food/all
 ========================================
 */
 
 router.get(
+
   "/all",
 
   authMiddleware,
 
   roleMiddleware(
-    "ngo"
+    ROLES.NGO
   ),
 
   getAllFood
@@ -100,16 +145,22 @@ router.get(
 ========================================
 GET NEARBY FOOD
 NGO ONLY
+GET /api/v1/food/nearby
 ========================================
 */
 
 router.get(
+
   "/nearby",
 
   authMiddleware,
 
   roleMiddleware(
-    "ngo"
+    ROLES.NGO
+  ),
+
+  validate(
+    nearbyFoodSchema
   ),
 
   getNearbyFood
@@ -119,16 +170,18 @@ router.get(
 ========================================
 GET MY DONATIONS
 DONOR ONLY
+GET /api/v1/food/my-donations
 ========================================
 */
 
 router.get(
+
   "/my-donations",
 
   authMiddleware,
 
   roleMiddleware(
-    "donor"
+    ROLES.DONOR
   ),
 
   getMyDonations
@@ -138,16 +191,22 @@ router.get(
 ========================================
 CLAIM FOOD
 NGO ONLY
+PUT /api/v1/food/claim/:id
 ========================================
 */
 
 router.put(
+
   "/claim/:id",
 
   authMiddleware,
 
   roleMiddleware(
-    "ngo"
+    ROLES.NGO
+  ),
+
+  validate(
+    claimFoodSchema
   ),
 
   claimFood
@@ -157,16 +216,18 @@ router.put(
 ========================================
 GET CLAIMED FOOD
 NGO ONLY
+GET /api/v1/food/claimed-food
 ========================================
 */
 
 router.get(
+
   "/claimed-food",
 
   authMiddleware,
 
   roleMiddleware(
-    "ngo"
+    ROLES.NGO
   ),
 
   getClaimedFood
@@ -174,37 +235,20 @@ router.get(
 
 /*
 ========================================
-ASSIGN DELIVERY
-NGO ONLY
-========================================
-*/
-
-router.put(
-  "/assign/:id",
-
-  authMiddleware,
-
-  roleMiddleware(
-    "ngo"
-  ),
-
-  assignDelivery
-);
-
-/*
-========================================
 MARK DELIVERED
 VOLUNTEER ONLY
+PUT /api/v1/food/mark-delivered/:id
 ========================================
 */
 
 router.put(
+
   "/mark-delivered/:id",
 
   authMiddleware,
 
   roleMiddleware(
-    "volunteer"
+    ROLES.VOLUNTEER
   ),
 
   markDelivered
@@ -214,16 +258,18 @@ router.put(
 ========================================
 VOLUNTEER DELIVERIES
 VOLUNTEER ONLY
+GET /api/v1/food/volunteer-deliveries
 ========================================
 */
 
 router.get(
+
   "/volunteer-deliveries",
 
   authMiddleware,
 
   roleMiddleware(
-    "volunteer"
+    ROLES.VOLUNTEER
   ),
 
   getVolunteerDeliveries
@@ -233,10 +279,12 @@ router.get(
 ========================================
 DASHBOARD STATS
 ALL AUTHENTICATED USERS
+GET /api/v1/food/stats
 ========================================
 */
 
 router.get(
+
   "/stats",
 
   authMiddleware,

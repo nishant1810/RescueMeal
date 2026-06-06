@@ -1,23 +1,122 @@
-import React from "react";
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import React,
+{
+  useState,
+} from "react";
 
-const DashboardLayout = ({
-  children,
-}) => {
-  return (
-    <div className="flex bg-gray-100">
-      <Sidebar />
+import Sidebar
+from "../components/layout/Sidebar";
 
-      <div className="flex-1">
-        <Navbar />
+import Navbar
+from "../components/layout/Navbar";
 
-        <div className="p-6">
-          {children}
+/*
+========================================
+DASHBOARD LAYOUT
+========================================
+*/
+
+const DashboardLayout =
+  ({ children }) => {
+
+    /*
+    ========================================
+    MOBILE SIDEBAR STATE
+    ========================================
+    */
+
+    const [
+
+      sidebarOpen,
+
+      setSidebarOpen,
+
+    ] = useState(false);
+
+    return (
+
+      <div
+
+        className="
+
+          min-h-screen
+
+          bg-gray-100
+
+          flex
+        "
+      >
+
+        {/* ========================================
+            SIDEBAR
+        ======================================== */}
+
+        <Sidebar
+
+          sidebarOpen={
+            sidebarOpen
+          }
+
+          setSidebarOpen={
+            setSidebarOpen
+          }
+        />
+
+        {/* ========================================
+            MAIN CONTENT
+        ======================================== */}
+
+        <div
+
+          className="
+
+            flex-1
+
+            flex
+
+            flex-col
+
+            lg:ml-64
+          "
+        >
+
+          {/* ========================================
+              NAVBAR
+          ======================================== */}
+
+          <Navbar
+
+            setSidebarOpen={
+              setSidebarOpen
+            }
+          />
+
+          {/* ========================================
+              PAGE CONTENT
+          ======================================== */}
+
+          <main
+
+            className="
+
+              flex-1
+
+              p-4
+
+              md:p-6
+
+              overflow-y-auto
+            "
+          >
+
+            {children}
+
+          </main>
+
         </div>
-      </div>
-    </div>
-  );
-};
 
-export default DashboardLayout;
+      </div>
+    );
+  };
+
+export default
+DashboardLayout;

@@ -11,11 +11,11 @@ import toast
 from "react-hot-toast";
 
 import Navbar
-from "../components/Navbar";
+from "../components/layout/Navbar";
 
 import {
   donateFood,
-} from "../services/foodService";
+} from "../services/food.service";
 
 const DonateFood = () => {
 

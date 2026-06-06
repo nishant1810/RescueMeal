@@ -1,18 +1,27 @@
-import express from "express";
+import express
+from "express";
 
 import {
+
   loginUser,
-  registerUser,
-} from "../controllers/auth.js";
 
-import validateMiddleware from "../middleware/validateMiddleware.js";
+  registerUser,
+
+} from "../controllers/auth.controller.js";
+
+import validate
+from "../middleware/zodValidation.middleware.js";
 
 import {
-  loginSchema,
-  registerSchema,
-} from "../validations/authValidation.js";
 
-const router = express.Router();
+  loginSchema,
+
+  registerSchema,
+
+} from "../validators/auth.validation.js";
+
+const router =
+  express.Router();
 
 /*
 ========================================
@@ -21,9 +30,12 @@ REGISTER
 */
 
 router.post(
+
   "/register",
 
-  validateMiddleware(registerSchema),
+  validate(
+    registerSchema
+  ),
 
   registerUser
 );
@@ -35,11 +47,15 @@ LOGIN
 */
 
 router.post(
+
   "/login",
 
-  validateMiddleware(loginSchema),
+  validate(
+    loginSchema
+  ),
 
   loginUser
 );
 
-export default router;
+export default
+router;

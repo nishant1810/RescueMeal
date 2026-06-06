@@ -1,4 +1,5 @@
-import React from "react";
+import React
+from "react";
 
 import {
   Routes,
@@ -27,168 +28,217 @@ from "./pages/Dashboard";
 import DonateFood
 from "./pages/DonateFood";
 
-import AvailableFood
-from "./pages/AvailableFood";
-
 import MyDonations
 from "./pages/MyDonations";
+
+import AvailableFood
+from "./pages/AvailableFood";
 
 import ClaimedFood
 from "./pages/ClaimedFood";
 
-import Deliveries
-from "./pages/Deliveries";
+import VolunteerDashboard
+from "./pages/VolunteerDashboard";
+
+import Unauthorized
+from "./pages/Unauthorized";
+
+import NotFound
+from "./pages/NotFound";
 
 /*
 ========================================
-PROTECTED ROUTE
+ROUTES
 ========================================
 */
 
 import ProtectedRoute
 from "./routes/ProtectedRoute";
 
+/*
+========================================
+CONSTANTS
+========================================
+*/
+
+import {
+  ROLES,
+} from "./constants/roles";
+
+/*
+========================================
+APP
+========================================
+*/
+
 function App() {
 
   return (
+
     <Routes>
 
-      {/* ========================================
-          PUBLIC ROUTES
-      ======================================== */}
-
-      {/* HOME */}
+      {/* PUBLIC */}
 
       <Route
         path="/"
         element={<Home />}
       />
 
-      {/* REGISTER */}
+      <Route
+        path="/login"
+        element={<Login />}
+      />
 
       <Route
         path="/register"
         element={<Register />}
       />
 
-      {/* LOGIN */}
-
-      <Route
-        path="/login"
-        element={<Login />}
-      />
-
-      {/* ========================================
-          PROTECTED ROUTES
-      ======================================== */}
-
       {/* DASHBOARD */}
 
       <Route
+
         path="/dashboard"
+
         element={
+
           <ProtectedRoute>
+
             <Dashboard />
+
           </ProtectedRoute>
         }
       />
 
-      {/* ========================================
-          DONOR ROUTES
-      ======================================== */}
-
-      {/* DONATE FOOD */}
+      {/* DONOR */}
 
       <Route
+
         path="/donate-food"
+
         element={
+
           <ProtectedRoute
+
             allowedRoles={[
-              "donor",
+              ROLES.DONOR,
             ]}
           >
+
             <DonateFood />
+
           </ProtectedRoute>
         }
       />
 
-      {/* MY DONATIONS */}
-
       <Route
+
         path="/my-donations"
+
         element={
+
           <ProtectedRoute
+
             allowedRoles={[
-              "donor",
+              ROLES.DONOR,
             ]}
           >
+
             <MyDonations />
+
           </ProtectedRoute>
         }
       />
 
-      {/* ========================================
-          NGO ROUTES
-      ======================================== */}
-
-      {/* AVAILABLE FOOD */}
+      {/* NGO */}
 
       <Route
+
         path="/available-food"
+
         element={
+
           <ProtectedRoute
+
             allowedRoles={[
-              "ngo",
+              ROLES.NGO,
             ]}
           >
+
             <AvailableFood />
+
           </ProtectedRoute>
         }
       />
 
-      {/* CLAIMED FOOD */}
-
       <Route
+
         path="/claimed-food"
+
         element={
+
           <ProtectedRoute
+
             allowedRoles={[
-              "ngo",
+              ROLES.NGO,
             ]}
           >
+
             <ClaimedFood />
+
           </ProtectedRoute>
         }
       />
 
-      {/* ========================================
-          VOLUNTEER ROUTES
-      ======================================== */}
-
-      {/* DELIVERIES */}
+      {/* VOLUNTEER */}
 
       <Route
+
         path="/deliveries"
+
         element={
+
           <ProtectedRoute
+
             allowedRoles={[
-              "volunteer",
+              ROLES.VOLUNTEER,
             ]}
           >
-            <Deliveries />
+
+            <VolunteerDashboard />
+
           </ProtectedRoute>
         }
       />
 
-      {/* ========================================
-          INVALID ROUTES
-      ======================================== */}
+      {/* UNAUTHORIZED */}
 
       <Route
+
+        path="/unauthorized"
+
+        element={<Unauthorized />}
+      />
+
+      {/* 404 */}
+
+      <Route
+
+        path="/404"
+
+        element={<NotFound />}
+      />
+
+      {/* INVALID */}
+
+      <Route
+
         path="*"
+
         element={
+
           <Navigate
-            to="/"
+            to="/404"
             replace
           />
         }

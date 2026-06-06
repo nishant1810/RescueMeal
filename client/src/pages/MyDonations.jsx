@@ -8,14 +8,14 @@ import {
 } from "react-router-dom";
 
 import Navbar
-from "../components/Navbar";
+from "../components/layout/Navbar";
 
 import TableSkeleton
 from "../components/TableSkeleton";
 
 import {
   getMyDonations,
-} from "../services/foodService";
+} from "../services/food.service";
 
 const MyDonations = () => {
 

@@ -1,11 +1,9 @@
-import http from "http";
-
 import dotenv
 from "dotenv";
+dotenv.config();
 
-import {
-  Server,
-} from "socket.io";
+import http
+from "http";
 
 import app
 from "./app.js";
@@ -13,13 +11,18 @@ from "./app.js";
 import connectDB
 from "./config/db.js";
 
-/*
-========================================
-ENV CONFIG
-========================================
-*/
+import logger
+from "./config/logger.js";
 
-dotenv.config();
+import {
+  connectRedis,
+} from "./config/redis.js";
+
+import {
+  initSocket,
+} from "./socket/socket.js";
+
+
 
 /*
 ========================================
@@ -28,6 +31,14 @@ DATABASE CONNECTION
 */
 
 connectDB();
+
+/*
+========================================
+REDIS CONNECTION
+========================================
+*/
+
+connectRedis();
 
 /*
 ========================================
@@ -40,107 +51,11 @@ const server =
 
 /*
 ========================================
-SOCKET.IO SERVER
+INITIALIZE SOCKET
 ========================================
 */
 
-const io =
-  new Server(server, {
-    cors: {
-      origin:
-        process.env.CLIENT_URL ||
-        "http://localhost:5173",
-
-      methods: [
-        "GET",
-        "POST",
-        "PUT",
-        "DELETE",
-      ],
-
-      credentials: true,
-    },
-  });
-
-/*
-========================================
-EXPORT SOCKET IO
-========================================
-*/
-
-export { io };
-
-/*
-========================================
-SOCKET CONNECTION
-========================================
-*/
-
-io.on(
-  "connection",
-  (socket) => {
-
-    console.log(
-      `Socket Connected: ${socket.id}`
-    );
-
-    /*
-    ========================================
-    JOIN ROOM
-    ========================================
-    */
-
-    socket.on(
-      "joinRoom",
-      (roomId) => {
-
-        socket.join(
-          roomId
-        );
-
-        console.log(
-          `Socket ${socket.id} joined room ${roomId}`
-        );
-      }
-    );
-
-    /*
-    ========================================
-    LEAVE ROOM
-    ========================================
-    */
-
-    socket.on(
-      "leaveRoom",
-      (roomId) => {
-
-        socket.leave(
-          roomId
-        );
-
-        console.log(
-          `Socket ${socket.id} left room ${roomId}`
-        );
-      }
-    );
-
-    /*
-    ========================================
-    DISCONNECT
-    ========================================
-    */
-
-    socket.on(
-      "disconnect",
-      () => {
-
-        console.log(
-          `Socket Disconnected: ${socket.id}`
-        );
-      }
-    );
-  }
-);
+initSocket(server);
 
 /*
 ========================================
@@ -149,10 +64,13 @@ HEALTH CHECK
 */
 
 app.get(
+
   "/",
+
   (req, res) => {
 
     res.status(200).json({
+
       success: true,
 
       message:
@@ -178,11 +96,81 @@ START SERVER
 */
 
 server.listen(
+
   PORT,
+
   () => {
 
-    console.log(
+    logger.info(
+
       `Server running on port ${PORT}`
     );
+  }
+);
+
+/*
+========================================
+SERVER ERROR HANDLER
+========================================
+*/
+
+server.on(
+
+  "error",
+
+  (error) => {
+
+    logger.error(
+      error
+    );
+
+    process.exit(1);
+  }
+);
+
+/*
+========================================
+UNHANDLED REJECTION
+========================================
+*/
+
+process.on(
+
+  "unhandledRejection",
+
+  (error) => {
+
+    logger.error(
+
+      `Unhandled Rejection: ${error.message}`
+    );
+
+    server.close(
+      () => {
+
+        process.exit(1);
+      }
+    );
+  }
+);
+
+/*
+========================================
+UNCAUGHT EXCEPTION
+========================================
+*/
+
+process.on(
+
+  "uncaughtException",
+
+  (error) => {
+
+    logger.error(
+
+      `Uncaught Exception: ${error.message}`
+    );
+
+    process.exit(1);
   }
 );

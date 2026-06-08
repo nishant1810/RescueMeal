@@ -1,76 +1,306 @@
-import React from "react";
-import {
+import React,
+{
   createContext,
+
   useContext,
+
   useEffect,
+
+  useMemo,
+
   useState,
 } from "react";
+
+/*
+========================================
+AUTH CONTEXT
+========================================
+*/
 
 const AuthContext =
   createContext();
 
-export const AuthProvider = ({
-  children,
-}) => {
-  const [user, setUser] =
-    useState(null);
+/*
+========================================
+AUTH PROVIDER
+========================================
+*/
 
-  const [loading, setLoading] =
-    useState(true);
+export const AuthProvider =
+  ({ children }) => {
 
-  useEffect(() => {
-    const storedUser =
-      localStorage.getItem("user");
+    /*
+    ========================================
+    STATES
+    ========================================
+    */
 
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const [
+
+      user,
+
+      setUser,
+
+    ] = useState(null);
+
+    const [
+
+      token,
+
+      setToken,
+
+    ] = useState(null);
+
+    const [
+
+      loading,
+
+      setLoading,
+
+    ] = useState(true);
+
+    /*
+    ========================================
+    HYDRATE AUTH
+    ========================================
+    */
+
+    useEffect(() => {
+
+      try {
+
+        const storedUser =
+
+          localStorage.getItem(
+            "user"
+          );
+
+        const storedToken =
+
+          localStorage.getItem(
+            "token"
+          );
+
+        /*
+        ========================================
+        RESTORE SESSION
+        ========================================
+        */
+
+        if (
+          storedUser &&
+          storedToken
+        ) {
+
+          setUser(
+            JSON.parse(
+              storedUser
+            )
+          );
+
+          setToken(
+            storedToken
+          );
+        }
+
+      } catch (error) {
+
+        console.error(
+          "AUTH HYDRATION ERROR:",
+          error
+        );
+
+        /*
+        ========================================
+        CLEAN INVALID STORAGE
+        ========================================
+        */
+
+        localStorage.removeItem(
+          "user"
+        );
+
+        localStorage.removeItem(
+          "token"
+        );
+
+      } finally {
+
+        setLoading(false);
+      }
+
+    }, []);
+
+    /*
+    ========================================
+    LOGIN
+    ========================================
+    */
+
+    const login =
+      (
+
+        userData,
+
+        accessToken
+      ) => {
+
+        /*
+        ========================================
+        SAVE STORAGE
+        ========================================
+        */
+
+        localStorage.setItem(
+          "user",
+
+          JSON.stringify(
+            userData
+          )
+        );
+
+        localStorage.setItem(
+          "token",
+
+          accessToken
+        );
+
+        /*
+        ========================================
+        UPDATE STATE
+        ========================================
+        */
+
+        setUser(
+          userData
+        );
+
+        setToken(
+          accessToken
+        );
+      };
+
+    /*
+    ========================================
+    LOGOUT
+    ========================================
+    */
+
+    const logout =
+      () => {
+
+        /*
+        ========================================
+        CLEAR STORAGE
+        ========================================
+        */
+
+        localStorage.removeItem(
+          "user"
+        );
+
+        localStorage.removeItem(
+          "token"
+        );
+
+        /*
+        ========================================
+        RESET STATE
+        ========================================
+        */
+
+        setUser(null);
+
+        setToken(null);
+      };
+
+    /*
+    ========================================
+    AUTH CHECK
+    ========================================
+    */
+
+    const isAuthenticated =
+      !!token;
+
+    /*
+    ========================================
+    MEMOIZED VALUE
+    ========================================
+    */
+
+    const value =
+      useMemo(
+        () => ({
+
+          user,
+
+          token,
+
+          loading,
+
+          login,
+
+          logout,
+
+          isAuthenticated,
+        }),
+
+        [
+
+          user,
+
+          token,
+
+          loading,
+        ]
+      );
+
+    /*
+    ========================================
+    PROVIDER
+    ========================================
+    */
+
+    return (
+
+      <AuthContext.Provider
+        value={value}
+      >
+
+        {children}
+
+      </AuthContext.Provider>
+    );
+  };
+
+/*
+========================================
+USE AUTH
+========================================
+*/
+
+export const useAuth =
+  () => {
+
+    const context =
+      useContext(
+        AuthContext
+      );
+
+    /*
+    ========================================
+    SAFETY CHECK
+    ========================================
+    */
+
+    if (!context) {
+
+      throw new Error(
+
+        "useAuth must be used inside AuthProvider"
+      );
     }
 
-    setLoading(false);
-  }, []);
-
-  const login = (
-    userData,
-    token
-  ) => {
-    localStorage.setItem(
-      "token",
-      token
-    );
-
-    localStorage.setItem(
-      "user",
-      JSON.stringify(userData)
-    );
-
-    setUser(userData);
+    return context;
   };
-
-  const logout = () => {
-    localStorage.removeItem(
-      "token"
-    );
-
-    localStorage.removeItem(
-      "user"
-    );
-
-    setUser(null);
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        loading,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () =>
-  useContext(AuthContext);

@@ -3,11 +3,20 @@ import React,
   useState,
 } from "react";
 
-import Sidebar
-from "../components/layout/Sidebar";
+/*
+========================================
+LAYOUT COMPONENTS
+========================================
+*/
 
 import Navbar
 from "../components/layout/Navbar";
+
+import Sidebar
+from "../components/layout/Sidebar";
+
+import MobileSidebar
+from "../components/layout/MobileSidebar";
 
 /*
 ========================================
@@ -20,7 +29,7 @@ const DashboardLayout =
 
     /*
     ========================================
-    MOBILE SIDEBAR STATE
+    SIDEBAR STATE
     ========================================
     */
 
@@ -40,17 +49,21 @@ const DashboardLayout =
 
           min-h-screen
 
-          bg-gray-100
-
-          flex
+          bg-slate-50
         "
       >
 
         {/* ========================================
-            SIDEBAR
+            DESKTOP SIDEBAR
         ======================================== */}
 
-        <Sidebar
+        <Sidebar />
+
+        {/* ========================================
+            MOBILE SIDEBAR
+        ======================================== */}
+
+        <MobileSidebar
 
           sidebarOpen={
             sidebarOpen
@@ -69,13 +82,13 @@ const DashboardLayout =
 
           className="
 
-            flex-1
+            lg:ml-72
+
+            min-h-screen
 
             flex
 
             flex-col
-
-            lg:ml-64
           "
         >
 
@@ -100,11 +113,13 @@ const DashboardLayout =
 
               flex-1
 
-              p-4
+              px-4
 
-              md:p-6
+              sm:px-6
 
-              overflow-y-auto
+              lg:px-8
+
+              py-8
             "
           >
 
@@ -118,5 +133,4 @@ const DashboardLayout =
     );
   };
 
-export default
-DashboardLayout;
+export default DashboardLayout;

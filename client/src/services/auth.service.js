@@ -1,23 +1,76 @@
-import API from "../api/axios";
+import api
+from "../lib/axios";
+
+/*
+========================================
+REGISTER USER
+========================================
+*/
 
 export const registerUser =
-  async (data) => {
-    const response =
-      await API.post(
+  async (userData) => {
+
+    const { data } =
+      await api.post(
+
         "/auth/register",
-        data
+
+        userData
       );
 
-    return response.data;
+    return data;
   };
 
+/*
+========================================
+LOGIN USER
+========================================
+*/
+
 export const loginUser =
-  async (data) => {
-    const response =
-      await API.post(
+  async (userData) => {
+
+    const { data } =
+      await api.post(
+
         "/auth/login",
-        data
+
+        userData
       );
 
-    return response.data;
+    return data;
+  };
+
+/*
+========================================
+GET PROFILE
+========================================
+*/
+
+export const getProfile =
+  async () => {
+
+    const { data } =
+      await api.get(
+        "/auth/profile"
+      );
+
+    return data;
+  };
+
+/*
+========================================
+LOGOUT
+========================================
+*/
+
+export const logoutUser =
+  async () => {
+
+    const { data } =
+      await api.post(
+        "/auth/logout"
+      );
+
+    return data;
   };

@@ -1,5 +1,10 @@
-import api
-from "./axios";
+import api from "../lib/axios";
+
+/*
+========================================
+AUTH API
+========================================
+*/
 
 /*
 ========================================
@@ -7,8 +12,7 @@ REGISTER USER
 ========================================
 */
 
-export const
-registerUser =
+export const registerUserApi =
   async (userData) => {
 
     const response =
@@ -28,8 +32,7 @@ LOGIN USER
 ========================================
 */
 
-export const
-loginUser =
+export const loginUserApi =
   async (userData) => {
 
     const response =
@@ -45,12 +48,11 @@ loginUser =
 
 /*
 ========================================
-GET PROFILE
+GET USER PROFILE
 ========================================
 */
 
-export const
-getProfile =
+export const getProfileApi =
   async () => {
 
     const response =
@@ -67,8 +69,7 @@ LOGOUT USER
 ========================================
 */
 
-export const
-logoutUser =
+export const logoutUserApi =
   async () => {
 
     const response =

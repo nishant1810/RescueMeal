@@ -1,5 +1,4 @@
-import React
-from "react";
+import React from "react";
 
 /*
 ========================================
@@ -9,10 +8,30 @@ CARD
 
 const Card =
   ({
+
     children,
 
     className = "",
+
+    padding = "md",
+
+    hover = false,
   }) => {
+
+    /*
+    ========================================
+    PADDING STYLES
+    ========================================
+    */
+
+    const paddings = {
+
+      sm: "p-4",
+
+      md: "p-6",
+
+      lg: "p-8",
+    };
 
     return (
 
@@ -22,13 +41,31 @@ const Card =
 
           bg-white
 
-          rounded-xl
-
-          shadow-sm
+          rounded-3xl
 
           border
 
-          p-6
+          border-gray-100
+
+          shadow-sm
+
+          transition-all
+
+          duration-300
+
+          ${paddings[padding]}
+
+          ${
+
+            hover
+
+              ? `
+                hover:shadow-xl
+                hover:-translate-y-1
+              `
+
+              : ""
+          }
 
           ${className}
         `}
@@ -40,5 +77,4 @@ const Card =
     );
   };
 
-export default
-Card;
+export default Card;

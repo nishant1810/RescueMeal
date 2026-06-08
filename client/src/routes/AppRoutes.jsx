@@ -1,5 +1,4 @@
-import React
-from "react";
+import React from "react";
 
 import {
   Routes,
@@ -9,16 +8,22 @@ import {
 
 /*
 ========================================
-ROUTE PROTECTION
+COMMON PAGES
 ========================================
 */
 
-import ProtectedRoute
-from "./ProtectedRoute";
+import Home
+from "../pages/common/Home";
+
+import NotFound
+from "../pages/common/NotFound";
+
+import Unauthorized
+from "../pages/common/Unauthorized";
 
 /*
 ========================================
-PAGES
+AUTH PAGES
 ========================================
 */
 
@@ -28,8 +33,14 @@ from "../pages/auth/Login";
 import Register
 from "../pages/auth/Register";
 
-import Dashboard
-from "../pages/common/Dashboard";
+/*
+========================================
+DONOR PAGES
+========================================
+*/
+
+import DonorDashboard
+from "../pages/donor/Dashboard";
 
 import DonateFood
 from "../pages/donor/DonateFood";
@@ -37,29 +48,60 @@ from "../pages/donor/DonateFood";
 import MyDonations
 from "../pages/donor/MyDonations";
 
+/*
+========================================
+NGO PAGES
+========================================
+*/
+
+import NGODashboard
+from "../pages/ngo/Dashboard";
+
 import AvailableFood
 from "../pages/ngo/AvailableFood";
 
 import ClaimedFood
 from "../pages/ngo/ClaimedFood";
 
-import VolunteerDeliveries
-from "../pages/volunteer/VolunteerDeliveries";
-
-import Unauthorized
-from "../pages/common/Unauthorized";
-
-import NotFound
-from "../pages/common/NotFound";
-
 /*
 ========================================
-CONSTANTS
+VOLUNTEER PAGES
 ========================================
 */
 
-import { ROLES }
-from "../constants/roles";
+import VolunteerDashboard
+from "../pages/volunteer/Dashboard";
+
+import Deliveries
+from "../pages/volunteer/Deliveries";
+
+/*
+========================================
+ADMIN PAGES
+========================================
+*/
+
+import AdminDashboard
+from "../pages/admin/Dashboard";
+
+/*
+========================================
+PROTECTED ROUTE
+========================================
+*/
+
+import ProtectedRoute
+from "./ProtectedRoute";
+
+/*
+========================================
+ROLES
+========================================
+*/
+
+import {
+  ROLES,
+} from "../constants/roles";
 
 /*
 ========================================
@@ -79,35 +121,23 @@ const AppRoutes =
         ======================================== */}
 
         <Route
+          path="/"
+          element={<Home />}
+        />
 
+        <Route
           path="/login"
-
           element={<Login />}
         />
 
         <Route
-
           path="/register"
-
           element={<Register />}
         />
 
-        {/* ========================================
-            DASHBOARD
-        ======================================== */}
-
         <Route
-
-          path="/dashboard"
-
-          element={
-
-            <ProtectedRoute>
-
-              <Dashboard />
-
-            </ProtectedRoute>
-          }
+          path="/unauthorized"
+          element={<Unauthorized />}
         />
 
         {/* ========================================
@@ -115,13 +145,26 @@ const AppRoutes =
         ======================================== */}
 
         <Route
-
-          path="/donate-food"
-
+          path="/donor/dashboard"
           element={
 
             <ProtectedRoute
+              allowedRoles={[
+                ROLES.DONOR,
+              ]}
+            >
 
+              <DonorDashboard />
+
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/donor/donate-food"
+          element={
+
+            <ProtectedRoute
               allowedRoles={[
                 ROLES.DONOR,
               ]}
@@ -134,13 +177,10 @@ const AppRoutes =
         />
 
         <Route
-
-          path="/my-donations"
-
+          path="/donor/my-donations"
           element={
 
             <ProtectedRoute
-
               allowedRoles={[
                 ROLES.DONOR,
               ]}
@@ -157,13 +197,26 @@ const AppRoutes =
         ======================================== */}
 
         <Route
-
-          path="/available-food"
-
+          path="/ngo/dashboard"
           element={
 
             <ProtectedRoute
+              allowedRoles={[
+                ROLES.NGO,
+              ]}
+            >
 
+              <NGODashboard />
+
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/ngo/available-food"
+          element={
+
+            <ProtectedRoute
               allowedRoles={[
                 ROLES.NGO,
               ]}
@@ -176,13 +229,10 @@ const AppRoutes =
         />
 
         <Route
-
-          path="/claimed-food"
-
+          path="/ngo/claimed-food"
           element={
 
             <ProtectedRoute
-
               allowedRoles={[
                 ROLES.NGO,
               ]}
@@ -199,66 +249,78 @@ const AppRoutes =
         ======================================== */}
 
         <Route
-
-          path="/volunteer-deliveries"
-
+          path="/volunteer/dashboard"
           element={
 
             <ProtectedRoute
-
               allowedRoles={[
                 ROLES.VOLUNTEER,
               ]}
             >
 
-              <VolunteerDeliveries />
+              <VolunteerDashboard />
+
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/volunteer/deliveries"
+          element={
+
+            <ProtectedRoute
+              allowedRoles={[
+                ROLES.VOLUNTEER,
+              ]}
+            >
+
+              <Deliveries />
 
             </ProtectedRoute>
           }
         />
 
         {/* ========================================
-            UNAUTHORIZED
+            ADMIN ROUTES
         ======================================== */}
 
         <Route
-
-          path="/unauthorized"
-
-          element={<Unauthorized />}
-        />
-
-        {/* ========================================
-            HOME REDIRECT
-        ======================================== */}
-
-        <Route
-
-          path="/"
-
+          path="/admin/dashboard"
           element={
 
-            <Navigate
-              to="/dashboard"
-              replace
-            />
+            <ProtectedRoute
+              allowedRoles={[
+                ROLES.ADMIN,
+              ]}
+            >
+
+              <AdminDashboard />
+
+            </ProtectedRoute>
           }
         />
 
         {/* ========================================
-            404 PAGE
+            FALLBACK ROUTES
         ======================================== */}
 
         <Route
-
-          path="*"
-
+          path="/404"
           element={<NotFound />}
+        />
+
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to="/404"
+              replace
+            />
+          }
         />
 
       </Routes>
     );
   };
 
-export default
-AppRoutes;
+export default AppRoutes;

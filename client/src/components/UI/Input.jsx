@@ -1,5 +1,4 @@
-import React
-from "react";
+import React from "react";
 
 /*
 ========================================
@@ -9,9 +8,16 @@ INPUT
 
 const Input =
   ({
+
     label,
 
-    error,
+    error = "",
+
+    helperText = "",
+
+    required = false,
+
+    disabled = false,
 
     className = "",
 
@@ -20,11 +26,11 @@ const Input =
 
     return (
 
-      <div
-        className="w-full"
-      >
+      <div className="w-full space-y-2">
 
-        {/* LABEL */}
+        {/* ========================================
+            LABEL
+        ======================================== */}
 
         {label && (
 
@@ -34,9 +40,9 @@ const Input =
 
               block
 
-              mb-2
+              text-sm
 
-              font-medium
+              font-semibold
 
               text-gray-700
             "
@@ -44,12 +50,27 @@ const Input =
 
             {label}
 
+            {required && (
+
+              <span
+                className="text-red-500"
+              >
+
+                {" "}*
+
+              </span>
+            )}
+
           </label>
         )}
 
-        {/* INPUT */}
+        {/* ========================================
+            INPUT
+        ======================================== */}
 
         <input
+
+          disabled={disabled}
 
           className={`
 
@@ -59,13 +80,19 @@ const Input =
 
             py-3
 
+            rounded-xl
+
             border
 
-            rounded-lg
+            bg-white
+
+            text-gray-800
+
+            placeholder:text-gray-400
 
             outline-none
 
-            transition
+            transition-all
 
             duration-200
 
@@ -73,11 +100,22 @@ const Input =
 
             focus:ring-orange-400
 
-            ${
+            focus:border-orange-400
 
+            disabled:bg-gray-100
+
+            disabled:cursor-not-allowed
+
+            disabled:opacity-70
+
+            ${
               error
 
-                ? "border-red-500"
+                ? `
+                  border-red-500
+                  focus:ring-red-300
+                  focus:border-red-500
+                `
 
                 : "border-gray-300"
             }
@@ -88,15 +126,36 @@ const Input =
           {...props}
         />
 
-        {/* ERROR */}
+        {/* ========================================
+            HELPER TEXT
+        ======================================== */}
+
+        {!error && helperText && (
+
+          <p
+
+            className="
+
+              text-sm
+
+              text-gray-500
+            "
+          >
+
+            {helperText}
+
+          </p>
+        )}
+
+        {/* ========================================
+            ERROR
+        ======================================== */}
 
         {error && (
 
           <p
 
             className="
-
-              mt-1
 
               text-sm
 
@@ -113,5 +172,4 @@ const Input =
     );
   };
 
-export default
-Input;
+export default Input;

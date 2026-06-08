@@ -1,5 +1,5 @@
 import api
-from "../api/axios";
+from "../lib/axios";
 
 /*
 ========================================

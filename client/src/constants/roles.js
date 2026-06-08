@@ -1,14 +1,10 @@
 export const ROLES = {
 
-  DONOR:
-    "donor",
+  DONOR: "donor",
 
-  NGO:
-    "ngo",
+  NGO: "ngo",
 
-  VOLUNTEER:
-    "volunteer",
+  VOLUNTEER: "volunteer",
 
-  ADMIN:
-    "admin",
+  ADMIN: "admin",
 };

@@ -1,14 +1,51 @@
-import React, {
+import React,
+{
   createContext,
+
   useContext,
+
+  useEffect,
+
   useState,
 } from "react";
+
+/*
+========================================
+SOCKET
+========================================
+*/
+
+import {
+  useSocket,
+} from "./SocketContext";
+
+/*
+========================================
+CREATE CONTEXT
+========================================
+*/
 
 const NotificationContext =
   createContext();
 
+/*
+========================================
+PROVIDER
+========================================
+*/
+
 export const NotificationProvider =
   ({ children }) => {
+
+    /*
+    ========================================
+    SOCKET
+    ========================================
+    */
+
+    const socket =
+      useSocket();
+
     /*
     ========================================
     STATE
@@ -16,80 +53,151 @@ export const NotificationProvider =
     */
 
     const [
+
       notifications,
+
       setNotifications,
+
     ] = useState([]);
 
     /*
     ========================================
-    ADD NOTIFICATION
+    SOCKET EVENTS
     ========================================
     */
 
-    const addNotification =
-      (
-        message,
-        type =
-          "info"
-      ) => {
-        const newNotification =
-          {
-            id:
-              Date.now(),
+    useEffect(() => {
 
-            message,
+      if (!socket) return;
 
-            type,
+      /*
+      ========================================
+      FOOD ADDED
+      ========================================
+      */
+
+      socket.on(
+
+        "food:new",
+
+        (food) => {
+
+          const newNotification = {
+
+            id: Date.now(),
+
+            title:
+              "New Food Donation",
+
+            message:
+              `${food.foodName} added`,
+
+            type:
+              "success",
 
             createdAt:
               new Date(),
+
+            read: false,
           };
 
+          setNotifications(
+            (prev) => [
+
+              newNotification,
+
+              ...prev,
+            ]
+          );
+        }
+      );
+
+      /*
+      ========================================
+      CLEANUP
+      ========================================
+      */
+
+      return () => {
+
+        socket.off(
+          "food:new"
+        );
+      };
+
+    }, [socket]);
+
+    /*
+    ========================================
+    MARK READ
+    ========================================
+    */
+
+    const markAsRead =
+      (id) => {
+
         setNotifications(
-          (prev) => [
-            newNotification,
-            ...prev,
-          ]
+          (prev) =>
+
+            prev.map(
+              (notification) =>
+
+                notification.id === id
+
+                  ? {
+
+                      ...notification,
+
+                      read: true,
+                    }
+
+                  : notification
+            )
         );
       };
 
     /*
     ========================================
-    REMOVE NOTIFICATION
+    CLEAR ALL
     ========================================
     */
 
-    const removeNotification =
-      (id) => {
-        setNotifications(
-          (prev) =>
-            prev.filter(
-              (
-                notification
-              ) =>
-                notification.id !==
-                id
-            )
-        );
+    const clearNotifications =
+      () => {
+
+        setNotifications([]);
       };
 
     return (
+
       <NotificationContext.Provider
+
         value={{
+
           notifications,
 
-          addNotification,
+          markAsRead,
 
-          removeNotification,
+          clearNotifications,
         }}
       >
+
         {children}
+
       </NotificationContext.Provider>
     );
   };
 
-export const useNotification =
-  () =>
-    useContext(
+/*
+========================================
+USE NOTIFICATIONS
+========================================
+*/
+
+export const useNotifications =
+  () => {
+
+    return useContext(
       NotificationContext
     );
+  };

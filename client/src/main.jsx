@@ -1,8 +1,6 @@
-import React
-from "react";
+import React from "react";
 
-import ReactDOM
-from "react-dom/client";
+import ReactDOM from "react-dom/client";
 
 import {
   BrowserRouter,
@@ -11,13 +9,6 @@ import {
 import {
   Toaster,
 } from "react-hot-toast";
-
-import App
-from "./App";
-
-import {
-  AuthProvider,
-} from "./context/AuthContext";
 
 /*
 ========================================
@@ -28,6 +19,22 @@ GLOBAL STYLES
 import "./styles/index.css";
 
 import "leaflet/dist/leaflet.css";
+
+/*
+========================================
+APP
+========================================
+*/
+
+import App from "./App";
+
+/*
+========================================
+GLOBAL PROVIDERS
+========================================
+*/
+
+import Providers from "./app/providers";
 
 /*
 ========================================
@@ -45,7 +52,7 @@ const root =
 
 /*
 ========================================
-RENDER APP
+RENDER APPLICATION
 ========================================
 */
 
@@ -55,10 +62,10 @@ root.render(
 
     <BrowserRouter>
 
-      <AuthProvider>
+      <Providers>
 
         {/* ========================================
-            TOASTER
+            TOAST NOTIFICATIONS
         ======================================== */}
 
         <Toaster
@@ -74,24 +81,24 @@ root.render(
             style: {
 
               borderRadius:
-                "10px",
+                "12px",
 
               background:
-                "#333",
+                "#1f2937",
 
               color:
-                "#fff",
+                "#ffffff",
             },
           }}
         />
 
         {/* ========================================
-            APP
+            APPLICATION
         ======================================== */}
 
         <App />
 
-      </AuthProvider>
+      </Providers>
 
     </BrowserRouter>
 

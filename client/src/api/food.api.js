@@ -1,5 +1,10 @@
-import api
-from "./axios";
+import api from "../lib/axios";
+
+/*
+========================================
+FOOD API
+========================================
+*/
 
 /*
 ========================================
@@ -7,8 +12,7 @@ DONATE FOOD
 ========================================
 */
 
-export const
-donateFood =
+export const donateFoodApi =
   async (formData) => {
 
     const response =
@@ -36,16 +40,27 @@ GET ALL FOOD
 ========================================
 */
 
-export const
-getAllFood =
+export const getAllFoodApi =
   async (
-    page = 1
+
+    page = 1,
+
+    limit = 6
   ) => {
 
     const response =
       await api.get(
 
-        `/food/all?page=${page}`
+        "/food/all",
+
+        {
+          params: {
+
+            page,
+
+            limit,
+          },
+        }
       );
 
     return response.data;
@@ -57,8 +72,7 @@ GET MY DONATIONS
 ========================================
 */
 
-export const
-getMyDonations =
+export const getMyDonationsApi =
   async () => {
 
     const response =
@@ -75,9 +89,21 @@ CLAIM FOOD
 ========================================
 */
 
-export const
-claimFood =
+export const claimFoodApi =
   async (foodId) => {
+
+    /*
+    ========================================
+    VALIDATION
+    ========================================
+    */
+
+    if (!foodId) {
+
+      throw new Error(
+        "Food ID is required"
+      );
+    }
 
     const response =
       await api.put(
@@ -94,17 +120,51 @@ GET NEARBY FOOD
 ========================================
 */
 
-export const
-getNearbyFood =
+export const getNearbyFoodApi =
   async (
+
     lat,
-    lng
+
+    lng,
+
+    distance = 10
   ) => {
+
+    /*
+    ========================================
+    VALIDATION
+    ========================================
+    */
+
+    if (
+
+      lat === undefined ||
+
+      lng === undefined
+
+    ) {
+
+      throw new Error(
+
+        "Latitude and Longitude are required"
+      );
+    }
 
     const response =
       await api.get(
 
-        `/food/nearby?lat=${lat}&lng=${lng}`
+        "/food/nearby",
+
+        {
+          params: {
+
+            lat,
+
+            lng,
+
+            distance,
+          },
+        }
       );
 
     return response.data;
@@ -116,13 +176,89 @@ GET DASHBOARD STATS
 ========================================
 */
 
-export const
-getDashboardStats =
+export const getDashboardStatsApi =
   async () => {
 
     const response =
       await api.get(
         "/food/stats"
+      );
+
+    return response.data;
+  };
+
+/*
+========================================
+DELETE FOOD
+========================================
+*/
+
+export const deleteFoodApi =
+  async (foodId) => {
+
+    /*
+    ========================================
+    VALIDATION
+    ========================================
+    */
+
+    if (!foodId) {
+
+      throw new Error(
+        "Food ID is required"
+      );
+    }
+
+    const response =
+      await api.delete(
+
+        `/food/${foodId}`
+      );
+
+    return response.data;
+  };
+
+/*
+========================================
+UPDATE FOOD
+========================================
+*/
+
+export const updateFoodApi =
+  async (
+
+    foodId,
+
+    formData
+  ) => {
+
+    /*
+    ========================================
+    VALIDATION
+    ========================================
+    */
+
+    if (!foodId) {
+
+      throw new Error(
+        "Food ID is required"
+      );
+    }
+
+    const response =
+      await api.put(
+
+        `/food/${foodId}`,
+
+        formData,
+
+        {
+          headers: {
+
+            "Content-Type":
+              "multipart/form-data",
+          },
+        }
       );
 
     return response.data;

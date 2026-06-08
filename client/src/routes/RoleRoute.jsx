@@ -1,68 +1,153 @@
-import React
-from "react";
+// import React from "react";
 
-import {
-  Navigate,
-} from "react-router-dom";
+// import {
+//   Navigate,
+//   useLocation,
+// } from "react-router-dom";
 
-/*
-========================================
-ROLE ROUTE
-========================================
-*/
+// /*
+// ========================================
+// AUTH CONTEXT
+// ========================================
+// */
 
-const RoleRoute =
-  ({
-    children,
-    allowedRoles,
-  }) => {
+// import {
+//   useAuth,
+// } from "../context/AuthContext";
 
-    /*
-    ========================================
-    GET USER
-    ========================================
-    */
+// /*
+// ========================================
+// ROLE ROUTE
+// ========================================
+// */
 
-    const user =
-      JSON.parse(
+// const RoleRoute =
+//   ({
 
-        localStorage.getItem(
-          "user"
-        )
-      );
+//     children,
 
-    /*
-    ========================================
-    INVALID ROLE
-    ========================================
-    */
+//     allowedRoles = [],
+//   }) => {
 
-    if (
+//     /*
+//     ========================================
+//     AUTH CONTEXT
+//     ========================================
+//     */
 
-      !user ||
+//     const {
+//       user,
+//       loading,
+//     } = useAuth();
 
-      !allowedRoles.includes(
-        user.role
-      )
+//     /*
+//     ========================================
+//     CURRENT LOCATION
+//     ========================================
+//     */
 
-    ) {
+//     const location =
+//       useLocation();
 
-      return (
-        <Navigate
-          to="/unauthorized"
-          replace
-        />
-      );
-    }
+//     /*
+//     ========================================
+//     LOADING STATE
+//     ========================================
+//     */
 
-    /*
-    ========================================
-    AUTHORIZED
-    ========================================
-    */
+//     if (loading) {
 
-    return children;
-  };
+//       return (
 
-export default
-RoleRoute;
+//         <div
+
+//           className="
+//             min-h-screen
+//             flex
+//             items-center
+//             justify-center
+//             bg-gray-50
+//           "
+//         >
+
+//           <h1
+
+//             className="
+//               text-2xl
+//               font-bold
+//               text-orange-500
+//             "
+//           >
+
+//             Loading...
+
+//           </h1>
+
+//         </div>
+//       );
+//     }
+
+//     /*
+//     ========================================
+//     NO USER
+//     ========================================
+//     */
+
+//     if (!user) {
+
+//       return (
+
+//         <Navigate
+
+//           to="/login"
+
+//           state={{
+//             from: location,
+//           }}
+
+//           replace
+//         />
+//       );
+//     }
+
+//     /*
+//     ========================================
+//     ROLE VALIDATION
+//     ========================================
+//     */
+
+//     const isAuthorized =
+
+//       allowedRoles.includes(
+//         user?.role
+//       );
+
+//     /*
+//     ========================================
+//     UNAUTHORIZED ACCESS
+//     ========================================
+//     */
+
+//     if (!isAuthorized) {
+
+//       return (
+
+//         <Navigate
+
+//           to="/unauthorized"
+
+//           replace
+//         />
+//       );
+//     }
+
+//     /*
+//     ========================================
+//     ACCESS GRANTED
+//     ========================================
+//     */
+
+//     return children;
+//   };
+
+// export default RoleRoute;

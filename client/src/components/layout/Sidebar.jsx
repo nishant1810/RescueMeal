@@ -1,5 +1,4 @@
-import React
-from "react";
+import React from "react";
 
 import {
   Link,
@@ -7,12 +6,40 @@ import {
 } from "react-router-dom";
 
 import {
+
   X,
+
+  LayoutDashboard,
+
+  HeartHandshake,
+
+  Package,
+
+  Utensils,
+
+  CheckCircle,
+
+  Truck,
+
+  Shield,
+
 } from "lucide-react";
+
+/*
+========================================
+AUTH CONTEXT
+========================================
+*/
 
 import {
   useAuth,
 } from "../../context/AuthContext";
+
+/*
+========================================
+ROLES
+========================================
+*/
 
 import {
   ROLES,
@@ -26,19 +53,11 @@ SIDEBAR
 
 const Sidebar =
   ({
+
     sidebarOpen,
 
     setSidebarOpen,
   }) => {
-
-    /*
-    ========================================
-    AUTH
-    ========================================
-    */
-
-    const { user } =
-      useAuth();
 
     /*
     ========================================
@@ -48,6 +67,66 @@ const Sidebar =
 
     const location =
       useLocation();
+
+    /*
+    ========================================
+    AUTH
+    ========================================
+    */
+
+    const {
+      user,
+    } = useAuth();
+
+    /*
+    ========================================
+    ACTIVE LINK
+    ========================================
+    */
+
+    const isActive =
+      (path) => {
+
+        return (
+          location.pathname === path
+        );
+      };
+
+    /*
+    ========================================
+    LINK STYLES
+    ========================================
+    */
+
+    const linkStyles =
+      (path) => `
+
+        flex
+        items-center
+        gap-3
+        px-4
+        py-3
+        rounded-xl
+        transition-all
+        duration-200
+        font-medium
+
+        ${
+          isActive(path)
+
+            ? `
+              bg-orange-500
+              text-white
+              shadow-md
+            `
+
+            : `
+              text-gray-300
+              hover:bg-gray-800
+              hover:text-white
+            `
+        }
+      `;
 
     /*
     ========================================
@@ -64,7 +143,10 @@ const Sidebar =
             "Dashboard",
 
           path:
-            "/dashboard",
+            "/donor/dashboard",
+
+          icon:
+            <LayoutDashboard size={20} />,
         },
 
         {
@@ -72,7 +154,10 @@ const Sidebar =
             "Donate Food",
 
           path:
-            "/donate-food",
+            "/donor/donate-food",
+
+          icon:
+            <HeartHandshake size={20} />,
         },
 
         {
@@ -80,7 +165,10 @@ const Sidebar =
             "My Donations",
 
           path:
-            "/my-donations",
+            "/donor/my-donations",
+
+          icon:
+            <Package size={20} />,
         },
       ],
 
@@ -91,7 +179,10 @@ const Sidebar =
             "Dashboard",
 
           path:
-            "/dashboard",
+            "/ngo/dashboard",
+
+          icon:
+            <LayoutDashboard size={20} />,
         },
 
         {
@@ -99,7 +190,10 @@ const Sidebar =
             "Available Food",
 
           path:
-            "/available-food",
+            "/ngo/available-food",
+
+          icon:
+            <Utensils size={20} />,
         },
 
         {
@@ -107,7 +201,10 @@ const Sidebar =
             "Claimed Food",
 
           path:
-            "/claimed-food",
+            "/ngo/claimed-food",
+
+          icon:
+            <CheckCircle size={20} />,
         },
       ],
 
@@ -118,7 +215,10 @@ const Sidebar =
             "Dashboard",
 
           path:
-            "/dashboard",
+            "/volunteer/dashboard",
+
+          icon:
+            <LayoutDashboard size={20} />,
         },
 
         {
@@ -126,7 +226,10 @@ const Sidebar =
             "Deliveries",
 
           path:
-            "/deliveries",
+            "/volunteer/deliveries",
+
+          icon:
+            <Truck size={20} />,
         },
       ],
 
@@ -137,7 +240,10 @@ const Sidebar =
             "Dashboard",
 
           path:
-            "/dashboard",
+            "/admin/dashboard",
+
+          icon:
+            <LayoutDashboard size={20} />,
         },
 
         {
@@ -145,18 +251,22 @@ const Sidebar =
             "Admin Panel",
 
           path:
-            "/admin",
+            "/admin/dashboard",
+
+          icon:
+            <Shield size={20} />,
         },
       ],
     };
 
     /*
     ========================================
-    CURRENT USER LINKS
+    USER LINKS
     ========================================
     */
 
     const links =
+
       menuItems[
         user?.role
       ] || [];
@@ -164,7 +274,6 @@ const Sidebar =
     return (
 
       <>
-
         {/* ========================================
             MOBILE OVERLAY
         ======================================== */}
@@ -174,22 +283,16 @@ const Sidebar =
           <div
 
             className="
-
               fixed
-
               inset-0
-
               bg-black/50
-
+              backdrop-blur-sm
               z-40
-
               lg:hidden
             "
 
             onClick={() =>
-              setSidebarOpen(
-                false
-              )
+              setSidebarOpen(false)
             }
           />
         )}
@@ -203,33 +306,21 @@ const Sidebar =
           className={`
 
             fixed
-
             top-0
-
             left-0
-
             z-50
-
-            w-64
-
+            w-72
             h-screen
-
             bg-gray-900
-
             text-white
-
-            p-6
-
-            shadow-xl
-
+            shadow-2xl
+            flex
+            flex-col
             transform
-
             transition-transform
-
             duration-300
 
             ${
-
               sidebarOpen
 
                 ? "translate-x-0"
@@ -241,52 +332,57 @@ const Sidebar =
           `}
         >
 
-          {/* ========================================
-              HEADER
-          ======================================== */}
+          {/* HEADER */}
 
           <div
 
             className="
-
               flex
-
               items-center
-
               justify-between
-
-              mb-10
+              px-6
+              py-6
+              border-b
+              border-gray-800
             "
           >
 
-            <h1
+            <div>
 
-              className="
+              <h1
 
-                text-3xl
+                className="
+                  text-3xl
+                  font-extrabold
+                  text-orange-500
+                "
+              >
 
-                font-bold
+                RescueMeal
 
-                text-orange-500
-              "
-            >
+              </h1>
 
-              RescueMeal
+              <p
 
-            </h1>
+                className="
+                  text-sm
+                  text-gray-400
+                  mt-1
+                "
+              >
 
-            {/* ========================================
-                CLOSE BUTTON
-            ======================================== */}
+                Food Rescue Platform
+
+              </p>
+
+            </div>
 
             <button
 
               className="lg:hidden"
 
               onClick={() =>
-                setSidebarOpen(
-                  false
-                )
+                setSidebarOpen(false)
               }
             >
 
@@ -296,13 +392,18 @@ const Sidebar =
 
           </div>
 
-          {/* ========================================
-              NAVIGATION LINKS
-          ======================================== */}
+
+          {/* NAVIGATION */}
 
           <nav
 
-            className="space-y-3"
+            className="
+              flex-1
+              overflow-y-auto
+              px-4
+              py-6
+              space-y-2
+            "
           >
 
             {links.map(
@@ -315,40 +416,21 @@ const Sidebar =
                   to={item.path}
 
                   onClick={() =>
-                    setSidebarOpen(
-                      false
-                    )
+                    setSidebarOpen(false)
                   }
 
-                  className={`
-
-                    block
-
-                    px-4
-
-                    py-3
-
-                    rounded-lg
-
-                    transition
-
-                    duration-200
-
-                    font-medium
-
-                    ${
-
-                      location.pathname ===
-                      item.path
-
-                        ? "bg-green-500 text-white"
-
-                        : "hover:bg-gray-800"
-                    }
-                  `}
+                  className={linkStyles(
+                    item.path
+                  )}
                 >
 
-                  {item.label}
+                  {item.icon}
+
+                  <span>
+
+                    {item.label}
+
+                  </span>
 
                 </Link>
               )
@@ -356,11 +438,27 @@ const Sidebar =
 
           </nav>
 
+          {/* FOOTER */}
+
+          <div
+
+            className="
+              p-6
+              border-t
+              border-gray-800
+              text-sm
+              text-gray-400
+            "
+          >
+
+            © 2026 RescueMeal
+
+          </div>
+
         </aside>
 
       </>
     );
   };
 
-export default
-Sidebar;
+export default Sidebar;

@@ -1,10 +1,15 @@
-import React
-from "react";
+import React from "react";
 
 import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+
+/*
+========================================
+AUTH CONTEXT
+========================================
+*/
 
 import {
   useAuth,
@@ -18,7 +23,9 @@ PROTECTED ROUTE
 
 const ProtectedRoute =
   ({
+
     children,
+
     allowedRoles = [],
   }) => {
 
@@ -33,7 +40,6 @@ const ProtectedRoute =
       user,
 
       loading,
-
     } = useAuth();
 
     /*
@@ -47,7 +53,7 @@ const ProtectedRoute =
 
     /*
     ========================================
-    LOADING SCREEN
+    LOADING STATE
     ========================================
     */
 
@@ -58,15 +64,10 @@ const ProtectedRoute =
         <div
 
           className="
-
             min-h-screen
-
             flex
-
             items-center
-
             justify-center
-
             bg-gray-50
           "
         >
@@ -75,21 +76,33 @@ const ProtectedRoute =
             className="text-center"
           >
 
-            <h1
+            <div
 
               className="
+                w-14
+                h-14
+                border-4
+                border-orange-500
+                border-t-transparent
+                rounded-full
+                animate-spin
+                mx-auto
+                mb-4
+              "
+            />
 
+            <h2
+
+              className="
                 text-2xl
-
                 font-bold
-
-                text-green-600
+                text-gray-700
               "
             >
 
               Loading...
 
-            </h1>
+            </h2>
 
           </div>
 
@@ -156,5 +169,4 @@ const ProtectedRoute =
     return children;
   };
 
-export default
-ProtectedRoute;
+export default ProtectedRoute;

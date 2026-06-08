@@ -1,5 +1,4 @@
-import React
-from "react";
+import React from "react";
 
 import {
   useNavigate,
@@ -7,13 +6,28 @@ import {
 
 import {
   Menu,
+
   LogOut,
 } from "lucide-react";
+
+/*
+========================================
+AUTH CONTEXT
+========================================
+*/
 
 import {
   useAuth,
 } from "../../context/AuthContext";
 
+/*
+========================================
+UTILS
+========================================
+*/
+
+import getDashboardRoute
+from "../../utils/getDashboardRoute";
 /*
 ========================================
 NAVBAR
@@ -36,7 +50,7 @@ const Navbar =
 
     /*
     ========================================
-    AUTH CONTEXT
+    AUTH
     ========================================
     */
 
@@ -45,7 +59,6 @@ const Navbar =
       user,
 
       logout,
-
     } = useAuth();
 
     /*
@@ -59,7 +72,19 @@ const Navbar =
 
     /*
     ========================================
-    LOGOUT HANDLER
+    DASHBOARD ROUTE
+    ========================================
+    */
+
+    const dashboardRoute =
+
+      getDashboardRoute(
+        role
+      );
+
+    /*
+    ========================================
+    LOGOUT
     ========================================
     */
 
@@ -68,28 +93,17 @@ const Navbar =
 
         /*
         ========================================
-        CONTEXT LOGOUT
+        AUTH LOGOUT
         ========================================
         */
 
-        if (logout) {
-
-          logout();
-        }
+        logout();
 
         /*
         ========================================
-        FALLBACK
+        REDIRECT
         ========================================
         */
-
-        localStorage.removeItem(
-          "token"
-        );
-
-        localStorage.removeItem(
-          "user"
-        );
 
         navigate(
           "/login"
@@ -129,11 +143,13 @@ const Navbar =
 
           z-30
 
-          bg-white
+          bg-white/95
 
-          shadow-sm
+          backdrop-blur-md
 
           border-b
+
+          border-gray-200
 
           px-4
 
@@ -174,10 +190,14 @@ const Navbar =
               lg:hidden
 
               text-gray-700
+
+              hover:text-orange-500
+
+              transition
             "
 
             onClick={() =>
-              setSidebarOpen(
+              setSidebarOpen?.(
                 true
               )
             }
@@ -187,23 +207,35 @@ const Navbar =
 
           </button>
 
-          {/* PAGE TITLE */}
+          {/* BRAND */}
 
           <div>
 
             <h1
 
+              onClick={() =>
+                navigate(
+                  dashboardRoute
+                )
+              }
+
               className="
 
-                text-2xl
+                text-3xl
 
-                font-bold
+                font-extrabold
 
-                text-gray-800
+                tracking-tight
+
+                text-orange-500
+
+                cursor-pointer
+
+                select-none
               "
             >
 
-              Dashboard
+              RescueMeal
 
             </h1>
 
@@ -214,12 +246,26 @@ const Navbar =
                 text-sm
 
                 text-gray-500
+
+                mt-1
               "
             >
 
               Welcome back,
+
               {" "}
-              {user?.name}
+
+              <span
+                className="font-medium"
+              >
+
+                {
+                  user?.name ||
+                  "User"
+                }
+
+              </span>
+
             </p>
 
           </div>
@@ -252,6 +298,8 @@ const Navbar =
 
               md:flex
 
+              items-center
+
               px-3
 
               py-1
@@ -277,53 +325,11 @@ const Navbar =
             `}
           >
 
-            {role}
+            {role || "user"}
 
           </div>
 
-          {/* USER NAME */}
-
-          <div
-
-            className="
-
-              hidden
-
-              sm:block
-            "
-          >
-
-            <p
-
-              className="
-
-                font-medium
-
-                text-gray-800
-              "
-            >
-
-              {user?.name}
-
-            </p>
-
-            <p
-
-              className="
-
-                text-sm
-
-                text-gray-500
-              "
-            >
-
-              {user?.email}
-
-            </p>
-
-          </div>
-
-          {/* LOGOUT BUTTON */}
+          {/* LOGOUT */}
 
           <button
 
@@ -347,11 +353,13 @@ const Navbar =
 
               px-4
 
-              py-2
+              py-2.5
 
-              rounded-lg
+              rounded-xl
 
-              transition
+              shadow-sm
+
+              transition-all
 
               duration-200
             "
@@ -375,5 +383,4 @@ const Navbar =
     );
   };
 
-export default
-Navbar;
+export default Navbar;

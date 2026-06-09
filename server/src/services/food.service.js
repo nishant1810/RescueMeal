@@ -1,17 +1,19 @@
-import mongoose
-from "mongoose";
+import mongoose from "mongoose";
 
 import {
   FOOD_STATUS,
 } from "../constants/foodStatus.js";
 
-import ApiError
-from "../utils/ApiError.js";
+import ApiError from "../utils/ApiError.js";
 
 import { getIO }
 from "../socket/socket.js";
+const redisClient = {
+  get: async () => null,
+  set: async () => null,
+};
 
-import redisClient from "../config/redis.js";
+// import redisClient from "../config/redis.js";
 
 import {
 

@@ -1,102 +1,30 @@
-import express from "express";
-import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
-import authRoutes from "./routes/auth.routes.js";
+console.log("1. ENV Loaded");
 
-const app = express();
+import http from "http";
 
-/*
-========================================
-MIDDLEWARE
-========================================
-*/
+console.log("2. HTTP Imported");
 
-app.use(express.json());
+import app from "./app.js";
 
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+console.log("3. App Imported");
 
-/*
-========================================
-CORS
-========================================
-*/
+import connectDB from "./config/db.js";
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      process.env.CLIENT_URL,
-    ],
+console.log("4. DB Imported");
 
-    credentials: true,
-  })
-);
+connectDB();
 
-/*
-========================================
-HEALTH CHECK
-========================================
-*/
+console.log("5. DB Function Called");
 
-app.get("/", (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "RescueMeal API Running",
-  });
+const server = http.createServer(app);
+
+console.log("6. Server Created");
+
+const PORT = process.env.PORT || 5000;
+
+server.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`);
 });
-
-/*
-========================================
-API ROUTES
-========================================
-*/
-
-app.use("/api/v1/auth", authRoutes);
-
-/*
-========================================
-404 ROUTE HANDLER
-========================================
-*/
-
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    statusCode: 404,
-    message: `Route Not Found - ${req.originalUrl}`,
-  });
-});
-
-/*
-========================================
-GLOBAL ERROR HANDLER
-========================================
-*/
-
-app.use((err, req, res, next) => {
-  console.error(err);
-
-  res.status(err.statusCode || 500).json({
-    success: false,
-    statusCode: err.statusCode || 500,
-    message:
-      err.message || "Internal Server Error",
-
-    stack:
-      process.env.NODE_ENV === "development"
-        ? err.stack
-        : null,
-  });
-});
-
-/*
-========================================
-EXPORT APP
-========================================
-*/
-
-export default app;

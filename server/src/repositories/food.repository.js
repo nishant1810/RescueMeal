@@ -1,5 +1,5 @@
 import Food
-from "../models/Food.js";
+from "../models/food.js";
 
 /*
 ========================================

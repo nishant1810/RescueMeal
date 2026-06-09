@@ -13,7 +13,11 @@ MIDDLEWARE
 
 app.use(express.json());
 
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
 /*
 ========================================
@@ -25,8 +29,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://your-vercel-app.vercel.app",
+      process.env.CLIENT_URL,
     ],
+
     credentials: true,
   })
 );
@@ -58,12 +63,11 @@ app.use("/api/v1/auth", authRoutes);
 ========================================
 */
 
-app.use("*", (req, res) => {
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     statusCode: 404,
     message: `Route Not Found - ${req.originalUrl}`,
-    stack: null,
   });
 });
 
@@ -79,12 +83,20 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({
     success: false,
     statusCode: err.statusCode || 500,
-    message: err.message || "Internal Server Error",
+    message:
+      err.message || "Internal Server Error",
+
     stack:
       process.env.NODE_ENV === "development"
         ? err.stack
         : null,
   });
 });
+
+/*
+========================================
+EXPORT APP
+========================================
+*/
 
 export default app;

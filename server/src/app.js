@@ -4,7 +4,6 @@ import helmet from "helmet";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
-import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 import dotenv from "dotenv";
 import path from "path";
@@ -16,7 +15,6 @@ LOGGER
 ========================================
 */
 
-import logger from "./config/logger.js";
 import morganMiddleware from "./middleware/morgan.middleware.js";
 
 /*
@@ -29,15 +27,6 @@ import authRoutes from "./routes/auth.routes.js";
 import foodRoutes from "./routes/food.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import deliveryRoutes from "./routes/delivery.routes.js";
-
-/*
-========================================
-MIDDLEWARE
-========================================
-*/
-
-import notFoundMiddleware from "./middleware/notFoundMiddleware.js";
-import errorMiddleware from "./middleware/errorMiddleware.js";
 
 /*
 ========================================
@@ -61,11 +50,9 @@ PATH CONFIG
 ========================================
 */
 
-const __filename =
-  fileURLToPath(import.meta.url);
+const __filename = fileURLToPath(import.meta.url);
 
-const __dirname =
-  path.dirname(__filename);
+const __dirname = path.dirname(__filename);
 
 /*
 ========================================
@@ -95,24 +82,12 @@ CORS
 
 app.use(
   cors({
-    origin:
-      process.env.CLIENT_URL ||
+    origin: [
+      process.env.CLIENT_URL,
       "http://localhost:5173",
+    ],
 
     credentials: true,
-
-    methods: [
-      "GET",
-      "POST",
-      "PUT",
-      "PATCH",
-      "DELETE",
-    ],
-
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-    ],
   })
 );
 
@@ -122,35 +97,27 @@ RATE LIMITER
 ========================================
 */
 
-const limiter =
-  rateLimit({
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
 
-    windowMs:
-      15 * 60 * 1000,
+  max:
+    process.env.NODE_ENV === "production"
+      ? 100
+      : 1000,
 
-    max:
-      process.env.NODE_ENV ===
-      "production"
-        ? 100
-        : 1000,
+  standardHeaders: true,
 
-    standardHeaders: true,
+  legacyHeaders: false,
 
-    legacyHeaders: false,
+  message: {
+    success: false,
 
-    message: {
+    message:
+      "Too many requests from this IP. Please try again later.",
+  },
+});
 
-      success: false,
-
-      message:
-        "Too many requests from this IP. Please try again later.",
-    },
-  });
-
-app.use(
-  "/api",
-  limiter
-);
+app.use("/api", limiter);
 
 /*
 ========================================
@@ -177,19 +144,7 @@ COOKIE PARSER
 ========================================
 */
 
-app.use(
-  cookieParser()
-);
-
-/*
-========================================
-MONGO SANITIZE
-========================================
-*/
-
-app.use(
-  mongoSanitize()
-);
+app.use(cookieParser());
 
 /*
 ========================================
@@ -197,9 +152,7 @@ HPP PROTECTION
 ========================================
 */
 
-app.use(
-  hpp()
-);
+app.use(hpp());
 
 /*
 ========================================
@@ -207,9 +160,7 @@ COMPRESSION
 ========================================
 */
 
-app.use(
-  compression()
-);
+app.use(compression());
 
 /*
 ========================================
@@ -217,9 +168,7 @@ LOGGER
 ========================================
 */
 
-app.use(
-  morganMiddleware
-);
+app.use(morganMiddleware);
 
 /*
 ========================================
@@ -230,10 +179,7 @@ STATIC FILES
 app.use(
   "/uploads",
   express.static(
-    path.join(
-      __dirname,
-      "../uploads"
-    )
+    path.join(__dirname, "../uploads")
   )
 );
 
@@ -243,19 +189,13 @@ HEALTH CHECK
 ========================================
 */
 
-app.get(
-  "/",
-  (req, res) => {
-
-    res.status(200).json({
-
-      success: true,
-
-      message:
-        "RescueMeal API Running Successfully",
-    });
-  }
-);
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message:
+      "RescueMeal API Running Successfully",
+  });
+});
 
 /*
 ========================================
@@ -263,25 +203,13 @@ API ROUTES
 ========================================
 */
 
-app.use(
-  "/api/v1/auth",
-  authRoutes
-);
+app.use("/api/v1/auth", authRoutes);
 
-app.use(
-  "/api/v1/food",
-  foodRoutes
-);
+app.use("/api/v1/food", foodRoutes);
 
-app.use(
-  "/api/v1/users",
-  userRoutes
-);
+app.use("/api/v1/users", userRoutes);
 
-app.use(
-  "/api/v1/delivery",
-  deliveryRoutes
-);
+app.use("/api/v1/delivery", deliveryRoutes);
 
 /*
 ========================================
@@ -289,9 +217,13 @@ app.use(
 ========================================
 */
 
-app.use(
-  notFoundMiddleware
-);
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    statusCode: 404,
+    message: `Route Not Found - ${req.originalUrl}`,
+  });
+});
 
 /*
 ========================================
@@ -299,9 +231,16 @@ GLOBAL ERROR HANDLER
 ========================================
 */
 
-app.use(
-  errorMiddleware
-);
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  res.status(err.statusCode || 500).json({
+    success: false,
+    statusCode: err.statusCode || 500,
+    message:
+      err.message || "Internal Server Error",
+  });
+});
 
 /*
 ========================================

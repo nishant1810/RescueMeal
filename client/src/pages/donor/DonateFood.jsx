@@ -17,7 +17,7 @@ LAYOUT
 */
 
 import DashboardLayout
-from "../../layouts/DashboardLayout";
+from "../../layouts/DashboardLayout.jsx";
 
 /*
 ========================================
@@ -26,7 +26,7 @@ MUTATION
 */
 
 import useDonateFood
-from "../../hooks/mutations/useDonateFood";
+from "../../hooks/mutations/useDonateFood.jsx";
 
 /*
 ========================================
@@ -35,16 +35,16 @@ UI COMPONENTS
 */
 
 import Card
-from "../../components/ui/Card";
+from "../../components/ui/Card.jsx";
 
 import Input
-from "../../components/ui/Input";
+from "../../components/ui/Input.jsx";
 
 import Button
-from "../../components/ui/Button";
+from "../../components/ui/Button.jsx";
 
 import PageHeader
-from "../../components/ui/PageHeader";
+from "../../components/ui/PageHeader.jsx";
 
 /*
 ========================================

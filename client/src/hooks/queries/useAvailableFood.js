@@ -11,7 +11,7 @@ SERVICES
 import {
   getAllFood,
   getNearbyFood,
-} from "../../services/food.service";
+} from "../../services/food.service.js";
 
 /*
 ========================================

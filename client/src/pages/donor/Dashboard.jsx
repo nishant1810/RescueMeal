@@ -50,13 +50,13 @@ UI COMPONENTS
 */
 
 import Loader
-from "../../components/ui/Loader";
+from "../../components/ui/Loader.jsx";
 
 import PageHeader
-from "../../components/ui/PageHeader";
+from "../../components/ui/PageHeader.jsx";
 
 import Button
-from "../../components/ui/Button";
+from "../../components/ui/Button.jsx";
 
 /*
 ========================================
@@ -65,16 +65,16 @@ DASHBOARD COMPONENTS
 */
 
 import StatsCard
-from "../../components/dashboard/StatsCard";
+from "../../components/dashboard/StatsCard.jsx";
 
 import DashboardGrid
-from "../../components/dashboard/DashboardGrid";
+from "../../components/dashboard/DashboardGrid.jsx";
 
 import SectionCard
-from "../../components/dashboard/SectionCard";
+from "../../components/dashboard/SectionCard.jsx";
 
 import AnalyticsChart
-from "../../components/dashboard/AnalyticsChart";
+from "../../components/dashboard/AnalyticsChart.jsx";
 
 /*
 ========================================

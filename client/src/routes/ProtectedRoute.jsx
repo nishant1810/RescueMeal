@@ -13,7 +13,7 @@ AUTH CONTEXT
 
 import {
   useAuth,
-} from "../context/AuthContext";
+} from "../context/AuthContext.jsx";
 
 /*
 ========================================

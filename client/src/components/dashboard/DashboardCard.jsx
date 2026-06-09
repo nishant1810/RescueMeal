@@ -1,6 +1,6 @@
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/Sidebar.jsx";
 
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar.jsx";
 
 const DashboardLayout = ({
   children,

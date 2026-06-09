@@ -8,25 +8,25 @@ import {
 } from "lucide-react";
 
 import DashboardLayout
-from "../../layouts/DashboardLayout";
+from "../../layouts/DashboardLayout.jsx";
 
 import useUserLocation
-from "../../hooks/location/useUserLocation";
+from "../../hooks/location/useUserLocation.jsx";
 
 import useAvailableFood
-from "../../hooks/queries/useAvailableFood";
+from "../../hooks/queries/useAvailableFood.jsx";
 
 import Loader
-from "../../components/ui/Loader";
+from "../../components/ui/Loader.jsx";
 
 import EmptyState
-from "../../components/ui/EmptyState";
+from "../../components/ui/EmptyState.jsx";
 
 import PageHeader
-from "../../components/ui/PageHeader";
+from "../../components/ui/PageHeader.jsx";
 
 import FoodGrid
-from "../../components/food/FoodGrid";
+from "../../components/food/FoodGrid.jsx";
 
 const AvailableFood = () => {
 

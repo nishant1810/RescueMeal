@@ -8,7 +8,7 @@ COMPONENTS
 */
 
 import Navbar
-from "../components/layout/Navbar";
+from "../components/layout/Navbar.jsx";
 
 /*
 ========================================

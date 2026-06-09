@@ -10,7 +10,7 @@ SERVICES
 
 import {
   getAllFoodService,
-} from "../../services/food.service";
+} from "../../services/food.service.js";
 
 /*
 ========================================
@@ -20,7 +20,7 @@ QUERY KEYS
 
 import {
   QUERY_KEYS,
-} from "../../constants/queryKeys";
+} from "../../constants/queryKeys.js";
 
 /*
 ========================================

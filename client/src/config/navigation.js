@@ -24,7 +24,7 @@ ROLES
 
 import {
   ROLES,
-} from "../constants/roles";
+} from "../constants/roles.js";
 
 /*
 ========================================

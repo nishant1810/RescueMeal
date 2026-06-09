@@ -18,10 +18,10 @@ UI COMPONENTS
 */
 
 import Button
-from "../ui/Button";
+from "../ui/Button.jsx";
 
 import DeliveryStatus
-from "../food/DeliveryStatus";
+from "../food/DeliveryStatus.jsx";
 
 /*
 ========================================
@@ -31,7 +31,7 @@ UTILS
 
 import {
   getImageUrl,
-} from "../../utils/getImageUrl";
+} from "../../utils/getImageUrl.js";
 
 /*
 ========================================

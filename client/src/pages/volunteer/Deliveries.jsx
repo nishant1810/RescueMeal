@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 import {Truck,MapPin,Package,CheckCircle,} from "lucide-react";
 
-import Navbar from "../../components/layout/Navbar";
+import Navbar from "../../components/layout/Navbar.jsx";
 
 import {getAvailableDeliveries,acceptDelivery,markPicked,markDelivered,} from "../../services/deliveryService";
 

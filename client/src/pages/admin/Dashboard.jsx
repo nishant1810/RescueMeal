@@ -24,7 +24,7 @@ LAYOUT
 */
 
 import DashboardLayout
-from "../../layouts/DashboardLayout";
+from "../../layouts/DashboardLayout.jsx";
 
 /*
 ========================================
@@ -34,7 +34,7 @@ SERVICES
 
 import {
   getAdminStats,
-} from "../../services/admin.service";
+} from "../../services/admin.service.js";
 
 /*
 ========================================

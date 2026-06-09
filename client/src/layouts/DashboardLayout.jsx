@@ -10,13 +10,13 @@ LAYOUT COMPONENTS
 */
 
 import Navbar
-from "../components/layout/Navbar";
+from "../components/layout/Navbar.jsx";
 
 import Sidebar
-from "../components/layout/Sidebar";
+from "../components/layout/Sidebar.jsx";
 
 import MobileSidebar
-from "../components/layout/MobileSidebar";
+from "../components/layout/MobileSidebar.jsx";
 
 /*
 ========================================

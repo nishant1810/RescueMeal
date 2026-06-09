@@ -11,7 +11,7 @@ LAYOUT
 */
 
 import DashboardLayout
-from "../../layouts/DashboardLayout";
+from "../../layouts/DashboardLayout.jsx";
 
 /*
 ========================================
@@ -21,7 +21,7 @@ SERVICES
 
 import {
   getClaimedFood,
-} from "../../services/food.service";
+} from "../../services/food.service.js";
 
 /*
 ========================================
@@ -30,13 +30,13 @@ UI COMPONENTS
 */
 
 import Loader
-from "../../components/UI/Loader";
+from "../../components/UI/Loader.jsx";
 
 import EmptyState
-from "../../components/UI/EmptyState";
+from "../../components/UI/EmptyState.jsx";
 
 import PageHeader
-from "../../components/UI/PageHeader";
+from "../../components/UI/PageHeader.jsx";
 
 /*
 ========================================
@@ -45,7 +45,7 @@ FOOD COMPONENTS
 */
 
 import ClaimedFoodCard
-from "../../components/food/ClaimedFoodCard";
+from "../../components/food/ClaimedFoodCard.jsx";
 
 /*
 ========================================

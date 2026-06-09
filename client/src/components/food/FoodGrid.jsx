@@ -7,7 +7,7 @@ FOOD CARD
 */
 
 import FoodCard
-from "./FoodCard";
+from "./FoodCard.jsx";
 
 /*
 ========================================

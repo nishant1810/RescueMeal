@@ -15,7 +15,7 @@ AUTH PROVIDER
 
 import {
   AuthProvider,
-} from "../context/AuthContext";
+} from "../context/AuthContext.jsx";
 
 /*
 ========================================
@@ -25,7 +25,7 @@ SOCKET PROVIDER
 
 import {
   SocketProvider,
-} from "../context/SocketContext";
+} from "../context/SocketContext.jsx";
 
 /*
 ========================================
@@ -35,7 +35,7 @@ NOTIFICATION PROVIDER
 
 import {
   NotificationProvider,
-} from "../context/NotificationContext";
+} from "../context/NotificationContext.jsx";
 
 /*
 ========================================

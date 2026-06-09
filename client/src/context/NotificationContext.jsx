@@ -17,7 +17,7 @@ SOCKET
 
 import {
   useSocket,
-} from "./SocketContext";
+} from "./SocketContext.jsx";
 
 /*
 ========================================

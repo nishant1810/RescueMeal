@@ -13,7 +13,7 @@ NOTIFICATIONS
 
 import {
   useNotifications,
-} from "../../context/NotificationContext";
+} from "../../context/NotificationContext.jsx";
 
 /*
 ========================================

@@ -6,7 +6,7 @@ ROUTES
 ========================================
 */
 
-import AppRoutes from "./routes/AppRoutes";
+import AppRoutes from "./routes/AppRoutes.jsx";
 
 /*
 ========================================
@@ -14,7 +14,7 @@ SOCKETS
 ========================================
 */
 
-import useRealtimeUpdates from "./hooks/socket/useRealtimeUpdates";
+import useRealtimeUpdates from "./hooks/socket/useRealtimeUpdates.js";
 
 /*
 ========================================

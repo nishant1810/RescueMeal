@@ -14,7 +14,7 @@ SERVICES
 
 import {
   claimFood,
-} from "../../services/food.service";
+} from "../../services/food.service.js";
 
 /*
 ========================================

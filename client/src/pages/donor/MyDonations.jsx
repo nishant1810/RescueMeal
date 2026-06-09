@@ -19,7 +19,7 @@ LAYOUT
 */
 
 import DashboardLayout
-from "../../layouts/DashboardLayout";
+from "../../layouts/DashboardLayout.jsx";
 
 /*
 ========================================
@@ -29,7 +29,7 @@ SERVICES
 
 import {
   getMyDonations,
-} from "../../services/food.service";
+} from "../../services/food.service.js";
 
 /*
 ========================================
@@ -38,22 +38,22 @@ UI COMPONENTS
 */
 
 import Loader
-from "../../components/ui/Loader";
+from "../../components/ui/Loader.jsx";
 
 import EmptyState
-from "../../components/ui/EmptyState";
+from "../../components/ui/EmptyState.jsx";
 
 import PageHeader
-from "../../components/ui/PageHeader";
+from "../../components/ui/PageHeader.jsx";
 
 import Button
-from "../../components/ui/Button";
+from "../../components/ui/Button.jsx";
 
 import Table
-from "../../components/ui/Table";
+from "../../components/ui/Table.jsx";
 
 import SectionCard
-from "../../components/dashboard/SectionCard";
+from "../../components/dashboard/SectionCard.jsx";
 
 /*
 ========================================
@@ -62,7 +62,7 @@ DONATION COMPONENTS
 */
 
 import DonationTableRow
-from "../../components/donations/DonationTableRow";
+from "../../components/donations/DonationTableRow.jsx";
 
 /*
 ========================================

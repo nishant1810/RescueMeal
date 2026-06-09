@@ -7,7 +7,7 @@ UI COMPONENTS
 */
 
 import StatusBadge
-from "../ui/StatusBadge";
+from "../ui/StatusBadge,jsx";
 
 /*
 ========================================
@@ -17,7 +17,7 @@ UTILS
 
 import {
   getImageUrl,
-} from "../../utils/getImageUrl";
+} from "../../utils/getImageUrl.js";
 
 /*
 ========================================

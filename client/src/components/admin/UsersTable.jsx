@@ -11,7 +11,7 @@ BUTTON
 */
 
 import Button
-from "../ui/Button";
+from "../ui/Button.jsx";
 
 /*
 ========================================

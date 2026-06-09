@@ -17,7 +17,7 @@ AUTH
 
 import {
   useAuth,
-} from "../../context/AuthContext";
+} from "../../context/AuthContext.jsx";
 
 /*
 ========================================
@@ -27,7 +27,7 @@ NAVIGATION CONFIG
 
 import {
   navigationConfig,
-} from "../../config/navigation";
+} from "../../config/navigation.js";
 
 /*
 ========================================

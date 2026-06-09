@@ -33,7 +33,7 @@ AUTH CONTEXT
 
 import {
   useAuth,
-} from "../../context/AuthContext";
+} from "../../context/AuthContext.jsx";
 
 /*
 ========================================
@@ -43,7 +43,7 @@ ROLES
 
 import {
   ROLES,
-} from "../../constants/roles";
+} from "../../constants/roles.js";
 
 /*
 ========================================

@@ -14,7 +14,7 @@ SERVICES
 
 import {
   deleteFood,
-} from "../../services/food.service";
+} from "../../services/food.service.js";
 
 /*
 ========================================

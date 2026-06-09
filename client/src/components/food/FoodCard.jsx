@@ -12,7 +12,7 @@ MUTATIONS
 */
 
 import useClaimFood
-from "../../hooks/mutations/useClaimFood";
+from "../../hooks/mutations/useClaimFood.js";
 
 /*
 ========================================
@@ -21,10 +21,10 @@ UI COMPONENTS
 */
 
 import Button
-from "../ui/Button";
+from "../ui/Button.jsx";
 
 import StatusBadge
-from "../ui/StatusBadge";
+from "../ui/StatusBadge.jsx";
 
 /*
 ========================================
@@ -34,7 +34,7 @@ UTILS
 
 import {
   calculateFoodDistance,
-} from "../../utils/calculateFoodDistance";
+} from "../../utils/calculateFoodDistance.js";
 
 /*
 ========================================

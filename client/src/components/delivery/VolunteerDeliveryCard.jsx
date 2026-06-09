@@ -16,7 +16,7 @@ UI
 */
 
 import Button
-from "../ui/Button";
+from "../ui/Button.jsx";
 
 /*
 ========================================
@@ -25,7 +25,7 @@ BADGE
 */
 
 import DeliveryBadge
-from "./DeliveryBadge";
+from "./DeliveryBadge.jsx";
 
 /*
 ========================================
@@ -35,7 +35,7 @@ UTILS
 
 import {
   getImageUrl,
-} from "../../utils/getImageUrl";
+} from "../../utils/getImageUrl.js";
 
 /*
 ========================================

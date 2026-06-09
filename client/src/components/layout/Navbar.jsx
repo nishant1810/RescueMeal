@@ -18,7 +18,7 @@ AUTH CONTEXT
 
 import {
   useAuth,
-} from "../../context/AuthContext";
+} from "../../context/AuthContext.jsx";
 
 /*
 ========================================
@@ -27,7 +27,7 @@ UTILS
 */
 
 import getDashboardRoute
-from "../../utils/getDashboardRoute";
+from "../../utils/getDashboardRoute.js";
 /*
 ========================================
 NAVBAR

@@ -13,13 +13,13 @@ COMMON PAGES
 */
 
 import Home
-from "../pages/common/Home";
+from "../pages/common/Home.jsx";
 
 import NotFound
-from "../pages/common/NotFound";
+from "../pages/common/NotFound.jsx";
 
 import Unauthorized
-from "../pages/common/Unauthorized";
+from "../pages/common/Unauthorized.jsx";
 
 /*
 ========================================
@@ -28,10 +28,10 @@ AUTH PAGES
 */
 
 import Login
-from "../pages/auth/Login";
+from "../pages/auth/Login.jsx";
 
 import Register
-from "../pages/auth/Register";
+from "../pages/auth/Register.jsx";
 
 /*
 ========================================
@@ -40,13 +40,13 @@ DONOR PAGES
 */
 
 import DonorDashboard
-from "../pages/donor/Dashboard";
+from "../pages/donor/Dashboard.jsx";
 
 import DonateFood
-from "../pages/donor/DonateFood";
+from "../pages/donor/DonateFood.jsx";
 
 import MyDonations
-from "../pages/donor/MyDonations";
+from "../pages/donor/MyDonations.jsx";
 
 /*
 ========================================
@@ -55,13 +55,13 @@ NGO PAGES
 */
 
 import NGODashboard
-from "../pages/ngo/Dashboard";
+from "../pages/ngo/Dashboard.jsx";
 
 import AvailableFood
-from "../pages/ngo/AvailableFood";
+from "../pages/ngo/AvailableFood.jsx";
 
 import ClaimedFood
-from "../pages/ngo/ClaimedFood";
+from "../pages/ngo/ClaimedFood.jsx";
 
 /*
 ========================================
@@ -70,10 +70,10 @@ VOLUNTEER PAGES
 */
 
 import VolunteerDashboard
-from "../pages/volunteer/Dashboard";
+from "../pages/volunteer/Dashboard.jsx";
 
 import Deliveries
-from "../pages/volunteer/Deliveries";
+from "../pages/volunteer/Deliveries.jsx";
 
 /*
 ========================================
@@ -82,7 +82,7 @@ ADMIN PAGES
 */
 
 import AdminDashboard
-from "../pages/admin/Dashboard";
+from "../pages/admin/Dashboard.jsx";
 
 /*
 ========================================
@@ -91,7 +91,7 @@ PROTECTED ROUTE
 */
 
 import ProtectedRoute
-from "./ProtectedRoute";
+from "./ProtectedRoute.jsx";
 
 /*
 ========================================
@@ -101,7 +101,7 @@ ROLES
 
 import {
   ROLES,
-} from "../constants/roles";
+} from "../constants/roles.js";
 
 /*
 ========================================

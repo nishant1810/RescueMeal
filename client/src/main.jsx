@@ -34,7 +34,7 @@ GLOBAL PROVIDERS
 ========================================
 */
 
-import Providers from "./app/providers";
+import Providers from "./app/providers.jsx";
 
 /*
 ========================================

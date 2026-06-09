@@ -22,7 +22,7 @@ LAYOUT
 */
 
 import DashboardLayout
-from "../../layouts/DashboardLayout";
+from "../../layouts/DashboardLayout.jsx";
 
 /*
 ========================================
@@ -32,7 +32,7 @@ SERVICES
 
 import {
   getDashboardStats,
-} from "../../services/food.service";
+} from "../../services/food.service.js";
 
 /*
 ========================================
@@ -41,16 +41,16 @@ UI COMPONENTS
 */
 
 import Loader
-from "../../components/UI/Loader";
+from "../../components/UI/Loader.jsx";
 
 import EmptyState
-from "../../components/UI/EmptyState";
+from "../../components/UI/EmptyState.jsx";
 
 import PageHeader
-from "../../components/UI/PageHeader";
+from "../../components/UI/PageHeader.jsx";
 
 import Button
-from "../../components/UI/Button";
+from "../../components/UI/Button.jsx";
 
 /*
 ========================================
@@ -59,16 +59,16 @@ DASHBOARD COMPONENTS
 */
 
 import StatsCard
-from "../../components/dashboard/StatsCard";
+from "../../components/dashboard/StatsCard.jsx";
 
 import DashboardGrid
-from "../../components/dashboard/DashboardGrid";
+from "../../components/dashboard/DashboardGrid.jsx";
 
 import SectionCard
-from "../../components/dashboard/SectionCard";
+from "../../components/dashboard/SectionCard.jsx";
 
 import AnalyticsChart
-from "../../components/dashboard/AnalyticsChart";
+from "../../components/dashboard/AnalyticsChart.jsx";
 
 /*
 ========================================

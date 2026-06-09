@@ -15,7 +15,7 @@ SOCKET
 
 import {
   socket,
-} from "../lib/socket";
+} from "../lib/socket.js";
 
 /*
 ========================================
@@ -25,7 +25,7 @@ AUTH
 
 import {
   useAuth,
-} from "./AuthContext";
+} from "./AuthContext.jsx";
 
 /*
 ========================================

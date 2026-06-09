@@ -1,7 +1,7 @@
 import React from "react";
 
 import FoodMap
-from "./FoodMap";
+from "./FoodMap.jsx";
 
 const FoodModal = ({
   food,

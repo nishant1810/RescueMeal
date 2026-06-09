@@ -12,14 +12,14 @@ import toast from "react-hot-toast";
 
 import {
   loginUser,
-} from "../../services/auth.service";
+} from "../../services/auth.service.js";
 
 import {
   useAuth,
-} from "../../context/AuthContext";
+} from "../../context/AuthContext.jsx";
 
 import getDashboardRoute
-from "../../utils/getDashboardRoute";
+from "../../utils/getDashboardRoute.js";
 
 import slide1
 from "../../assets/animations/ImgDisplay.jpg";

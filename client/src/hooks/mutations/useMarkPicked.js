@@ -14,7 +14,7 @@ SERVICES
 
 import {
   markPicked,
-} from "../../services/delivery.service";
+} from "../../services/delivery.service.js";
 
 /*
 ========================================

@@ -1,5 +1,4 @@
-import api
-from "./axios";
+import lib from "../lib/axios.js";
 
 /*
 ========================================

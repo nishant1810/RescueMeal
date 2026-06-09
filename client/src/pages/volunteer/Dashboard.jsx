@@ -41,16 +41,16 @@ UI COMPONENTS
 */
 
 import Loader
-from "../../components/UI/Loader.jsx";
+from "../../components/ui/Loader.jsx";
 
 import EmptyState
-from "../../components/UI/EmptyState.jsx";
+from "../../components/ui/EmptyState.jsx";
 
 import PageHeader
-from "../../components/UI/PageHeader.jsx";
+from "../../components/ui/PageHeader.jsx";
 
 import Button
-from "../../components/UI/Button.jsx";
+from "../../components/ui/Button.jsx";
 
 /*
 ========================================

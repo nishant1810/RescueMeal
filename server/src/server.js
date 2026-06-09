@@ -1,41 +1,35 @@
-import dotenv from "dotenv";
-dotenv.config();
+import express from "express";
+import cors from "cors";
 
-import http from "http";
+import authRoutes from "./routes/auth.routes.js";
 
-import app from "./app.js";
-
-import connectDB from "./config/db.js";
-
-import logger from "./config/logger.js";
-
-import "./config/redis.js";
-
-import { initSocket } from "./socket/socket.js";
+const app = express();
 
 /*
 ========================================
-DATABASE CONNECTION
+MIDDLEWARE
 ========================================
 */
 
-connectDB();
+app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
 
 /*
 ========================================
-CREATE HTTP SERVER
+CORS
 ========================================
 */
 
-const server = http.createServer(app);
-
-/*
-========================================
-INITIALIZE SOCKET
-========================================
-*/
-
-initSocket(server);
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://your-vercel-app.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 
 /*
 ========================================
@@ -52,56 +46,45 @@ app.get("/", (req, res) => {
 
 /*
 ========================================
-PORT
+API ROUTES
 ========================================
 */
 
-const PORT = process.env.PORT || 5000;
+app.use("/api/v1/auth", authRoutes);
 
 /*
 ========================================
-START SERVER
+404 ROUTE HANDLER
 ========================================
 */
 
-server.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`);
-});
-
-/*
-========================================
-SERVER ERROR HANDLER
-========================================
-*/
-
-server.on("error", (error) => {
-  logger.error(error);
-
-  process.exit(1);
-});
-
-/*
-========================================
-UNHANDLED REJECTION
-========================================
-*/
-
-process.on("unhandledRejection", (error) => {
-  logger.error(`Unhandled Rejection: ${error.message}`);
-
-  server.close(() => {
-    process.exit(1);
+app.use("*", (req, res) => {
+  res.status(404).json({
+    success: false,
+    statusCode: 404,
+    message: `Route Not Found - ${req.originalUrl}`,
+    stack: null,
   });
 });
 
 /*
 ========================================
-UNCAUGHT EXCEPTION
+GLOBAL ERROR HANDLER
 ========================================
 */
 
-process.on("uncaughtException", (error) => {
-  logger.error(`Uncaught Exception: ${error.message}`);
+app.use((err, req, res, next) => {
+  console.error(err);
 
-  process.exit(1);
+  res.status(err.statusCode || 500).json({
+    success: false,
+    statusCode: err.statusCode || 500,
+    message: err.message || "Internal Server Error",
+    stack:
+      process.env.NODE_ENV === "development"
+        ? err.stack
+        : null,
+  });
 });
+
+export default app;

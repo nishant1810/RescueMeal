@@ -1,5 +1,4 @@
-import express
-from "express";
+import express from "express";
 
 import {
 
@@ -9,8 +8,7 @@ import {
 
 } from "../controllers/auth.controller.js";
 
-import validate
-from "../middleware/zodValidation.middleware.js";
+import validate from "../middleware/zodValidation.middleware.js";
 
 import {
 

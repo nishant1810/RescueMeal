@@ -12,14 +12,11 @@ COMMON PAGES
 ========================================
 */
 
-import Home
-from "../pages/common/Home.jsx";
+import Home from "../pages/common/Home.jsx";
 
-import NotFound
-from "../pages/common/NotFound.jsx";
+import NotFound from "../pages/common/NotFound.jsx";
 
-import Unauthorized
-from "../pages/common/Unauthorized.jsx";
+import Unauthorized from "../pages/common/Unauthorized.jsx";
 
 /*
 ========================================
@@ -27,11 +24,9 @@ AUTH PAGES
 ========================================
 */
 
-import Login
-from "../pages/auth/Login.jsx";
+import Login from "../pages/auth/Login.jsx";
 
-import Register
-from "../pages/auth/Register.jsx";
+import Register from "../pages/auth/Register.jsx";
 
 /*
 ========================================
@@ -39,14 +34,11 @@ DONOR PAGES
 ========================================
 */
 
-import DonorDashboard
-from "../pages/donor/Dashboard.jsx";
+import DonorDashboard from "../pages/donor/Dashboard.jsx";
 
-import DonateFood
-from "../pages/donor/DonateFood.jsx";
+import DonateFood from "../pages/donor/DonateFood.jsx";
 
-import MyDonations
-from "../pages/donor/MyDonations.jsx";
+import MyDonations from "../pages/donor/MyDonations.jsx";
 
 /*
 ========================================
@@ -54,14 +46,11 @@ NGO PAGES
 ========================================
 */
 
-import NGODashboard
-from "../pages/ngo/Dashboard.jsx";
+import NGODashboard from "../pages/ngo/Dashboard.jsx";
 
-import AvailableFood
-from "../pages/ngo/AvailableFood.jsx";
+import AvailableFood from "../pages/ngo/AvailableFood.jsx";
 
-import ClaimedFood
-from "../pages/ngo/ClaimedFood.jsx";
+import ClaimedFood from "../pages/ngo/ClaimedFood.jsx";
 
 /*
 ========================================
@@ -69,11 +58,9 @@ VOLUNTEER PAGES
 ========================================
 */
 
-import VolunteerDashboard
-from "../pages/volunteer/Dashboard.jsx";
+import VolunteerDashboard from "../pages/volunteer/Dashboard.jsx";
 
-import Deliveries
-from "../pages/volunteer/Deliveries.jsx";
+import Deliveries from "../pages/volunteer/Deliveries.jsx";
 
 /*
 ========================================
@@ -81,8 +68,7 @@ ADMIN PAGES
 ========================================
 */
 
-import AdminDashboard
-from "../pages/admin/Dashboard.jsx";
+import AdminDashboard from "../pages/admin/Dashboard.jsx";
 
 /*
 ========================================
@@ -90,8 +76,7 @@ PROTECTED ROUTE
 ========================================
 */
 
-import ProtectedRoute
-from "./ProtectedRoute.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 
 /*
 ========================================

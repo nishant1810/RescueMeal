@@ -7,8 +7,7 @@ COMPONENTS
 ========================================
 */
 
-import Navbar
-from "../components/layout/Navbar.jsx";
+import Navbar from "../components/layout/Navbar.jsx";
 
 /*
 ========================================

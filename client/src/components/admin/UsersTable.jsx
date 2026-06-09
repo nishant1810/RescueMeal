@@ -10,8 +10,7 @@ BUTTON
 ========================================
 */
 
-import Button
-from "../ui/Button.jsx";
+import Button from "../ui/Button.jsx";
 
 /*
 ========================================

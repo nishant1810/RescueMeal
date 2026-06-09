@@ -23,8 +23,7 @@ LAYOUT
 ========================================
 */
 
-import DashboardLayout
-from "../../layouts/DashboardLayout.jsx";
+import DashboardLayout from "../../layouts/DashboardLayout.jsx";
 
 /*
 ========================================

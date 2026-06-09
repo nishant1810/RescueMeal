@@ -15,8 +15,7 @@ UI
 ========================================
 */
 
-import Button
-from "../ui/Button.jsx";
+import Button from "../ui/Button.jsx";
 
 /*
 ========================================
@@ -24,8 +23,7 @@ BADGE
 ========================================
 */
 
-import DeliveryBadge
-from "./DeliveryBadge.jsx";
+import DeliveryBadge from "./DeliveryBadge.jsx";
 
 /*
 ========================================

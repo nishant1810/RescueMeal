@@ -14,17 +14,13 @@ IMAGES
 ========================================
 */
 
-import slide1
-from "../../assets/animations/ImgDisplay.jpg";
+import slide1 from "../../assets/animations/ImgDisplay.jpg";
 
-import slide2
-from "../../assets/animations/info-img.jpg";
+import slide2 from "../../assets/animations/info-img.jpg";
 
-import slide3
-from "../../assets/animations/pic-1.avif";
+import slide3 from "../../assets/animations/pic-1.avif";
 
-import slide4
-from "../../assets/animations/pexels-mehmet-turgut-kirkgoz-11576242.jpg";
+import slide4 from "../../assets/animations/pexels-mehmet-turgut-kirkgoz-11576242.jpg";
 
 /*
 ========================================

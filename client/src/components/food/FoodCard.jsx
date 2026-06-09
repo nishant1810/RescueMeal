@@ -11,8 +11,7 @@ MUTATIONS
 ========================================
 */
 
-import useClaimFood
-from "../../hooks/mutations/useClaimFood.js";
+import useClaimFood from "../../hooks/mutations/useClaimFood.js";
 
 /*
 ========================================
@@ -20,11 +19,9 @@ UI COMPONENTS
 ========================================
 */
 
-import Button
-from "../ui/Button.jsx";
+import Button from "../ui/Button.jsx";
 
-import StatusBadge
-from "../ui/StatusBadge.jsx";
+import StatusBadge from "../ui/StatusBadge.jsx";
 
 /*
 ========================================

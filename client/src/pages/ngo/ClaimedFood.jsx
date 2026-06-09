@@ -10,8 +10,7 @@ LAYOUT
 ========================================
 */
 
-import DashboardLayout
-from "../../layouts/DashboardLayout.jsx";
+import DashboardLayout from "../../layouts/DashboardLayout.jsx";
 
 /*
 ========================================
@@ -29,14 +28,11 @@ UI COMPONENTS
 ========================================
 */
 
-import Loader
-from "../../components/ui/Loader.jsx";
+import Loader from "../../components/ui/Loader.jsx";
 
-import EmptyState
-from "../../components/ui/EmptyState.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
 
-import PageHeader
-from "../../components/ui/PageHeader.jsx";
+import PageHeader from "../../components/ui/PageHeader.jsx";
 
 /*
 ========================================
@@ -44,8 +40,7 @@ FOOD COMPONENTS
 ========================================
 */
 
-import ClaimedFoodCard
-from "../../components/food/ClaimedFoodCard.jsx";
+import ClaimedFoodCard from "../../components/food/ClaimedFoodCard.jsx";
 
 /*
 ========================================

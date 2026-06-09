@@ -17,11 +17,9 @@ UI COMPONENTS
 ========================================
 */
 
-import Button
-from "../ui/Button.jsx";
+import Button from "../ui/Button.jsx";
 
-import DeliveryStatus
-from "../food/DeliveryStatus.jsx";
+import DeliveryStatus from "../food/DeliveryStatus.jsx";
 
 /*
 ========================================

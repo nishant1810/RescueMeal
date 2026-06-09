@@ -26,8 +26,7 @@ UTILS
 ========================================
 */
 
-import getDashboardRoute
-from "../../utils/getDashboardRoute.js";
+import getDashboardRoute from "../../utils/getDashboardRoute.js";
 /*
 ========================================
 NAVBAR

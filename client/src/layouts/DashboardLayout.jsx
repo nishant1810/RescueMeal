@@ -9,14 +9,11 @@ LAYOUT COMPONENTS
 ========================================
 */
 
-import Navbar
-from "../components/layout/Navbar.jsx";
+import Navbar from "../components/layout/Navbar.jsx";
 
-import Sidebar
-from "../components/layout/Sidebar.jsx";
+import Sidebar from "../components/layout/Sidebar.jsx";
 
-import MobileSidebar
-from "../components/layout/MobileSidebar.jsx";
+import MobileSidebar from "../components/layout/MobileSidebar.jsx";
 
 /*
 ========================================

@@ -18,8 +18,7 @@ LAYOUT
 ========================================
 */
 
-import DashboardLayout
-from "../../layouts/DashboardLayout.jsx";
+import DashboardLayout from "../../layouts/DashboardLayout.jsx";
 
 /*
 ========================================
@@ -37,23 +36,17 @@ UI COMPONENTS
 ========================================
 */
 
-import Loader
-from "../../components/ui/Loader.jsx";
+import Loader from "../../components/ui/Loader.jsx";
 
-import EmptyState
-from "../../components/ui/EmptyState.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
 
-import PageHeader
-from "../../components/ui/PageHeader.jsx";
+import PageHeader from "../../components/ui/PageHeader.jsx";
 
-import Button
-from "../../components/ui/Button.jsx";
+import Button from "../../components/ui/Button.jsx";
 
-import Table
-from "../../components/ui/Table.jsx";
+import Table from "../../components/ui/Table.jsx";
 
-import SectionCard
-from "../../components/dashboard/SectionCard.jsx";
+import SectionCard from "../../components/dashboard/SectionCard.jsx";
 
 /*
 ========================================
@@ -61,8 +54,7 @@ DONATION COMPONENTS
 ========================================
 */
 
-import DonationTableRow
-from "../../components/donations/DonationTableRow.jsx";
+import DonationTableRow from "../../components/donations/DonationTableRow.jsx";
 
 /*
 ========================================

@@ -6,8 +6,7 @@ UI COMPONENTS
 ========================================
 */
 
-import StatusBadge
-from "../ui/StatusBadge,jsx";
+import StatusBadge from "../ui/StatusBadge.jsx";
 
 /*
 ========================================

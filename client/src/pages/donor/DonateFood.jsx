@@ -26,7 +26,7 @@ MUTATION
 */
 
 import useDonateFood
-from "../../hooks/mutations/useDonateFood.jsx";
+from "../../hooks/mutations/useDonateFood.js";
 
 /*
 ========================================

@@ -11,10 +11,10 @@ import DashboardLayout
 from "../../layouts/DashboardLayout.jsx";
 
 import useUserLocation
-from "../../hooks/location/useUserLocation.jsx";
+from "../../hooks/location/useUserLocation.js";
 
 import useAvailableFood
-from "../../hooks/queries/useAvailableFood.jsx";
+from "../../hooks/queries/useAvailableFood.js";
 
 import Loader
 from "../../components/ui/Loader.jsx";

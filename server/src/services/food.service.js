@@ -11,9 +11,7 @@ from "../utils/ApiError.js";
 import { getIO }
 from "../socket/socket.js";
 
-import {
-  redisClient,
-} from "../config/redis.js";
+import redisClient from "../config/redis.js";
 
 import {
 

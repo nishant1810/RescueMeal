@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 
 import User
-from "../models/User.js";
+from "../models/user.js";
 
 import generateToken
 from "../utils/generateToken.js";

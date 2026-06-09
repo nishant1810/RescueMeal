@@ -38,19 +38,19 @@ UI COMPONENTS
 */
 
 import Loader
-from "../../components/UI/Loader";
+from "../../components/ui/Loader";
 
 import EmptyState
-from "../../components/UI/EmptyState";
+from "../../components/ui/EmptyState";
 
 import PageHeader
-from "../../components/UI/PageHeader";
+from "../../components/ui/PageHeader";
 
 import Button
-from "../../components/UI/Button";
+from "../../components/ui/Button";
 
 import Table
-from "../../components/UI/Table";
+from "../../components/ui/Table";
 
 import SectionCard
 from "../../components/dashboard/SectionCard";

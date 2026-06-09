@@ -35,16 +35,16 @@ UI COMPONENTS
 */
 
 import Card
-from "../../components/ui/Card";
+from "../../components/UI/Card";
 
 import Input
-from "../../components/ui/Input";
+from "../../components/UI/Input";
 
 import Button
-from "../../components/ui/Button";
+from "../../components/UI/Button";
 
 import PageHeader
-from "../../components/ui/PageHeader";
+from "../../components/UI/PageHeader";
 
 /*
 ========================================

@@ -17,13 +17,13 @@ import useAvailableFood
 from "../../hooks/queries/useAvailableFood";
 
 import Loader
-from "../../components/ui/Loader";
+from "../../components/UI/Loader";
 
 import EmptyState
-from "../../components/ui/EmptyState";
+from "../../components/UI/EmptyState";
 
 import PageHeader
-from "../../components/ui/PageHeader";
+from "../../components/UI/PageHeader";
 
 import FoodGrid
 from "../../components/food/FoodGrid";

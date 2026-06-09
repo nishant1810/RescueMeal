@@ -50,13 +50,13 @@ UI COMPONENTS
 */
 
 import Loader
-from "../../components/ui/Loader";
+from "../../components/UI/Loader";
 
 import PageHeader
-from "../../components/ui/PageHeader";
+from "../../components/UI/PageHeader";
 
 import Button
-from "../../components/ui/Button";
+from "../../components/UI/Button";
 
 /*
 ========================================

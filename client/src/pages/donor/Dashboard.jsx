@@ -49,11 +49,11 @@ UI COMPONENTS
 ========================================
 */
 
-import Loader from "../../components/ui/Loader.jsx";
+import Loader from "../../components/UI/Loader.jsx";
 
-import PageHeader from "../../components/ui/PageHeader.jsx";
+import PageHeader from "../../components/UI/PageHeader.jsx";
 
-import Button from "../../components/ui/Button.jsx";
+import Button from "../../components/UI/Button.jsx";
 
 /*
 ========================================

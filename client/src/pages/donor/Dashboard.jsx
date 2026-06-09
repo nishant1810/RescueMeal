@@ -49,14 +49,11 @@ UI COMPONENTS
 ========================================
 */
 
-import Loader
-from "../../components/ui/Loader.jsx";
+import Loader from "../../components/ui/Loader.jsx";
 
-import PageHeader
-from "../../components/ui/PageHeader.jsx";
+import PageHeader from "../../components/ui/PageHeader.jsx";
 
-import Button
-from "../../components/ui/Button.jsx";
+import Button from "../../components/ui/Button.jsx";
 
 /*
 ========================================
@@ -64,17 +61,13 @@ DASHBOARD COMPONENTS
 ========================================
 */
 
-import StatsCard
-from "../../components/dashboard/StatsCard.jsx";
+import StatsCard from "../../components/dashboard/StatsCard.jsx";
 
-import DashboardGrid
-from "../../components/dashboard/DashboardGrid.jsx";
+import DashboardGrid from "../../components/dashboard/DashboardGrid.jsx";
 
-import SectionCard
-from "../../components/dashboard/SectionCard.jsx";
+import SectionCard from "../../components/dashboard/SectionCard.jsx";
 
-import AnalyticsChart
-from "../../components/dashboard/AnalyticsChart.jsx";
+import AnalyticsChart from "../../components/dashboard/AnalyticsChart.jsx";
 
 /*
 ========================================

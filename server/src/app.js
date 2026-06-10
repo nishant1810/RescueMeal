@@ -80,12 +80,10 @@ CORS
 ========================================
 */
 
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-);
+app.use(cors({
+    origin: "rescue-meal.vercel.app",
+    credentials: true
+}));
 
 /*
 ========================================

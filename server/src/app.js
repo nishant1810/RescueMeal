@@ -50,9 +50,11 @@ PATH CONFIG
 ========================================
 */
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename =
+  fileURLToPath(import.meta.url);
 
-const __dirname = path.dirname(__filename);
+const __dirname =
+  path.dirname(__filename);
 
 /*
 ========================================
@@ -76,14 +78,75 @@ app.use(
 
 /*
 ========================================
+ALLOWED ORIGINS
+========================================
+*/
+
+const allowedOrigins = [
+
+  "http://localhost:5173",
+
+  process.env.CLIENT_URL,
+];
+
+/*
+========================================
 CORS
 ========================================
 */
 
-app.use(cors({
-    origin: "rescue-meal.vercel.app",
-    credentials: true
-}));
+app.use(
+  cors({
+
+    origin: function (
+      origin,
+      callback
+    ) {
+
+      /*
+      ========================================
+      ALLOW NON-BROWSER REQUESTS
+      ========================================
+      */
+
+      if (!origin) {
+
+        return callback(
+          null,
+          true
+        );
+      }
+
+      /*
+      ========================================
+      CHECK ALLOWED ORIGINS
+      ========================================
+      */
+
+      if (
+        allowedOrigins.includes(
+          origin
+        )
+      ) {
+
+        callback(
+          null,
+          true
+        );
+
+      } else {
+
+        callback(
+          new Error(
+            `CORS blocked for origin: ${origin}`
+          )
+        );
+      }
+    },
+
+    credentials: false,
+  })
+);
 
 /*
 ========================================
@@ -92,11 +155,16 @@ RATE LIMITER
 */
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+
+  windowMs:
+    15 * 60 * 1000,
 
   max:
-    process.env.NODE_ENV === "production"
+    process.env.NODE_ENV ===
+    "production"
+
       ? 100
+
       : 1000,
 
   standardHeaders: true,
@@ -104,6 +172,7 @@ const limiter = rateLimit({
   legacyHeaders: false,
 
   message: {
+
     success: false,
 
     message:
@@ -127,7 +196,9 @@ app.use(
 
 app.use(
   express.urlencoded({
+
     extended: true,
+
     limit: "10mb",
   })
 );
@@ -171,9 +242,15 @@ STATIC FILES
 */
 
 app.use(
+
   "/uploads",
+
   express.static(
-    path.join(__dirname, "../uploads")
+
+    path.join(
+      __dirname,
+      "../uploads"
+    )
   )
 );
 
@@ -184,8 +261,11 @@ HEALTH CHECK
 */
 
 app.get("/", (req, res) => {
+
   res.status(200).json({
+
     success: true,
+
     message:
       "RescueMeal API Running Successfully",
   });
@@ -197,13 +277,25 @@ API ROUTES
 ========================================
 */
 
-app.use("/api/v1/auth", authRoutes);
+app.use(
+  "/api/v1/auth",
+  authRoutes
+);
 
-app.use("/api/v1/food", foodRoutes);
+app.use(
+  "/api/v1/food",
+  foodRoutes
+);
 
-app.use("/api/v1/users", userRoutes);
+app.use(
+  "/api/v1/users",
+  userRoutes
+);
 
-app.use("/api/v1/delivery", deliveryRoutes);
+app.use(
+  "/api/v1/delivery",
+  deliveryRoutes
+);
 
 /*
 ========================================
@@ -212,10 +304,15 @@ app.use("/api/v1/delivery", deliveryRoutes);
 */
 
 app.use((req, res) => {
+
   res.status(404).json({
+
     success: false,
+
     statusCode: 404,
-    message: `Route Not Found - ${req.originalUrl}`,
+
+    message:
+      `Route Not Found - ${req.originalUrl}`,
   });
 });
 
@@ -225,16 +322,52 @@ GLOBAL ERROR HANDLER
 ========================================
 */
 
-app.use((err, req, res, next) => {
-  console.error(err);
+app.use(
+  (
+    err,
+    req,
+    res,
+    next
+  ) => {
 
-  res.status(err.statusCode || 500).json({
-    success: false,
-    statusCode: err.statusCode || 500,
-    message:
-      err.message || "Internal Server Error",
-  });
-});
+    console.error(err);
+
+/*
+========================================
+CORS ERROR
+========================================
+*/
+
+    if (
+      err.message?.includes(
+        "CORS"
+      )
+    ) {
+
+      return res.status(403).json({
+
+        success: false,
+
+        message:
+          err.message,
+      });
+    }
+
+    res.status(
+      err.statusCode || 500
+    ).json({
+
+      success: false,
+
+      statusCode:
+        err.statusCode || 500,
+
+      message:
+        err.message ||
+        "Internal Server Error",
+    });
+  }
+);
 
 /*
 ========================================

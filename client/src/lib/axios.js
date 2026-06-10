@@ -17,11 +17,8 @@ const api = axios.create({
   */
 
   baseURL:
-
     import.meta.env
-      .VITE_API_URL ||
-
-    "http://localhost:5000/api/v1",
+      .VITE_API_URL,
 
   /*
   ========================================
@@ -30,14 +27,6 @@ const api = axios.create({
   */
 
   timeout: 10000,
-
-  /*
-  ========================================
-  SEND COOKIES
-  ========================================
-  */
-
-  withCredentials: true,
 
   /*
   ========================================
@@ -62,22 +51,10 @@ api.interceptors.request.use(
 
   (config) => {
 
-    /*
-    ========================================
-    GET TOKEN
-    ========================================
-    */
-
     const token =
       localStorage.getItem(
         "token"
       );
-
-    /*
-    ========================================
-    ATTACH TOKEN
-    ========================================
-    */
 
     if (token) {
 
@@ -104,8 +81,7 @@ RESPONSE INTERCEPTOR
 
 api.interceptors.response.use(
 
-  (response) =>
-    response,
+  (response) => response,
 
   (error) => {
 
@@ -118,19 +94,13 @@ api.interceptors.response.use(
     if (!error.response) {
 
       toast.error(
-        "Network Error"
+        "Unable to connect to server"
       );
 
       return Promise.reject(
         error
       );
     }
-
-    /*
-    ========================================
-    STATUS
-    ========================================
-    */
 
     const status =
       error.response.status;
@@ -143,12 +113,6 @@ api.interceptors.response.use(
 
     if (status === 401) {
 
-      /*
-      ========================================
-      CLEAR STORAGE
-      ========================================
-      */
-
       localStorage.removeItem(
         "token"
       );
@@ -157,28 +121,16 @@ api.interceptors.response.use(
         "user"
       );
 
-      /*
-      ========================================
-      SESSION EXPIRED
-      ========================================
-      */
-
-      toast.error(
-        "Session expired. Please login again."
-      );
-
-      /*
-      ========================================
-      REDIRECT LOGIN
-      ========================================
-      */
-
       if (
 
         window.location.pathname !==
         "/login"
 
       ) {
+
+        toast.error(
+          "Session expired. Please login again."
+        );
 
         window.location.href =
           "/login";
@@ -191,7 +143,7 @@ api.interceptors.response.use(
     ========================================
     */
 
-    if (status === 403) {
+    else if (status === 403) {
 
       toast.error(
         "Access denied"
@@ -200,18 +152,17 @@ api.interceptors.response.use(
 
     /*
     ========================================
-    IMPORTANT
-    REMOVE GLOBAL SERVER TOASTS
+    SERVER ERROR
     ========================================
     */
 
-    /*
-    DO NOT SHOW:
-    - Internal server error
-    - Backend custom errors
+    else if (status >= 500) {
 
-    Mutation hooks will handle them.
-    */
+      console.error(
+        "Server Error:",
+        error.response.data
+      );
+    }
 
     return Promise.reject(
       error
